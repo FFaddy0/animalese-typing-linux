@@ -12,9 +12,8 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "build:swift": "swiftc swift/swift-key-listener.swift -o swift-key-listener",
-    "build:mac": "electron-builder --mac --arm64",
-    "build:mac:x64": "electron-builder --mac --x64"
+    "build:swift": "swiftc swift/swift-key-listener.swift -o swift-key-listener-x64 -target x86_64-apple-macosx11.0 && swiftc swift/swift-key-listener.swift -o swift-key-listener-arm64 -target arm64-apple-macosx11.0 && lipo -create -output swift-key-listener swift-key-listener-x64 swift-key-listener-arm64 && chmod +x ./swift-key-listener",
+    "build:mac": "npm run build:swift && electron-builder --mac"
   },
   "build": {
     "asar": true,
@@ -44,10 +43,10 @@
       "extendInfo": {
         "NSInputMonitoringUsageDescription": "This app needs access to detect key presses."
       },
-      "extraFiles": [
+      "extraResources": [
         {
           "from": "swift-key-listener",
-          "to": "Resources/swift-key-listener"
+          "to": "swift-key-listener"
         }
       ]
     },
