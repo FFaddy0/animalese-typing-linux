@@ -12,7 +12,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "build:swift": "swiftc swift/swift-key-listener.swift -o swift-key-listener-x64 -target x86_64-apple-macosx13.0 && swiftc swift/swift-key-listener.swift -o swift-key-listener-arm64 -target arm64-apple-macosx13.0 && lipo -create -output swift-key-listener swift-key-listener-x64 swift-key-listener-arm64 && chmod +x ./swift-key-listener",
+    "build:swift": "swiftc swift/swift-key-listener.swift -o swift-key-listener-x64 -target x86_64-apple-macosx11.0 && swiftc swift/swift-key-listener.swift -o swift-key-listener-arm64 -target arm64-apple-macosx11.0 && lipo -create -output swift-key-listener swift-key-listener-x64 swift-key-listener-arm64 && chmod +x ./swift-key-listener",
     "build:mac": "npm run build:swift && electron-builder --mac"
   },
   "build": {
@@ -34,8 +34,8 @@
         {
           "target": "dmg",
           "arch": [
-            "x64",
-            "arm64"
+            "arm64",
+            "x64"
           ]
         }
       ],
