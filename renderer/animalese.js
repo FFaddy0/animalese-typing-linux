@@ -408,5 +408,14 @@ document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) =>
 document.addEventListener('DOMContentLoaded', () => {
     const checked = document.querySelector('input[name="remap_type"]:checked');
     if (checked) checked.dispatchEvent(new Event('change'));
+
+    // Close settings when clicking outside
+    const focusOut = document.getElementById('focus_out');
+    const settingsOverlay = document.getElementById('settings_overlay');
+    focusOut.addEventListener('mousedown', function(event) {
+        if (focusOut.getAttribute('show') === 'true' && !settingsOverlay.contains(event.target)) {
+            focusOut.setAttribute('show', 'false');
+        }
+    });
 });
 //#endregion
