@@ -40,9 +40,6 @@
         }
       ],
       "icon": "assets/images/icon.png",
-      "extendInfo": {
-        "NSInputMonitoringUsageDescription": "This app needs access to detect key presses."
-      },
       "extraResources": [
         {
           "from": "swift-key-listener",
@@ -57,7 +54,8 @@
       ],
       "category": "Utility",
       "icon": "assets/images/icon.png"
-    }
+    },
+    "afterSign": "build/after-sign-hook.js"
   },
   "license": "MIT",
   "description": "Animalese Typing",
