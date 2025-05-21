@@ -111,11 +111,44 @@ div[show=false] {
     font-size: 12px;
     color: #b89c7a9f;
 }
+
+#reset_settings {
+    position: relative;
+    overflow: hidden;
+}
+#reset_settings::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: rgba(255, 0, 0, 0);
+    z-index: 0;
+    pointer-events: none;
+    transition: background-color 2s ease-out;
+}
+#reset_settings:active::before {
+    background-color: rgba(255, 0, 0, 0.531);
+    animation: load 2s linear forwards
+}
+
+@keyframes load {
+    0% { width: 0%; }
+    99% { width: 100%; }
+    100% { width: 0%; }
+}
+
+#reset_settings span {
+    position: relative;
+    z-index: 1;
+}
+
 /*#endregion GENERAL */
 
 /*#region BUTTONS */
 
-input[type=button] {
+input[type=button], button {
     background-color: #ece4c1;
     color: #6e5c44;
     font-family: "Arial Rounded Bold";
@@ -129,19 +162,19 @@ input[type=button] {
     outline: none;
 }
 
-input[type=button]:not(:disabled):hover {
+input[type=button]:not(:disabled):hover, button:not(:disabled):hover {
     background-color: #e0c49e;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
     transform: scale(1.05);
 }
 
-input[type=button]:active {
+input[type=button]:active, button:active {
     background-color: #d1b48b;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transform: scale(0.95);
 }
 
-input[type=button]:disabled {
+input[type=button]:disabled, button:disabled  {
     background-color: #f8f2d7;
     color: #a89c85; 
     cursor: not-allowed;
@@ -343,7 +376,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 input[type=range]::-webkit-slider-thumb:hover {
     transition: box-shadow 0.05s ease;
-    box-shadow: 0 0 0 3px #109145ad;
+    box-shadow: 0 0 0 3px #6cd576;
 }
 /*#endregion SLIDERS*/
 

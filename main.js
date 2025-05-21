@@ -32,22 +32,24 @@ else app.on('second-instance', () => showIfAble()); // show instance that is run
 
 app.setAppUserModelId('com.joshxviii.animalese-typing');
 
+const defaults = {
+    lang: 'en',
+    volume: 0.5,
+    audio_mode: 0,
+    always_enabled: true,
+    enabled_apps: [],
+    voice_profile: {
+        voice_type: 'f2',
+        pitch_shift: 0.0,
+        pitch_variation: 0.2,
+        intonation: 0.0
+    },
+    saved_voice_profiles: new Map(),
+    remapped_keys: new Map()
+}
+
 const preferences = new Store({
-    defaults: {
-        lang: 'en',
-        volume: 0.5,
-        audio_mode: 0,
-        always_enabled: true,
-        enabled_apps: [],
-        voice_profile: {
-            voice_type: 'f2',
-            pitch_shift: 0.0,
-            pitch_variation: 0.2,
-            intonation: 0.0
-        },
-        saved_voice_profiles: new Map(),
-        remapped_keys: new Map()
-    }
+    defaults: defaults
 });
 
 ipcMain.on('get-store-data-sync', (e) => {
@@ -56,6 +58,20 @@ ipcMain.on('get-store-data-sync', (e) => {
 ipcMain.handle('store-set', async (e, key, value) => {
     preferences.set(key, value);
     bgwin.webContents.send(`updated-${key}`, value);
+});
+ipcMain.handle('store-reset', async (e) => {// set settings to default and trigger store update messages
+    const resetable = [
+        'audio_mode',
+        'voice_profile',
+        'saved_voice_profiles',
+        'remapped_keys',
+        'enabled_apps',
+        'always_enabled'
+    ];
+    resetable.forEach(r=>{
+        preferences.reset(r);
+        bgwin.webContents.send(`updated-${r}`, defaults[r]);
+    });
 });
 ipcMain.on('close-window', (e) => {
     if (bgwin) bgwin.close();

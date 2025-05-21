@@ -5,7 +5,7 @@ const { createAudioManager } = require('./audioManager');
 const { initCapsLockState, isCapsLockActive } = require('./capsLockState');
 initCapsLockState();
 
-const settingsData = ipcRenderer.sendSync('get-store-data-sync');
+let settingsData = ipcRenderer.sendSync('get-store-data-sync');
 const appInfo = ipcRenderer.sendSync('get-app-info');
 
 // general app messages 
@@ -57,6 +57,10 @@ contextBridge.exposeInMainWorld('settings', {
     set: (key, value) => {
         settingsData[key] = value;
         return ipcRenderer.invoke('store-set', key, value)
+    },
+    reset: () => {
+        ipcRenderer.invoke('store-reset')
+        settingsData = ipcRenderer.sendSync('get-store-data-sync');
     }
 });
 

@@ -23,7 +23,12 @@ customElements.define('svg-button', class extends HTMLElement {
     }
 });
 
-let voiceProfile = preferences.get('voice_profile');
+
+document.getElementById('version').innerHTML = `v${window.api.getAppInfo().version}`;
+
+document.getElementById('reset_settings').addEventListener('animationend', (e) => {
+    resetSettings();
+});
 
 //#region Initialize controls and listeners
 const controls = [
@@ -33,19 +38,27 @@ const controls = [
     'pitch_variation',
     'intonation'
 ];
-document.querySelectorAll('input[name="audio_mode"]').forEach(radio => {// audio mode initilize 
-    radio.checked = parseInt(radio.value) === preferences.get('audio_mode');
-    radio.addEventListener('change', () => {
-        if (radio.checked) preferences.set('audio_mode', parseInt(radio.value));
-    });
-});
+let voiceProfile = null;
+let voiceProfileSlots = null;
 function initControls() {
+    voiceProfile = preferences.get('voice_profile');
+    voiceProfileSlots = preferences.get('saved_voice_profiles');
+
     document.getElementById('lang_select').value = preferences.get('lang');
     document.getElementById('check_always_enabled').checked = preferences.get('always_enabled');
     document.getElementById('apps_table').setAttribute('disabled', preferences.get('always_enabled'));
-    document.getElementById('version').innerHTML = `v${window.api.getAppInfo().version}`;
+    document.querySelectorAll('input[name="audio_mode"]').forEach(radio => {// audio mode initilize 
+        //radio.replaceWith(radio.cloneNode(true));
+        radio.checked = parseInt(radio.value) === preferences.get('audio_mode');
+        radio.addEventListener('change', () => {
+            if (radio.checked) preferences.set('audio_mode', parseInt(radio.value));
+        });
+    });
+    for (let i = 0; i < 5; i++) {
+        document.getElementById('voice_profile_slots').options[i].innerHTML = voiceProfileSlots[i+1]?.name || `Slot ${i+1}`;
+    }
 
-
+    // voice profile slider controls
     controls.forEach(control => {
         let el = document.getElementById(control);
         if (!el) return;
@@ -132,6 +145,8 @@ function initControls() {
             document.getElementById('male').setAttribute('pressed', 'false');
         }
     }
+
+    document.querySelectorAll('#apps_tbody tr input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
 }
 initControls();
 
@@ -206,7 +221,7 @@ function updatedActiveWindows(activeWindows = []) {
         }
     });
 }
-updatedActiveWindows();
+
 function updateEnabledApps(appName, isChecked) {
     let enabledApps = preferences.get('enabled_apps')
 
@@ -253,10 +268,6 @@ window.api.onKeyPress( (keyInfo) => {
 //#endregion
 
 //#region Savable voice profiles
-const voiceProfileSlots = preferences.get('saved_voice_profiles');
-for (let i = 0; i < 5; i++) {
-    document.getElementById('voice_profile_slots').options[i].innerHTML = voiceProfileSlots[i+1]?.name || `Slot ${i+1}`;
-}
 
 function deleteVoiceProfile() {
     const selectedSlot = document.getElementById('voice_profile_slots').value;
@@ -312,6 +323,12 @@ function openSettings() {
     document.getElementById('focus_out').setAttribute('show', show);
 }
 
+function resetSettings() {
+    window.settings.reset();
+    setTimeout( () => {
+        initControls();
+    }, 10)
+}
 
 
 function isAlpha(str) {return str?(str.length === 1)?(/\p{Letter}/gu).test(str.charAt(0)):false:false;}
@@ -338,7 +355,6 @@ function remapStop() {
     remapCancel.disabled = true;
     document.querySelector('.highlighted')?.classList.remove('highlighted');
 }
-
 
 window.api.onRemapButtonPress( (remapButton) => {
     if ( !(remapIn === document.activeElement || isRemapping) ) return;
@@ -382,8 +398,6 @@ document.addEventListener('keydown', e => {
         }
     });
 });
- 
-
 
 document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) => {
     radio.addEventListener('change', () => {
@@ -392,12 +406,8 @@ document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) =>
         allTypes.forEach(el => el.setAttribute('show',false));
         allControllers.forEach(el => el.setAttribute('show',false));
 
-        // Show the selected one (index is 0-based)
         const selectedIndex = parseInt(radio.value) - 1;
-        if (selectedIndex == 0) window.api.sendRemapData({
-            label: '',
-            sound: ''
-        });
+        if (selectedIndex == 0) window.api.sendRemapData({label: '', sound: ''});// index 0 is "No Sound"
         if (allTypes[selectedIndex]) {
             allTypes[selectedIndex].setAttribute('show',true);
             allControllers[selectedIndex].setAttribute('show',true);
