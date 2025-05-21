@@ -403,14 +403,17 @@ document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) =>
     radio.addEventListener('change', () => {
         const allTypes = document.querySelectorAll('#remap_types .remap_type');
         const allControllers = document.querySelectorAll('#remap_controllers .remap_controller');
+        const allEditors = document.querySelectorAll('#bottom_row .audio_editor');
         allTypes.forEach(el => el.setAttribute('show',false));
         allControllers.forEach(el => el.setAttribute('show',false));
+        allEditors.forEach(el => el.setAttribute('show',false));
 
         const selectedIndex = parseInt(radio.value) - 1;
         if (selectedIndex == 0) window.api.sendRemapData({label: '', sound: ''});// index 0 is "No Sound"
         if (allTypes[selectedIndex]) {
             allTypes[selectedIndex].setAttribute('show',true);
             allControllers[selectedIndex].setAttribute('show',true);
+            allEditors[selectedIndex].setAttribute('show',true);
         }
     });
 });

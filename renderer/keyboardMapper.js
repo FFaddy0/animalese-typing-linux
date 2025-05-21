@@ -234,6 +234,7 @@ function press(btn, holdKey=false) {
         else {
             window.audio.play(sound);
             setTimeout(() => btn.classList.remove('pressed'), 100);
+            setTimeout(() => btn.classList.remove('pressed'), 100);
         }
         window.api.sendRemapData({
             label: label,
