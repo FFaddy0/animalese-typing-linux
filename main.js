@@ -216,19 +216,19 @@ function createTrayIcon() {
 let keyListener;
 
 async function startKeyListener() {
+    const platform = process.platform;
     let listenerPath;
-    let listenerName;
 
-    if (process.platform === 'darwin') {
-        listenerName = 'mac';
-        listenerPath = isDev
-            ? path.join(__dirname, 'libs', 'key-listeners', 'swift-key-listener')
-            : path.join(process.resourcesPath, 'swift-key-listener');
-    } else if (process.platform === 'win32') {
-        listenerName = 'win';
+    if (platform === 'win32') {
         listenerPath = isDev
             ? path.join(__dirname, 'libs', 'key-listeners', 'cpp-key-listener.exe')
             : path.join(process.resourcesPath, 'cpp-key-listener.exe');
+    } else if (platform === 'darwin') {
+        listenerPath = isDev
+            ? path.join(__dirname, 'libs', 'key-listeners', 'swift-key-listener')
+            : path.join(process.resourcesPath, 'swift-key-listener');
+    } else if (platform === 'linux') {
+        //TODO: create linux key listener
     } else {
         console.error('Unsupported platform');
         return;
@@ -252,12 +252,12 @@ async function startKeyListener() {
                     });
                 }
             } catch (err) {
-                console.error(`Invalid JSON from ${listenerName}:`, line);
+                console.error(`Invalid JSON from ${platform}:`, line);
             }
         }
     });
     keyListener.stderr.on('data', data => {
-        console.error(`${listenerName} error:`, data.toString());
+        console.error(`${platform} error:`, data.toString());
     });
 }
 
