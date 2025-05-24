@@ -1,15 +1,8 @@
 const { app, shell, contextBridge, ipcRenderer } = require('electron');
-<<<<<<< HEAD:preload.js
-const keycodeToSound = require('./keycodeToSound');
-const translator = require('./translator'); 
-const { createAudioManager } = require('./audioManager');
-const { initCapsLockState, isCapsLockActive } = require('./capsLockState');
-=======
 const keycodeToSound = require('./keycode-to-sound.cjs');
 const translator = require('./translator.cjs'); 
 const { createAudioManager } = require('./audio-manager.cjs');
 const { initCapsLockState, isCapsLockActive } = require('./caps-lock-state.cjs');
->>>>>>> feature/macOS-support:preload.cjs
 initCapsLockState();
 
 let settingsData = ipcRenderer.sendSync('get-store-data-sync');
