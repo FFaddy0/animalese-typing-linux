@@ -17,6 +17,14 @@
     filter: drop-shadow(0 6px 0px #d1b48b);
 }
 
+.highlighted, .highlighted .key-label, .highlighted .button-top, .highlighted[btn-type=b] .button-top {
+    fill: rgb(0, 204, 255);
+    color: white;
+}
+.highlighted .key-icon {
+     fill: white;
+}
+
 /*#region KEYBOARD */
 key-board {
     display: inline-block;
@@ -69,27 +77,25 @@ key-button, .key_s, .key_m, .key_l, .key_blank {
 .key_m {min-width: calc(2* var(--key-size) * 2);}
 .key_l {min-width: calc(3* var(--key-size) * 2);}
 
-key-button .button-top
-{
-    transform: translate(0px,0px);
+key-button .button-top {
     fill:#ece0d0;
-    stroke: #0d944500;
+    transform: translate(0px,0px);
     transition: all 0.33s ease;
 }
 
-key-button.pressed .button-top
-{
-    fill:#eedbc2;
-    stroke: #08a74a3d;
+key-button.pressed .button-top {
+    fill:#a1e19a;
     transform: translate(0px,4px);
     transition: transform 0.07s ease;
 }
 key-button.pressed .key-label {
+    color: #ffffff;
     transform: translate(-50%, calc(-50% + 12.5%));
     transition: transform 0.07s ease;
 }
 
 key-button.pressed .key-icon {
+    fill: #ffffff;
     transform: translate(-50%, calc(-50% + 8%));
     transition: transform 0.07s ease;
 }
@@ -132,7 +138,7 @@ piano-key, .piano_l, .piano_m, .piano_r, .piano_b {
     display: inline-block;
 }
 
-piano-key[type=b], .piano_b {
+piano-key[btn-type=b], .piano_b {
     z-index: 0;
     min-width: calc(var(--key-size) * 2);
     min-height: calc(var(--key-size) * 4.5);
@@ -141,28 +147,25 @@ piano-key[type=b], .piano_b {
     max-width: calc(var(--key-size) * 2);
     max-height: calc(var(--key-size) * 4.5);
 }
-piano-key[type=b] {
+piano-key[btn-type=b] {
     margin: 0px calc(var(--key-size) * -1);
 }
 
-piano-key .button-top
-{
+piano-key .button-top {
     pointer-events:all;
     transform: translate(0px,0px);
     fill:#ffffff;
     transition: all 0.33s ease;
 }
-piano-key[type=b] .button-top {
+piano-key[btn-type=b] .button-top {
     fill:#444444;
 }
-piano-key .button-top:hover
-{
+piano-key .button-top:hover {
     transition: fill 0.1s ease;
     transition: stroke 0.1s ease;
-    transition: transform 0.33s ease;
+    transition: transform 0.33s ease-out;
 }
-piano-key.pressed .button-top
-{
+piano-key.pressed .button-top {
     fill:#a1e19a;
     transform: translate(0px,4px);
     transition: transform 0.07s ease;

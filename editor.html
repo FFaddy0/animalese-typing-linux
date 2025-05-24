@@ -88,7 +88,7 @@ author: joshxviii
 
                 <div class="catagory">
                     <!-- <h3 translation="settings.reset">Reset Settings</h3> -->
-                    <input type="button" onclick="resetSettings()" translation="settings.reset"/>
+                    <button id="reset_settings" type="button"><span translation="settings.reset"></span></button>
                 </div>
 
                 <div class="separator"></div>
@@ -104,18 +104,21 @@ author: joshxviii
 
             <div id="top_row">
                 <div id="remap_controllers">
-                    <div class="remap_controller" show="true" ><h3 style="color: #95846d7d;text-align: center;margin-block: 70px;">No Sound</h3></div>
-                    <key-board type="voice" class="remap_controller" show="false"></key-board>
+                    <div class="remap_controller" show="true" ><h3 style="color: #95846d7d;text-align: center;margin-block: 70px;"></h3></div>
+                    <key-board layout-type="voice" class="remap_controller" show="false"></key-board>
                     <piano-board class="remap_controller" show="false"></piano-board>
-                    <key-board type="sfx" class="remap_controller" show="false"></key-board>
+                    <key-board layout-type="sfx" class="remap_controller" show="false"></key-board>
                 </div>
 
                 <div id="key_remapper">
                     <div style="width: 100%;">
                         <h3 translation="key-remapper" style="margin-block: 0px 4px;">Key Remapper</h3>
-                        <input id="remap_in" type="text" maxlength="1" onclick="this.focus()" translation="click.to.remap"/>
-                        <label id="remap_monitor" for="remap_in" translation="click.to.remap"></label>
-                        <input id="remap_cancel" type="button" onclick="remapStop()" disabled translation="cancel.rebind"/>
+                        <input id="remap_in" type="text" maxlength="1" onclick="this.focus()" translation="remap"/>
+                        <label id="remap_monitor" for="remap_in" translation="remap" class="highlighted"></label>
+                        <div class="button_row">
+                            <input id="remap_cancel" type="button" onclick="remapStop()" disabled style="font-weight: 900;" translation="remap.end"/>
+                            <input id="remap_reset" type="button" onclick="remapReset()" disabled style="font-weight: 900;" translation="remap.reset"/>
+                        </div>
                     </div>
 
 
@@ -131,22 +134,22 @@ author: joshxviii
                         <div class="remap_type"></div>
                         <div class="remap_type"></div>
                     </div>
-                    <div>
+                    <div id="remap_type_select">
                         <div class="labeled_con" style="flex-direction: column;">
                             <input type="radio" name="remap_type" id="remap_type_1" value="1" checked>
-                            <label for="remap_type_1" style="color:transparent; text-shadow: 0px 0px 0px #d9bd96;">❌</label>
+                            <label for="remap_type_1">❌</label>
                         </div>
                         <div class="labeled_con" style="flex-direction: column;">
                             <input type="radio" name="remap_type" id="remap_type_2" value="2">
-                            <label for="remap_type_2" style="color:transparent; text-shadow: 0px 0px 0px #d9bd96;">💬</label>
+                            <label for="remap_type_2">💬</label>
                         </div>
                         <div class="labeled_con" style="flex-direction: column;">
                             <input type="radio" name="remap_type" id="remap_type_3" value="3">
-                            <label for="remap_type_3" style="color:transparent; text-shadow: 0px 0px 0px #d9bd96;">🎵</label>
+                            <label for="remap_type_3">🎵</label>
                         </div>
                         <div class="labeled_con" style="flex-direction: column;">
                             <input type="radio" name="remap_type" id="remap_type_4" value="4">
-                            <label for="remap_type_4" style="color:transparent; text-shadow: 0px 0px 0px #d9bd96;">🔊</label>
+                            <label for="remap_type_4">🔊</label>
                         </div>
                     </div>
                 </div>
@@ -154,61 +157,64 @@ author: joshxviii
 
             <div class="separator"></div>
 
-            <div id="voice_profile_editor">
+            <div id="bottom_row">
+                <div class="audio_editor" show="true">None</div>
+                <div class="audio_editor" id="voice_profile_editor" show="false">
+                    <div id="sliders">
+                        <div class="slider-group">
+                            <label id="label_editor_1" class="editor_label" translation="editor_1">Pitch Shift</label>
+                            <input id="pitch_shift" class="editor_slider" type="range" min="-12" max="12" step="0.2" value="0" defaultValue="0"></input>
+                            <input type="text" id="pitch_shift_out" class="editor_output" />
+                        </div>
 
-                <div id="sliders">
-                    <div class="slider-group">
-                        <label id="label_editor_1" class="editor_label" translation="editor_1">Pitch Shift</label>
-                        <input id="pitch_shift" class="editor_slider" type="range" min="-12" max="12" step="0.2" value="0" defaultValue="0"></input>
-                        <input type="text" id="pitch_shift_out" class="editor_output" />
+                        <div class="slider-group">
+                            <label id="label_editor_2" class="editor_label" translation="editor_2">Intonation</label>
+                            <input id="intonation" class="editor_slider" type="range" min="-1.0" max="2.0" step="0.1" value="0" defaultValue="0"></input>
+                            <input type="text" id="intonation_out" class="editor_output" />
+                        </div>
+
+                        <div class="slider-group">
+                            <label id="label_editor_3" class="editor_label" translation="editor_3">Pitch Variation</label>
+                            <input id="pitch_variation" class="editor_slider" type="range" min="0" max="12" step="0.1" value="0" defaultValue="0.5"></input>
+                            <input type="text" id="pitch_variation_out" class="editor_output" />
+                        </div>
                     </div>
 
-                    <div class="slider-group">
-                        <label id="label_editor_2" class="editor_label" translation="editor_2">Intonation</label>
-                        <input id="intonation" class="editor_slider" type="range" min="-1.0" max="2.0" step="0.1" value="0" defaultValue="0"></input>
-                        <input type="text" id="intonation_out" class="editor_output" />
+                    <div id="voice_type_group">
+                        <div id="voice_type_buttons" style="display: flex;">
+                            <svg-button id="male" name="male" onclick="selectVoiceType('male')"></svg-button>
+                            <svg-button id="female" name="female" onclick="selectVoiceType('female')"></svg-button>
+                        </div>
+
+                        <select id="voice_type" class="female">
+                            <option id="label_f1" class="female" value="f1" translation="f1" selected>f1</option>
+                            <option id="label_f2" class="female" value="f2" translation="f2">f2</option>
+                            <option id="label_f3" class="female" value="f3" translation="f3">f3</option>
+                            <option id="label_f4" class="female" value="f4" translation="f4">f4</option>
+                            <option id="label_m1" class="male"   value="m1" translation="m1">m1</option>
+                            <option id="label_m2" class="male"   value="m2" translation="m2">m2</option>
+                            <option id="label_m3" class="male"   value="m3" translation="m3">m3</option>
+                            <option id="label_m4" class="male"   value="m4" translation="m4">m4</option>
+                        </select>
                     </div>
 
-                    <div class="slider-group">
-                        <label id="label_editor_3" class="editor_label" translation="editor_3">Pitch Variation</label>
-                        <input id="pitch_variation" class="editor_slider" type="range" min="0" max="12" step="0.1" value="0" defaultValue="0.5"></input>
-                        <input type="text" id="pitch_variation_out" class="editor_output" />
+                    <div id="saved_profiles">
+                        <select id="voice_profile_slots" onchange="loadVoiceProfile()">
+                            <option id="save_1" value="1" selected>Empty</option>
+                            <option id="save_2" value="2">Empty</option>
+                            <option id="save_3" value="3">Empty</option>
+                            <option id="save_4" value="4">Empty</option>
+                            <option id="save_5" value="5">Empty</option>
+                        </select>
+                        <input type="text" id="save_profile_name" translation="settings.none"/>
+                        <div class="button_row">
+                            <input type="button" id="save_profile_button" value="S" onclick="saveVoiceProfile()"/>
+                            <input type="button" id="delete_profile_button" value="D" onclick="deleteVoiceProfile()"/>
+                        </div>
                     </div>
                 </div>
-
-                <div id="voice_type_group">
-                    <div id="voice_type_buttons">
-                        <svg-button id="male" name="male" onclick="selectVoiceType('male')"></svg-button>
-                        <svg-button id="female" name="female" onclick="selectVoiceType('female')"></svg-button>
-                    </div>
-
-                    <select id="voice_type" class="female">
-                        <option id="label_f1" class="female" value="f1" translation="f1" selected>f1</option>
-                        <option id="label_f2" class="female" value="f2" translation="f2">f2</option>
-                        <option id="label_f3" class="female" value="f3" translation="f3">f3</option>
-                        <option id="label_f4" class="female" value="f4" translation="f4">f4</option>
-                        <option id="label_m1" class="male"   value="m1" translation="m1">m1</option>
-                        <option id="label_m2" class="male"   value="m2" translation="m2">m2</option>
-                        <option id="label_m3" class="male"   value="m3" translation="m3">m3</option>
-                        <option id="label_m4" class="male"   value="m4" translation="m4">m4</option>
-                    </select>
-                </div>
-
-                <div id="saved_profiles">
-                    <select id="voice_profile_slots" onchange="loadVoiceProfile()">
-                        <option id="save_1" value="1" selected>Empty</option>
-                        <option id="save_2" value="2">Empty</option>
-                        <option id="save_3" value="3">Empty</option>
-                        <option id="save_4" value="4">Empty</option>
-                        <option id="save_5" value="5">Empty</option>
-                    </select>
-                    <input type="text" id="save_profile_name" translation="settings.none"/>
-                    <div id="save_profile_buttons">
-                        <input type="button" id="save_profile_button" value="S" onclick="saveVoiceProfile()"/>
-                        <input type="button" id="delete_profile_button" value="D" onclick="deleteVoiceProfile()"/>
-                    </div>
-                </div>
-
+                <div class="audio_editor" show="false">Notes</div>
+                <div class="audio_editor" show="false">SFX</div>
             </div>
             
         </div>

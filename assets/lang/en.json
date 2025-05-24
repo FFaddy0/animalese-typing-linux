@@ -16,6 +16,10 @@
     "editor_3":"pitch variation",
     "key-remapper":"key-remapper",
 
+    "remap":"click to remap",
+    "remap.end":"✓",
+    "remap.reset":"⟲",
+
     "f1":"Sweet",
     "f2":"Peppy",
     "f3":"Big sister",
@@ -26,7 +30,6 @@
     "m4":"Cranky",
 
     "settings":"settings",
-    "settings.show":"Show Settings",
     "settings.startup":"Run on startup",
     "settings.disable":"Disable",
     "settings.audio_mode":"audio mode",

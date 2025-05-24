@@ -22,8 +22,6 @@ ipcRenderer.on('updated-voice_profile', (_, voice_profile) => v = voice_profile)
 let mode = ipcRenderer.sendSync('get-store-data-sync').audio_mode;
 ipcRenderer.on('updated-audio_mode', (_, audio_mode) => mode = audio_mode);
 
-
-//TODO: convert file type from .wav to .acc
 const audio_path = path.join(__dirname, './assets/audio/');
 const file_type = ".ogg";
 
@@ -61,7 +59,7 @@ const voice_sprite = {
     z: [200 * 25,   200],
 }
 
-// TODO: change the note's pitch with js rather than having a different hard-coded sound per note.
+// TODO: change the note's pitch with js rather than having a different hard-coded sound sprite per note.
 // This will make adding custom sounds much easier later.
 // (60,000) / 60bpm = 1000ms
 const notes_sprite = {
@@ -93,8 +91,8 @@ const notes_sprite = {
 // (60,000) / 100bpm = 600ms
 const special_sprite = {
     OK:     [600 * 0, 600],
-    Deska:  [600 * 1, 600],
-    Gwah:   [600 * 2, 600]
+    Gwah:   [600 * 1, 600],
+    Deska:      [600 * 2, 600]
 }
 // 60,000 / 100bpm = 600ms
 const sfx_sprite = {
@@ -128,9 +126,8 @@ const sfx_sprite = {
 //endregion
 
 function createAudioInstance(fileName, sprite = null) {
-    filePath = path.join(audio_path, fileName + file_type);
     return new Howl({
-        src: [audio_path + fileName + file_type], sprite,
+        src: [path.join(audio_path, fileName + file_type)], sprite,
         onloaderror: (id, err) => console.error('Load error:', err)
     });
 }

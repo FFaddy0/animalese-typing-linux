@@ -3,7 +3,7 @@
  */
 
 const preferences = window.settings;
-let lastKey = {};
+let currentKey = {};
 
 // custom svg button element
 customElements.define('svg-button', class extends HTMLElement {
@@ -23,7 +23,12 @@ customElements.define('svg-button', class extends HTMLElement {
     }
 });
 
-let voiceProfile = preferences.get('voice_profile');
+
+document.getElementById('version').innerHTML = `v${window.api.getAppInfo().version}`;
+
+document.getElementById('reset_settings').addEventListener('animationend', (e) => {
+    resetSettings();
+});
 
 //#region Initialize controls and listeners
 const controls = [
@@ -33,19 +38,27 @@ const controls = [
     'pitch_variation',
     'intonation'
 ];
-document.querySelectorAll('input[name="audio_mode"]').forEach(radio => {// audio mode initilize 
-    radio.checked = parseInt(radio.value) === preferences.get('audio_mode');
-    radio.addEventListener('change', () => {
-        if (radio.checked) preferences.set('audio_mode', parseInt(radio.value));
-    });
-});
+let voiceProfile = null;
+let voiceProfileSlots = null;
 function initControls() {
+    voiceProfile = preferences.get('voice_profile');
+    voiceProfileSlots = preferences.get('saved_voice_profiles');
+
     document.getElementById('lang_select').value = preferences.get('lang');
     document.getElementById('check_always_enabled').checked = preferences.get('always_enabled');
     document.getElementById('apps_table').setAttribute('disabled', preferences.get('always_enabled'));
-    document.getElementById('version').innerHTML = `v${window.api.getAppInfo().version}`;
+    document.querySelectorAll('input[name="audio_mode"]').forEach(radio => {// audio mode initilize 
+        //radio.replaceWith(radio.cloneNode(true));
+        radio.checked = parseInt(radio.value) === preferences.get('audio_mode');
+        radio.addEventListener('change', () => {
+            if (radio.checked) preferences.set('audio_mode', parseInt(radio.value));
+        });
+    });
+    for (let i = 0; i < 5; i++) {
+        document.getElementById('voice_profile_slots').options[i].innerHTML = voiceProfileSlots[i+1]?.name || `Slot ${i+1}`;
+    }
 
-
+    // voice profile slider controls
     controls.forEach(control => {
         let el = document.getElementById(control);
         if (!el) return;
@@ -132,6 +145,8 @@ function initControls() {
             document.getElementById('male').setAttribute('pressed', 'false');
         }
     }
+
+    document.querySelectorAll('#apps_tbody tr input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
 }
 initControls();
 
@@ -206,7 +221,7 @@ function updatedActiveWindows(activeWindows = []) {
         }
     });
 }
-updatedActiveWindows();
+
 function updateEnabledApps(appName, isChecked) {
     let enabledApps = preferences.get('enabled_apps')
 
@@ -226,7 +241,7 @@ function updateAlwaysEnabled(value) {
 
 //#region Key press detect
 window.api.onKeyPress( (keyInfo) => {
-    lastKey = keyInfo;
+    currentKey = keyInfo;
     if (isRemapping || remapIn === document.activeElement) return;
     const path = (keyInfo.isShiftDown && keyInfo.data.shiftSound) || keyInfo.data.sound;
     if (path === undefined) return;
@@ -253,10 +268,6 @@ window.api.onKeyPress( (keyInfo) => {
 //#endregion
 
 //#region Savable voice profiles
-const voiceProfileSlots = preferences.get('saved_voice_profiles');
-for (let i = 0; i < 5; i++) {
-    document.getElementById('voice_profile_slots').options[i].innerHTML = voiceProfileSlots[i+1]?.name || `Slot ${i+1}`;
-}
 
 function deleteVoiceProfile() {
     const selectedSlot = document.getElementById('voice_profile_slots').value;
@@ -274,7 +285,7 @@ function deleteVoiceProfile() {
 function saveVoiceProfile() {
     // Get the current voice profile
     const currentVoiceProfile = preferences.get('voice_profile');
-    const selectedSlot = document.getElementById('voice_profile_slots').value;
+    const selectedSlot = parseInt(document.getElementById('voice_profile_slots').value);
     const profileName = document.getElementById('save_profile_name').value.trim();
 
     if (!profileName) {
@@ -282,9 +293,7 @@ function saveVoiceProfile() {
         return;
     }
 
-    let savedVoiceProfiles = preferences.get('saved_voice_profiles');
-
-    savedVoiceProfiles = new Map(Object.entries(savedVoiceProfiles));
+    let savedVoiceProfiles = new Map(Object.entries(preferences.get('saved_voice_profiles')));
     savedVoiceProfiles.set(selectedSlot, { name: profileName, profile: currentVoiceProfile });
     document.getElementById('voice_profile_slots').options[parseInt(selectedSlot)-1].innerHTML = profileName;
     const savedProfilesObject = Object.fromEntries(savedVoiceProfiles);
@@ -314,17 +323,12 @@ function openSettings() {
     document.getElementById('focus_out').setAttribute('show', show);
 }
 
-
-
-
-
-
-
-
-
-
-
-
+function resetSettings() {
+    window.settings.reset();
+    setTimeout( () => {
+        initControls();
+    }, 10)
+}
 
 
 function isAlpha(str) {return str?(str.length === 1)?(/\p{Letter}/gu).test(str.charAt(0)):false:false;}
@@ -338,6 +342,7 @@ const remapCancel = document.getElementById('remap_cancel');
 
 function remapStart() {
     if (isRemapping == true) return;
+    remapMonitor.classList.add('remapping');
     isRemapping = true;
     remapCancel.disabled = false;
 }
@@ -345,9 +350,31 @@ function remapStart() {
 function remapStop() {
     isRemapping = false;
     remapMonitor.setAttribute('monitoring', false)
+    remapMonitor.classList.remove('remapping');
     remapMonitor.innerHTML = remapIn.getAttribute('placeholder');
     remapCancel.disabled = true;
+    document.querySelector('.highlighted')?.classList.remove('highlighted');
 }
+
+window.api.onRemapButtonPress( (remapButton) => {
+    if ( !(remapIn === document.activeElement || isRemapping) ) return;
+
+    if( (currentKey.isShiftDown && currentKey.data.shiftSound != remapButton.sound) ||
+        (!currentKey.isShiftDown && currentKey.data.sound != remapButton.sound)
+    ) {
+        let remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
+        if (currentKey.isShiftDown) currentKey.data.shiftSound = remapButton.sound;
+        else currentKey.data.sound = remapButton.sound;
+        remappedKeys.set(currentKey.keycode, currentKey.data);
+        const newRemappedKeys = Object.fromEntries(remappedKeys);
+
+        document.querySelector('.highlighted')?.classList.remove('highlighted');
+        document.querySelector(`[sound="${remapButton.sound}"]`)?.classList.add('highlighted');
+
+        preferences.set('remapped_keys', newRemappedKeys);
+    }
+
+});
 
 remapIn.addEventListener('focusin', e => remapMonitor.setAttribute('monitoring', true));
 remapIn.addEventListener('focusout', e => isRemapping?undefined:remapMonitor.setAttribute('monitoring', false));
@@ -357,10 +384,12 @@ document.addEventListener('keydown', e => {
     if ( !(remapIn === document.activeElement || isRemapping) ) return;
     remapStart();
     
-    remapMonitor.innerHTML = ((lastKey.isShiftDown && lastKey.data.key !== "Shift"?"Shift + ":"") + lastKey.data.key).toUpperCase();
+    remapMonitor.innerHTML = ((currentKey.isShiftDown && currentKey.data.key !== "Shift"?"Shift + ":"") + currentKey.data.key).toUpperCase();
 
-    const sound = (lastKey.isShiftDown && lastKey.data.shiftSound) || lastKey.data.sound
-    const tabIndex = !sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0
+    const sound = (currentKey.isShiftDown && currentKey.data.shiftSound) || currentKey.data.sound
+    const tabIndex = !sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0        
+    document.querySelector('.highlighted')?.classList.remove('highlighted');
+    document.querySelector(`[sound="${sound}"]`)?.classList.add('highlighted');
 
     document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) => {
         if (index === tabIndex) {
@@ -368,20 +397,23 @@ document.addEventListener('keydown', e => {
             radio.dispatchEvent(new Event('change'));
         }
     });
-})
+});
 
 document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) => {
     radio.addEventListener('change', () => {
         const allTypes = document.querySelectorAll('#remap_types .remap_type');
         const allControllers = document.querySelectorAll('#remap_controllers .remap_controller');
+        const allEditors = document.querySelectorAll('#bottom_row .audio_editor');
         allTypes.forEach(el => el.setAttribute('show',false));
         allControllers.forEach(el => el.setAttribute('show',false));
+        allEditors.forEach(el => el.setAttribute('show',false));
 
-        // Show the selected one (index is 0-based)
         const selectedIndex = parseInt(radio.value) - 1;
+        if (selectedIndex == 0) window.api.sendRemapData({label: '', sound: ''});// index 0 is "No Sound"
         if (allTypes[selectedIndex]) {
             allTypes[selectedIndex].setAttribute('show',true);
             allControllers[selectedIndex].setAttribute('show',true);
+            allEditors[selectedIndex].setAttribute('show',true);
         }
     });
 });
@@ -389,13 +421,14 @@ document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) =>
 document.addEventListener('DOMContentLoaded', () => {
     const checked = document.querySelector('input[name="remap_type"]:checked');
     if (checked) checked.dispatchEvent(new Event('change'));
-});
-//#endregion
 
-//#region request Permission
-window.api.onPermissionError((msg) => {
-    alert(`⚠️ Animalese Typing requires Accessibility permission to detect key presses.\n\nPlease allow access in System Settings > Privacy & Security > Accessibility.`);
-  
-    window.open("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility");
-  });
+    // Close settings when clicking outside
+    const focusOut = document.getElementById('focus_out');
+    const settingsOverlay = document.getElementById('settings_overlay');
+    focusOut.addEventListener('mousedown', function(event) {
+        if (focusOut.getAttribute('show') === 'true' && !settingsOverlay.contains(event.target)) {
+            focusOut.setAttribute('show', 'false');
+        }
+    });
+});
 //#endregion

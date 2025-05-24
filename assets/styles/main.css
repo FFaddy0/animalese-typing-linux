@@ -29,8 +29,9 @@ p {
     margin: 0px;
     text-align: center;
 }
-div[show=false] {
+div[show=false], div[show=false] text {
     visibility: hidden;
+    opacity: 0%;
 }
 #main-win {
     margin-top: 30px;
@@ -111,11 +112,44 @@ div[show=false] {
     font-size: 12px;
     color: #b89c7a9f;
 }
+
+#reset_settings {
+    position: relative;
+    overflow: hidden;
+}
+#reset_settings::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: rgba(255, 0, 0, 0);
+    z-index: 0;
+    pointer-events: none;
+    transition: background-color 2s ease-out;
+}
+#reset_settings:active::before {
+    background-color: rgba(255, 0, 0, 0.531);
+    animation: load 2s linear forwards
+}
+
+@keyframes load {
+    0% { width: 0%; }
+    99% { width: 100%; }
+    100% { width: 0%; }
+}
+
+#reset_settings span {
+    position: relative;
+    z-index: 1;
+}
+
 /*#endregion GENERAL */
 
 /*#region BUTTONS */
 
-input[type=button] {
+input[type=button], button {
     background-color: #ece4c1;
     color: #6e5c44;
     font-family: "Arial Rounded Bold";
@@ -129,19 +163,19 @@ input[type=button] {
     outline: none;
 }
 
-input[type=button]:not(:disabled):hover {
+input[type=button]:not(:disabled):hover, button:not(:disabled):hover {
     background-color: #e0c49e;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
     transform: scale(1.05);
 }
 
-input[type=button]:active {
+input[type=button]:active, button:active {
     background-color: #d1b48b;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transform: scale(0.95);
 }
 
-input[type=button]:disabled {
+input[type=button]:disabled, button:disabled  {
     background-color: #f8f2d7;
     color: #a89c85; 
     cursor: not-allowed;
@@ -198,14 +232,31 @@ input[type=radio] {
 
 input[type=radio]:checked::before {
     content: '';
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     background-color: #6cd576;
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#remap_type_select input[type=radio] {
+    width: 22px;
+    height: 22px;
+    border-width: 3px;
+}
+
+#remap_type_select input[type=radio]:checked::before {
+    width: 11px;
+    height: 11px;
+}
+
+#remap_type_select label {
+    font-size: 20px;
+    color: transparent;
+    text-shadow: 0px 0px 0px #d9bd96;
 }
 
 .svg-button {
@@ -250,12 +301,13 @@ input[type=radio]:checked::before {
     filter: drop-shadow(0 0 5px #f71bff8c);
 }
 
-#save_profile_buttons {
+.button_row {
     display: flex;
     flex-direction: row;
     gap: 10px;
     margin-top: 6px;
     margin-bottom: 6px;
+    justify-content: center;
 }
 /*#endregion BUTTONS */
 
@@ -325,7 +377,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 input[type=range]::-webkit-slider-thumb:hover {
     transition: box-shadow 0.05s ease;
-    box-shadow: 0 0 0 3px #109145ad;
+    box-shadow: 0 0 0 3px #6cd576;
 }
 /*#endregion SLIDERS*/
 
@@ -396,8 +448,6 @@ input[type=text]::placeholder {
     flex-direction: row;
 }
 
-
-
 #voice_type_group {
     /* background-color: chartreuse; */
     display: flex;
@@ -408,7 +458,7 @@ input[type=text]::placeholder {
 #saved_profiles {
     /* background-color: rgb(0, 157, 255); */
     width: 80%;
-    margin-top: 4px;
+    margin: 4px 16px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -525,6 +575,10 @@ input[type=text]::placeholder {
 #remap_monitor[monitoring=true] {
     border: 4px dashed #6cd576ab;
 }
+#remap_monitor.remapping {
+    border-color: rgb(0, 204, 255);
+}
+
 #remap_in {
     width: 0;
     padding: 0;
@@ -677,4 +731,8 @@ table {
 table thead {
     color: #6e5c44;
     align-self: center;
+}
+
+.audio_editor {
+    position: absolute;
 }

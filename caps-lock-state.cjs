@@ -35,7 +35,6 @@ function getInitialCapsState() {
     return false;
 }
 
-
 function isCapsLockActive() {return capsActive;}
 
 module.exports = {
