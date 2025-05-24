@@ -195,53 +195,58 @@ function createTrayIcon() {
     });
 }
 
-let iohook = null;
-let macKeyListener = null;
+let keyListener;
 
 async function startKeyListener() {
-    if (process.platform != 'darwin') {
-        if (!iohook) iohook = (await import('iohook')).default;
-        iohook.on('keydown', e => bgwin.webContents.send('keydown', e));
-        iohook.on('keyup', e => bgwin.webContents.send('keyup', e));
-        iohook.start();
-    } else {
-        const listenerPath = isDev
-            ? path.join(__dirname, 'swift-key-listener')
-            : path.join(process.resourcesPath, 'swift-key-listener');
-        macKeyListener = spawn(listenerPath);
-        macKeyListener.stdout.on('data', data => {
-            const lines = data.toString().split('\n').filter(Boolean);
+    let listenerPath;
+    let listenerName;
 
-            for (const line of lines) {
-                if (line.toLowerCase().includes('accessibility') || line.toLowerCase().includes('permission')) {
-                    bgwin.webContents.send('permission-error', line);
-                    continue;
-                }
-                try {
-                    const event = JSON.parse(line);
-                    if (event.type === 'keydown' || event.type === 'keyup') {
-                        bgwin.webContents.send(event.type, {
-                            keycode: event.keycode,
-                            shiftKey: event.shift
-                        });
-                    }
-                } catch (err) {
-                    console.error('Invalid JSON from swift-key-listener:', line);
-                }
-            }
-        });
-        macKeyListener.stderr.on('data', data => {
-            console.error('Swift listener error:', data.toString());
-        });
+    if (process.platform === 'darwin') {
+        listenerName = 'mac';
+        listenerPath = isDev
+            ? path.join(__dirname, 'libs', 'key-listeners', 'swift-key-listener')
+            : path.join(process.resourcesPath, 'swift-key-listener');
+    } else if (process.platform === 'win32') {
+        listenerName = 'win';
+        listenerPath = isDev
+            ? path.join(__dirname, 'libs', 'key-listeners', 'cpp-key-listener.exe')
+            : path.join(process.resourcesPath, 'cpp-key-listener.exe');
+    } else {
+        console.error('Unsupported platform');
+        return;
     }
+
+    keyListener = spawn(listenerPath);
+    keyListener.stdout.on('data', data => {
+        const lines = data.toString().split('\n').filter(Boolean);
+
+        for (const line of lines) {
+            if (line.toLowerCase().includes('accessibility') || line.toLowerCase().includes('permission')) {
+                bgwin.webContents.send('permission-error', line);
+                continue;
+            }
+            try {
+                const event = JSON.parse(line);
+                if (event.type === 'keydown' || event.type === 'keyup') {
+                    bgwin.webContents.send(event.type, {
+                        keycode: event.keycode,
+                        shiftKey: event.shift
+                    });
+                }
+            } catch (err) {
+                console.error(`Invalid JSON from ${listenerName}:`, line);
+            }
+        }
+    });
+    keyListener.stderr.on('data', data => {
+        console.error(`${listenerName} error:`, data.toString());
+    });
 }
 
 function stopKeyListener() {
-    if (process.platform != 'darwin' && iohook) {
-        iohook.unload();
-        iohook.stop();
-    } else if (macKeyListener) {
-        macKeyListener.kill();
+    if (keyListener) {
+        keyListener.kill();
+        keyListener = null;
     }
 }
 
@@ -264,9 +269,9 @@ app.on('window-all-closed', function () {
 
 app.on('before-quit', () => {
     stopKeyListener();
-    if (macKeyListener) {
-        macKeyListener.kill('SIGKILL');
-        macKeyListener = null;
+    if (keyListener) {
+        keyListener.kill('SIGKILL');
+        keyListener = null;
     }
     if (bgwin) {
         bgwin.removeAllListeners();
@@ -278,8 +283,8 @@ app.on('before-quit', () => {
 });
 
 app.on('quit', () => {
-    if (macKeyListener) {
-        macKeyListener.kill('SIGKILL');
+    if (keyListener) {
+        keyListener.kill('SIGKILL');
     }
     app.exit(0);
 });
