@@ -2,7 +2,7 @@
 
 ### A desktop version of my [Animalese Typing Web Extension](https://www.youtube.com/watch?v=wdxvKpUY7q8).
 
-\*This app is still in development, there may be bugs!\* 🙂
+\*This app is still in development, and there will be bugs!\* 🙂
 
 ---
 

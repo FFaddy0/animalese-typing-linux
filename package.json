@@ -4,6 +4,7 @@
   "version": "0.0.3",
   "description": "Animalese Typing",
   "repository": "https://github.com/joshxviii/animalese-typing-desktop",
+  "type": "module",
   "author": {
     "name": "joshxviii",
     "email": "dagexviii.dev@gmail.com"
@@ -13,10 +14,11 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder -wml",
-    "build:win": "electron-builder -w",
-    "build:mac": "electron-builder -m",
-    "build:linux": "electron-builder -l"
+    "build": "electron-builder",
+    "build:swift": "swiftc libs/key-listeners/swift-key-listener.swift -o swift-key-listener-x64 -target x86_64-apple-macosx11.0 && swiftc libs/key-listeners/swift-key-listener.swift -o swift-key-listener-arm64 -target arm64-apple-macosx11.0 && lipo -create -output swift-key-listener swift-key-listener-x64 swift-key-listener-arm64 && chmod +x ./swift-key-listener",
+    "build:mac": "npm run build:swift && electron-builder --mac",
+    "build:cpp": "g++ -o libs/key-listeners/cpp-key-listener.exe libs/key-listeners/cpp-key-listener.cpp -mwindows",
+    "build:win": "npm run build:cpp && electron-builder --win"
   },
   "build": {
     "asar": true,
@@ -27,57 +29,54 @@
       "output": "exports"
     },
     "win": {
-      "target": [
+      "target": "nsis",
+      "icon": "assets/images/icon.png",
+      "extraResources": [
         {
-          "target": "nsis",
-          "arch": [ "x64" ]
+          "from": "libs/key-listeners/cpp-key-listener.exe",
+          "to": "cpp-key-listener.exe"
         }
-      ],
-      "icon": "assets/images/icon.png"
+      ]
     },
     "mac": {
       "target": [
         {
           "target": "dmg",
-          "arch": [ "arm64", "x64" ]
+          "arch": [
+            "arm64",
+            "x64"
+          ]
         }
       ],
-      "icon": "assets/images/icon.png"
+      "icon": "assets/images/icon.png",
+      "extraResources": [
+        {
+          "from": "swift-key-listener",
+          "to": "swift-key-listener"
+        }
+      ]
     },
     "linux": {
       "target": [
-        {
-          "target": "deb",
-          "arch": [ "x64" ]
-        },
-        {
-          "target": "AppImage",
-          "arch": [ "x64" ]
-        }
-      ], 
+        "AppImage",
+        "deb"
+      ],
       "category": "Utility",
       "icon": "assets/images/icon.png"
-    }
+    },
+    "afterSign": "build/after-sign-hook.js"
   },
   "dependencies": {
-    "active-win": "^8.2.1",
-    "electron-store": "^6.0.1",
+    "@deepfocus/get-windows": "^1.0.21",
+    "child_process": "^1.0.2",
+    "electron-is-dev": "^3.0.1",
+    "electron-store": "^10.0.1",
     "howler": "^2.2.4",
-    "iohook": "^0.9.3"
+    "store": "^2.0.12"
   },
   "devDependencies": {
-    "electron": "^12.2.3",
-    "electron-builder": "~24.13.3"
-  },
-  "iohook": {
-    "targets": [
-      "electron-87"
-    ],
-    "platforms": [
-      "win32",
-      "darwin",
-      "linux"
-    ],
-    "arches": [ "x64" ]
+    "electron": "^36.2.1",
+    "electron-builder": "~24.13.3",
+    "electron-rebuild": "^3.2.9"
   }
 }

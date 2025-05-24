@@ -6,3 +6,6 @@ gist
 .DS_Store
 .vscode
 /exports
+venv
+swift-key-listener*
+cpp-key-listener.exe*
