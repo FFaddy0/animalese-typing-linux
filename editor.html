@@ -124,10 +124,10 @@ author: joshxviii
 
 
                     <div id="remap_tabs">
-                        <svg-button class="remap_tab" onmousedown="changeTab(0)" icon="close" title="No Sound" pressed="false"></svg-button>
-                        <svg-button class="remap_tab" onmousedown="changeTab(1)" icon="speech" title="Speech" pressed="true"></svg-button>
-                        <svg-button class="remap_tab" onmousedown="changeTab(2)" icon="note" title="Notes" pressed="false"></svg-button>
-                        <svg-button class="remap_tab" onmousedown="changeTab(3)" icon="sfx" title="Sound Effects" pressed="false"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(0);window.audio.play('sfx.default', { channel: 2, volume: 0.55 });" icon="close" title="No Sound" pressed="false"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(1);window.audio.play('sfx.default', { channel: 2, volume: 0.55 });" icon="speech" title="Speech" pressed="true"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(2);window.audio.play('sfx.default', { channel: 2, volume: 0.55 });" icon="note" title="Notes" pressed="false"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(3);window.audio.play('sfx.default', { channel: 2, volume: 0.55 });" icon="sfx" title="Sound Effects" pressed="false"></svg-button>
                     </div>
                 </div>
             </div>

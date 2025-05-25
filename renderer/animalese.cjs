@@ -89,7 +89,7 @@ function initControls() {
             else {
                 voiceProfile[control] = value;
                 preferences.set('voice_profile', voiceProfile);
-                //setTimeout(() => {window.audio.play('&.special.OK', {channel: 2, volume:.55});}, 10);
+                if(control==='voice_type') setTimeout(() => {window.audio.play('&.special.OK', {channel: 2, volume:.55});}, 10);
             }
         };
 
@@ -365,6 +365,7 @@ function remapStop() {
 function remapReset() {
     const defaultKey = window.api.getDefaultKey(currentKey.keycode);
     const sound = currentKey.isShiftDown && defaultKey.shiftSound ? defaultKey.shiftSound : defaultKey.sound;
+    changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
     window.api.sendRemapData({ sound });
 }
 
@@ -418,7 +419,6 @@ function changeTab(newTabIndex = 1) {
     if(isRemapping) allTabs[newTabIndex].classList.add('highlighted');
 
     if (newTabIndex === tabIndex) return;
-    window.audio.play('sfx.default', { channel: 2, volume: 0.55 });
     const allControllers = document.querySelectorAll('#remap_controllers .remap_controller');
     const allEditors = document.querySelectorAll('#bottom_row .audio_editor');
 
