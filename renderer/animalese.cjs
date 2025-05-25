@@ -8,17 +8,14 @@ let currentKey = {};
 // custom svg button element
 customElements.define('svg-button', class extends HTMLElement {
     connectedCallback() {
-        this.setAttribute('pressed','false');
-        const name = this.getAttribute('name');
-        this.id = `${name}`
+        const icon = this.getAttribute('icon');
         
-        fetch(`assets/svg/${name}.svg`)
+        fetch(`assets/svg/${icon}.svg`)
         .then(res => res.text())
         .then(svg => {
             this.innerHTML = svg;
             const svgEl = this.querySelector('svg');
             svgEl.classList.add('svg-button');
-           
         });
     }
 });
@@ -334,26 +331,30 @@ function resetSettings() {
 function isAlpha(str) {return str?(str.length === 1)?(/\p{Letter}/gu).test(str.charAt(0)):false:false;}
 
 //#region Key Remapper
+let tabIndex = 0;
 let isRemapping = false;
 
+const remapAccept = document.getElementById('remap_accept');
 const remapMonitor = document.getElementById('remap_monitor');
 const remapIn = document.getElementById('remap_in');
-const remapCancel = document.getElementById('remap_cancel');
 
 function remapStart() {
     if (isRemapping == true) return;
+    remapAccept.setAttribute('disabled', false);
     remapMonitor.classList.add('remapping');
     isRemapping = true;
-    remapCancel.disabled = false;
 }
 
 function remapStop() {
-    isRemapping = false;
-    remapMonitor.setAttribute('monitoring', false)
-    remapMonitor.classList.remove('remapping');
-    remapMonitor.innerHTML = remapIn.getAttribute('placeholder');
-    remapCancel.disabled = true;
-    document.querySelector('.highlighted')?.classList.remove('highlighted');
+    if (tabIndex == 0) window.api.sendRemapData({label: '', sound: ''});// index 0 is "No Sound"
+    setTimeout(()=>{
+        isRemapping = false;
+        remapAccept.setAttribute('disabled', true);
+        remapMonitor.setAttribute('monitoring', false)
+        remapMonitor.classList.remove('remapping');
+        remapMonitor.innerHTML = remapIn.getAttribute('placeholder');
+        document.querySelector('.highlighted')?.classList.remove('highlighted');
+    },1)
 }
 
 window.api.onRemapButtonPress( (remapButton) => {
@@ -373,7 +374,6 @@ window.api.onRemapButtonPress( (remapButton) => {
 
         preferences.set('remapped_keys', newRemappedKeys);
     }
-
 });
 
 remapIn.addEventListener('focusin', e => remapMonitor.setAttribute('monitoring', true));
@@ -387,41 +387,29 @@ document.addEventListener('keydown', e => {
     remapMonitor.innerHTML = ((currentKey.isShiftDown && currentKey.data.key !== "Shift"?"Shift + ":"") + currentKey.data.key).toUpperCase();
 
     const sound = (currentKey.isShiftDown && currentKey.data.shiftSound) || currentKey.data.sound
-    const tabIndex = !sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0        
+    changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     document.querySelector(`[sound="${sound}"]`)?.classList.add('highlighted');
-
-    document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) => {
-        if (index === tabIndex) {
-            radio.checked = true;
-            radio.dispatchEvent(new Event('change'));
-        }
-    });
 });
 
-document.querySelectorAll('input[name="remap_type"]').forEach( (radio, index) => {
-    radio.addEventListener('change', () => {
-        const allTypes = document.querySelectorAll('#remap_types .remap_type');
-        const allControllers = document.querySelectorAll('#remap_controllers .remap_controller');
-        const allEditors = document.querySelectorAll('#bottom_row .audio_editor');
-        allTypes.forEach(el => el.setAttribute('show',false));
-        allControllers.forEach(el => el.setAttribute('show',false));
-        allEditors.forEach(el => el.setAttribute('show',false));
+function changeTab(newTabIndex = 0) {
+    if (newTabIndex === tabIndex) return;
+    window.audio.play('sfx.default', { channel: 2, volume: 0.55 });
+    const allTabs = document.querySelectorAll('#remap_tabs .remap_tab');
+    const allControllers = document.querySelectorAll('#remap_controllers .remap_controller');
+    const allEditors = document.querySelectorAll('#bottom_row .audio_editor');
+    allTabs.forEach(el => el.setAttribute('pressed',false));
+    allControllers.forEach(el => el.setAttribute('show',false));
+    allEditors.forEach(el => el.setAttribute('show',false));
 
-        const selectedIndex = parseInt(radio.value) - 1;
-        if (selectedIndex == 0) window.api.sendRemapData({label: '', sound: ''});// index 0 is "No Sound"
-        if (allTypes[selectedIndex]) {
-            allTypes[selectedIndex].setAttribute('show',true);
-            allControllers[selectedIndex].setAttribute('show',true);
-            allEditors[selectedIndex].setAttribute('show',true);
-        }
-    });
-});
+    allTabs[newTabIndex].setAttribute('pressed',true);
+    allControllers[newTabIndex].setAttribute('show',true);
+    allEditors[newTabIndex].setAttribute('show',true);
+
+    tabIndex = newTabIndex;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    const checked = document.querySelector('input[name="remap_type"]:checked');
-    if (checked) checked.dispatchEvent(new Event('change'));
-
     // Close settings when clicking outside
     const focusOut = document.getElementById('focus_out');
     const settingsOverlay = document.getElementById('settings_overlay');

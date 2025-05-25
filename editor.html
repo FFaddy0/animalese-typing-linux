@@ -18,10 +18,10 @@ author: joshxviii
             <div id="title" title="Animalese Typing - Desktop">Animalese Typing</div>
         </div>
 
-        <div style="margin-top:3px; display: flex; padding: 0px 16px; gap: 16px;">
-            <svg-button onclick="openSettings()" name="config" title="Settings"></svg-button>
-            <svg-button onclick="window.api.minimizeWindow()" name="minimize" title="Minimize"></svg-button>
-            <svg-button onclick="window.api.closeWindow();" name="close" title="Close"></svg-button>
+        <div style="display: flex; padding: 0px 16px; gap: 16px;">
+            <svg-button onclick="openSettings()" icon="config" title="Settings"></svg-button>
+            <svg-button onclick="window.api.minimizeWindow()" icon="minimize" title="Minimize"></svg-button>
+            <svg-button onclick="window.api.closeWindow();" icon="close" title="Close"></svg-button>
         </div>
     </div>
 
@@ -110,47 +110,25 @@ author: joshxviii
                     <key-board layout-type="sfx" class="remap_controller" show="false"></key-board>
                 </div>
 
-                <div id="key_remapper">
-                    <div style="width: 100%;">
-                        <h3 translation="key-remapper" style="margin-block: 0px 4px;">Key Remapper</h3>
-                        <input id="remap_in" type="text" maxlength="1" onclick="this.focus()" translation="remap"/>
-                        <label id="remap_monitor" for="remap_in" translation="remap" class="highlighted"></label>
-                        <div class="button_row">
-                            <input id="remap_cancel" type="button" onclick="remapStop()" disabled style="font-weight: 900;" translation="remap.end"/>
-                            <input id="remap_reset" type="button" onclick="remapReset()" disabled style="font-weight: 900;" translation="remap.reset"/>
-                        </div>
-                    </div>
-
-
-                    <div id="remap_types">
-                        <div class="remap_type"></div>
-                        <div class="remap_type"></div>
-                        <!-- <div class="remap_type">
-                            <div class="wrapper">
-                                <input id="remap_alpha_in" type="text" maxlength="1" onclick="this.focus()"/>
+                <div style="width: 100%; margin: 0px 8px 0px 0px;">
+                    <div id="key_remapper">
+                        <div style="width: 100%;">
+                            <h3 translation="key-remapper" style="margin-block: 6px 16px;">Key Remapper</h3>
+                            <input id="remap_in" type="text" maxlength="1" onclick="this.focus()" translation="remap"/>
+                            <label id="remap_monitor" for="remap_in" translation="remap" class="highlighted"></label>
+                            <div class="button_row">
+                                <svg-button id="remap_accept" onclick="remapStop()" icon="accept" title="Accept" disabled="true"></svg-button>
+                                <svg-button id="remap_reset" onclick="remapReset()" icon="reset" title="Reset" disabled="true"></svg-button>
                             </div>
-                            <label id="remap_alpha_out" for="remap_alpha_in">A</label>
-                        </div> -->
-                        <div class="remap_type"></div>
-                        <div class="remap_type"></div>
+                        </div>
                     </div>
-                    <div id="remap_type_select">
-                        <div class="labeled_con" style="flex-direction: column;">
-                            <input type="radio" name="remap_type" id="remap_type_1" value="1" checked>
-                            <label for="remap_type_1">❌</label>
-                        </div>
-                        <div class="labeled_con" style="flex-direction: column;">
-                            <input type="radio" name="remap_type" id="remap_type_2" value="2">
-                            <label for="remap_type_2">💬</label>
-                        </div>
-                        <div class="labeled_con" style="flex-direction: column;">
-                            <input type="radio" name="remap_type" id="remap_type_3" value="3">
-                            <label for="remap_type_3">🎵</label>
-                        </div>
-                        <div class="labeled_con" style="flex-direction: column;">
-                            <input type="radio" name="remap_type" id="remap_type_4" value="4">
-                            <label for="remap_type_4">🔊</label>
-                        </div>
+
+
+                    <div id="remap_tabs">
+                        <svg-button class="remap_tab" onmousedown="changeTab(0)" icon="close" title="No Sound" pressed="true"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(1)" icon="speech" title="Speech" pressed="false"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(2)" icon="note" title="Notes" pressed="false"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(3)" icon="sfx" title="Sound Effects" pressed="false"></svg-button>
                     </div>
                 </div>
             </div>
@@ -182,8 +160,8 @@ author: joshxviii
 
                     <div id="voice_type_group">
                         <div id="voice_type_buttons" style="display: flex;">
-                            <svg-button id="male" name="male" onclick="selectVoiceType('male')"></svg-button>
-                            <svg-button id="female" name="female" onclick="selectVoiceType('female')"></svg-button>
+                            <svg-button id="male" icon="male" onclick="selectVoiceType('male')"></svg-button>
+                            <svg-button id="female" icon="female" onclick="selectVoiceType('female')"></svg-button>
                         </div>
 
                         <select id="voice_type" class="female">

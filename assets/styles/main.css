@@ -259,23 +259,32 @@ input[type=radio]:checked::before {
     text-shadow: 0px 0px 0px #d9bd96;
 }
 
-.svg-button {
+svg-button {
+    --alt1-color: #e0c49e;
     cursor: pointer;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    filter: drop-shadow(0 0 2px #0000005d);
     transition: all 0.1s ease;
     -webkit-app-region: no-drag;
 }
-.svg-button:hover {
-    transform: scale(1.07);
+svg-button[disabled=true] {
+    --alt1-color: #ece4c1;;
+    user-select: none;
+    cursor: default;
+    pointer-events: none;
 }
-.svg-button:active {
+svg-button:not([disabled=true]):hover {
+    transform: scale(1.07);
+    z-index: 2;
+}
+svg-button:not([disabled=true]):active  {
     transform: scale(.9);
 }
 
-.title-bar .svg-button {
-    filter: drop-shadow(0 0 0px #ffffff00);
+.title-bar svg-button {
+    --alt1-color: #ffffff;
     transform-origin: center;
     width: 24px;
     height: 24px;
@@ -283,12 +292,12 @@ input[type=radio]:checked::before {
 #male {
     --alt1-color: #f3f3f3;
     --alt2-color: #4b4b4b;
-    transition: all 0.4s ease-in-out;
+    /* transition: all 0.4s ease-in-out; */
 }
 #female {
     --alt1-color: #f3f3f3;
     --alt2-color: #4b4b4b;
-    transition: all 0.4s ease-in-out;
+    /* transition: all 0.4s ease-in-out; */
 }
 #male[pressed=true] {
     --alt1-color: #f0feff;
@@ -304,10 +313,11 @@ input[type=radio]:checked::before {
 .button_row {
     display: flex;
     flex-direction: row;
-    gap: 10px;
-    margin-top: 6px;
-    margin-bottom: 6px;
+    margin: 6px;
     justify-content: center;
+}
+.button_row svg-button {
+    width: 100%;
 }
 /*#endregion BUTTONS */
 
@@ -534,17 +544,14 @@ input[type=text]::placeholder {
 }
 
 #key_remapper {
-    width: 190px;
-    height: 180px;
-    margin: 8px;
-    margin-left: 0px;
+    margin: 8px 0px 0px 0px;
     padding: 8px;
     flex: 1;
     display: flex; 
     align-items: center;
     /* justify-content: center; */
     background-color: #f8f2d7;
-    border-radius: 16px;
+    border-radius: 16px 16px 0px 0px;
     box-sizing: border-box;
     color: #95846d7d;
     font-size: 14px;
@@ -591,18 +598,34 @@ input[type=text]::placeholder {
     color: transparent;
 }
 
-#remap_types {
+#remap_tabs {
     margin: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
+    height: 32px;
 }
 
-.remap_type {
-  display: none;
+.remap_tab[pressed=true] {
+    background-color: #f8f2d7;
+    filter: drop-shadow(0 6px 0px #e0c49e);
+    translate: 0px 0px;
 }
 
-.remap_type[show=true] {
-  display: block;
+.remap_tab {
+    transform-origin: top;
+    border-radius: 0px 0px 8px 8px;
+    translate: 0px 6px;
+    background-color: #ece4c1;
+    filter: drop-shadow(0 -6px 0px #e0c49e);
+    width: 100%;
+}
+
+.remap_tab:not([disabled=true]):hover {
+    transform: scale(1);
+}
+.remap_tab:not([disabled=true]):active {
+    transform: scaleY(.9);
 }
 
 #settings_overlay {
