@@ -3,7 +3,7 @@ const os = require('os');
 const { execSync } = require('child_process');
 const { ipcRenderer } = require('electron');
 
-const capsLockKeycode = (process.platform === 'darwin') ? 57 : 58;
+const capsLockKeycode = (process.platform === 'darwin') ? 57 : 20;
 capsActive = getInitialCapsState();
 
 function initCapsLockState() {
