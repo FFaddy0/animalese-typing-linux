@@ -404,6 +404,8 @@ document.addEventListener('keydown', e => {
     remapMonitor.innerHTML = ((currentKey.isShiftDown && currentKey.key !== "Shift"?"Shift + ":"") + currentKey.key).toUpperCase();
 
     const sound = (currentKey.isShiftDown && currentKey.shiftSound) || currentKey.sound
+    window.audio.play(sound, { channel: 2, volume: 0.55 });
+    
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     document.querySelector(`[sound="${sound}"]`)?.classList.add('highlighted');
     changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
