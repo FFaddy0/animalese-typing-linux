@@ -131,7 +131,7 @@ div[show=false], div[show=false] text {
 }
 #reset_settings:active::before {
     background-color: rgba(255, 0, 0, 0.531);
-    animation: load 2s linear forwards
+    animation: load 1.5s linear forwards
 }
 
 @keyframes load {
@@ -632,9 +632,9 @@ input[type=text]::placeholder {
     width: 320px;
     height: 300px;
     position: absolute;
-    left: 50%;
-    top: 45%;
-    transform: translate(-50%, -50%);
+    /* left: 50%; */
+    /* top: 45%; */
+    /* transform: translate(100%, 0%); */
     background-color: #fffae4;
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
@@ -644,6 +644,7 @@ input[type=text]::placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
+    align-self: anchor-center;
     gap: 12px;
 }
 #settings_overlay h3 {
@@ -687,10 +688,12 @@ input[type=text]::placeholder {
 }
 
 #focus_out {
-    margin: -4px;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
     z-index: 2;
     position: absolute;
-    width: 101%;
+    width: 100%;
     height: 100%;
     background-color: #0000002f;
 }

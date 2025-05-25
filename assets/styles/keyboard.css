@@ -19,6 +19,7 @@
 
 .highlighted, .highlighted .key-label, .highlighted .button-top, .highlighted[btn-type=b] .button-top {
     fill: rgb(0, 204, 255);
+    --alt1-color: rgb(0, 204, 255);
     color: white;
 }
 .highlighted .key-icon {

@@ -7,18 +7,25 @@ initCapsLockState();
 
 let settingsData = ipcRenderer.sendSync('get-store-data-sync');
 const appInfo = ipcRenderer.sendSync('get-app-info');
+const defaultKeyMap = keycodeToSound[appInfo.platform];
+
 
 // general app messages 
 contextBridge.exposeInMainWorld('api', {
     closeWindow: () => ipcRenderer.send('close-window'),
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     sendRemapData: (data) => ipcRenderer.send('remap-key-press', data),
-    onRemapButtonPress: (callback) => ipcRenderer.on('remap-key-set', (_event, data) => callback(data)),
+    onRemapReceived: (callback) => ipcRenderer.on('remap-key-set', (_event, data) => callback(data)),
+    getDefaultKey: (keycode) => defaultKeyMap[keycode],
     onKeyPress: (callback) => ipcRenderer.on('keydown', (_event, e) => {
-        const data = settingsData.remapped_keys[e.keycode] || keycodeToSound[appInfo.platform][e.keycode];
-        if (data === undefined) return;
+        const remappedKey = settingsData.remapped_keys[e.keycode]
+        const defaultKey = defaultKeyMap[e.keycode]
+        
+        if (defaultKey === undefined) return;
         const keyInfo = {
-            data: data,
+            key: defaultKey.key,
+            sound: remappedKey?.sound || defaultKey.sound,
+            shiftSound: remappedKey?.shiftSound || defaultKey.shiftSound,
             keycode: e.keycode,
             isShiftDown: e.shiftKey,
             isCapsLock: isCapsLockActive()

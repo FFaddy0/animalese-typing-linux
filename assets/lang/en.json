@@ -17,8 +17,6 @@
     "key-remapper":"key-remapper",
 
     "remap":"click to remap",
-    "remap.end":"✓",
-    "remap.reset":"⟲",
 
     "f1":"Sweet",
     "f2":"Peppy",
@@ -38,6 +36,8 @@
     "settings.always_enabled":"always enabled",
     "settings.lang":"language",
     "settings.none":"none",
+    "settings.reset":"reset",
+    "settings.reset.description":"hold to reset settings",
 
     "en": "English",
     "es": "Spanish/Español",

@@ -89,7 +89,7 @@ function initControls() {
             else {
                 voiceProfile[control] = value;
                 preferences.set('voice_profile', voiceProfile);
-                setTimeout(() => {window.audio.play('&.special.OK', {channel: 2, volume:.55});}, 10);
+                //setTimeout(() => {window.audio.play('&.special.OK', {channel: 2, volume:.55});}, 10);
             }
         };
 
@@ -169,10 +169,12 @@ function selectVoiceType(type) {
 // keep consistant aspect ratio and scales all elements on the window
 function scaleWindow() {
     const wrapper = document.getElementById('main-win');
+    // const overlay = document.getElementById('settings_overlay');
     const scaleX = window.innerWidth / 720;
     const scaleY = window.innerHeight / 360;
     const scale = Math.min(scaleX, scaleY);
     wrapper.style.transform = `scale(${scale*1})`;
+    // overlay.style.transform = `scale(${scale*1})`;
 }
 window.addEventListener('resize', scaleWindow);
 window.addEventListener('load', scaleWindow);
@@ -240,7 +242,7 @@ function updateAlwaysEnabled(value) {
 window.api.onKeyPress( (keyInfo) => {
     currentKey = keyInfo;
     if (isRemapping || remapIn === document.activeElement) return;
-    const path = (keyInfo.isShiftDown && keyInfo.data.shiftSound) || keyInfo.data.sound;
+    const path = (keyInfo.isShiftDown && keyInfo.shiftSound) || keyInfo.sound;
     if (path === undefined) return;
     switch (true) {
         case ( path.startsWith('&.voice') ):
@@ -331,16 +333,18 @@ function resetSettings() {
 function isAlpha(str) {return str?(str.length === 1)?(/\p{Letter}/gu).test(str.charAt(0)):false:false;}
 
 //#region Key Remapper
-let tabIndex = 0;
+let tabIndex = 1;
 let isRemapping = false;
 
-const remapAccept = document.getElementById('remap_accept');
+const remapAcceptBtn = document.getElementById('remap_accept');
+const remapResetBtn = document.getElementById('remap_reset');
 const remapMonitor = document.getElementById('remap_monitor');
 const remapIn = document.getElementById('remap_in');
 
 function remapStart() {
     if (isRemapping == true) return;
-    remapAccept.setAttribute('disabled', false);
+    remapAcceptBtn.setAttribute('disabled', false);
+    remapResetBtn.setAttribute('disabled', false);
     remapMonitor.classList.add('remapping');
     isRemapping = true;
 }
@@ -349,31 +353,43 @@ function remapStop() {
     if (tabIndex == 0) window.api.sendRemapData({label: '', sound: ''});// index 0 is "No Sound"
     setTimeout(()=>{
         isRemapping = false;
-        remapAccept.setAttribute('disabled', true);
+        remapAcceptBtn.setAttribute('disabled', true);
+        remapResetBtn.setAttribute('disabled', true);
         remapMonitor.setAttribute('monitoring', false)
         remapMonitor.classList.remove('remapping');
         remapMonitor.innerHTML = remapIn.getAttribute('placeholder');
-        document.querySelector('.highlighted')?.classList.remove('highlighted');
+        document.querySelectorAll('.highlighted').forEach(el => el.classList.remove('highlighted'));
     },1)
 }
 
-window.api.onRemapButtonPress( (remapButton) => {
-    if ( !(remapIn === document.activeElement || isRemapping) ) return;
+function remapReset() {
+    const defaultKey = window.api.getDefaultKey(currentKey.keycode);
+    const sound = currentKey.isShiftDown && defaultKey.shiftSound ? defaultKey.shiftSound : defaultKey.sound;
+    window.api.sendRemapData({ sound });
+}
 
-    if( (currentKey.isShiftDown && currentKey.data.shiftSound != remapButton.sound) ||
-        (!currentKey.isShiftDown && currentKey.data.sound != remapButton.sound)
-    ) {
-        let remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
-        if (currentKey.isShiftDown) currentKey.data.shiftSound = remapButton.sound;
-        else currentKey.data.sound = remapButton.sound;
-        remappedKeys.set(currentKey.keycode, currentKey.data);
-        const newRemappedKeys = Object.fromEntries(remappedKeys);
+window.api.onRemapReceived((remapButton) => {
+    if (!(remapIn === document.activeElement || isRemapping)) return;
 
-        document.querySelector('.highlighted')?.classList.remove('highlighted');
-        document.querySelector(`[sound="${remapButton.sound}"]`)?.classList.add('highlighted');
+    const keycode = `${currentKey.keycode}`;
+    const defaultKey = window.api.getDefaultKey(keycode);
+    const defaultSound = currentKey.isShiftDown && defaultKey.shiftSound ? defaultKey.shiftSound : defaultKey.sound;
+    const reset = remapButton.sound === defaultSound;// if the key is being mapped to it's default sound, reset and clear the mapping in settings
 
-        preferences.set('remapped_keys', newRemappedKeys);
-    }
+    const remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
+    const mapping = { ...remappedKeys.get(keycode) || {} };
+
+    if (reset) delete mapping[currentKey.isShiftDown ? 'shiftSound' : 'sound'];
+    else mapping[currentKey.isShiftDown ? 'shiftSound' : 'sound'] = remapButton.sound;
+    
+
+    if (Object.keys(mapping).length === 0) remappedKeys.delete(keycode);
+    else remappedKeys.set(keycode, mapping);
+    
+    document.querySelector('.highlighted')?.classList.remove('highlighted');
+    document.querySelector(`[sound="${remapButton.sound}"]`)?.classList.add('highlighted');
+
+    preferences.set('remapped_keys', Object.fromEntries(remappedKeys));
 });
 
 remapIn.addEventListener('focusin', e => remapMonitor.setAttribute('monitoring', true));
@@ -384,25 +400,31 @@ document.addEventListener('keydown', e => {
     if ( !(remapIn === document.activeElement || isRemapping) ) return;
     remapStart();
     
-    remapMonitor.innerHTML = ((currentKey.isShiftDown && currentKey.data.key !== "Shift"?"Shift + ":"") + currentKey.data.key).toUpperCase();
+    remapMonitor.innerHTML = ((currentKey.isShiftDown && currentKey.key !== "Shift"?"Shift + ":"") + currentKey.key).toUpperCase();
 
-    const sound = (currentKey.isShiftDown && currentKey.data.shiftSound) || currentKey.data.sound
-    changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
+    const sound = (currentKey.isShiftDown && currentKey.shiftSound) || currentKey.sound
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     document.querySelector(`[sound="${sound}"]`)?.classList.add('highlighted');
+    changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
 });
 
-function changeTab(newTabIndex = 0) {
+function changeTab(newTabIndex = 1) {
+    const allTabs = document.querySelectorAll('#remap_tabs .remap_tab');
+    allTabs.forEach(el => {
+        el.setAttribute('pressed',false)
+        el.classList.remove('highlighted');
+    });
+    allTabs[newTabIndex].setAttribute('pressed',true);
+    if(isRemapping) allTabs[newTabIndex].classList.add('highlighted');
+
     if (newTabIndex === tabIndex) return;
     window.audio.play('sfx.default', { channel: 2, volume: 0.55 });
-    const allTabs = document.querySelectorAll('#remap_tabs .remap_tab');
     const allControllers = document.querySelectorAll('#remap_controllers .remap_controller');
     const allEditors = document.querySelectorAll('#bottom_row .audio_editor');
-    allTabs.forEach(el => el.setAttribute('pressed',false));
+
     allControllers.forEach(el => el.setAttribute('show',false));
     allEditors.forEach(el => el.setAttribute('show',false));
 
-    allTabs[newTabIndex].setAttribute('pressed',true);
     allControllers[newTabIndex].setAttribute('show',true);
     allEditors[newTabIndex].setAttribute('show',true);
 

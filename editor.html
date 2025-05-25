@@ -25,87 +25,86 @@ author: joshxviii
         </div>
     </div>
 
+    <div id="focus_out" show="false">
+    <div id="settings_overlay">
+        <h2 id="settings_title" translation="settings">Settings</h2>
+
+        <div class="separator"></div>
+        
+        <div class="catagory">
+            <h3 translation="settings.lang">Language</h3>
+            <select id="lang_select" onchange="updateLanguage(`${this.value}`)">
+                <option value="en"      translation="en"></option>
+                <option value="es"      translation="es"></option>
+                <option value="de"      translation="de"></option>
+                <option value="fr"      translation="fr"></option>
+                <option value="ko"      translation="ko"></option>
+                <option value="ja"      translation="ja"></option>
+                <option value="zh_CN"   translation="zh_CN"></option>
+            </select>
+        </div>
+        
+        <div class="catagory">
+            <h3 translation="settings.audio_mode"></h3>
+            <div class="rad_button_list">
+                <div class="labeled_con">
+                    <input type="radio" id="config_1" name="audio_mode" value="0" checked>
+                    <label for="config_1" translation="config_1">Default</label>
+                </div>
+                <div class="labeled_con">
+                    <input type="radio" id="config_2" name="audio_mode" value="1">
+                    <label for="config_2" translation="config_2">Animalese Only</label>
+                </div>
+                <div class="labeled_con">
+                    <input type="radio" id="config_3" name="audio_mode" value="2">
+                    <label for="config_3" translation="config_3">Sound Effects Only</label>
+                </div>
+                <div class="labeled_con">
+                    <input type="radio" id="config_4" name="audio_mode" value="3">
+                    <label for="config_4" translation="config_4">Randomized</label><p style="opacity: .6; font-size: 10px; margin: 3px 6px;" translation="config_4.description">(disguise typing)</p>
+                </div>
+            </div>
+        </div>
+    
+        <div class="catagory">
+            <h3 translation="settings.apps"></h3>
+            <div class="labeled_con">
+                <input type="checkbox" id="check_always_enabled" onchange="updateAlwaysEnabled(this.checked)"/>
+                <label for="check_always_enabled" translation="settings.always_enabled">Always Enabled</label>
+            </div>
+            <table id="apps_table" disabled="false">
+                <thead>
+                    <tr>
+                        <th translation="settings.apps.description" style="font-size: 10px; opacity: .5;"></th>
+                    </tr>
+                </thead>
+                <tbody id="apps_tbody"></tbody>
+            </table>
+        </div>
+
+        <div class="catagory">
+            <!-- <h3 translation="settings.reset">Reset Settings</h3> -->
+            <button id="reset_settings" type="button"><span translation="settings.reset"></span></button>
+            <p translation="settings.reset.description"></p>
+        </div>
+
+        <div class="separator"></div>
+        <div class="footer" title="GitHub" style="cursor: pointer;">
+            <p onclick="window.api.goToUrl('https:\/\/github.com/joshxviii/animalese-typing-desktop')">
+                Animalese Typing <text id="version"></text>
+            </p>
+        </div>
+    </div>
+    </div>
+
     <div id="main-win">
 
         <div id="main_content">
-            
-            <div id="focus_out" show="false">
-            <div id="settings_overlay">
-                <h2 id="settings_title" translation="settings">Settings</h2>
-
-                <div class="separator"></div>
-                
-                <div class="catagory">
-                    <h3 translation="settings.lang">Language</h3>
-                    <select id="lang_select" onchange="updateLanguage(`${this.value}`)">
-                        <option value="en"      translation="en"></option>
-                        <option value="es"      translation="es"></option>
-                        <option value="de"      translation="de"></option>
-                        <option value="fr"      translation="fr"></option>
-                        <option value="ko"      translation="ko"></option>
-                        <option value="ja"      translation="ja"></option>
-                        <option value="zh_CN"   translation="zh_CN"></option>
-                    </select>
-                </div>
-                
-                <div class="catagory">
-                    <h3 translation="settings.audio_mode"></h3>
-                    <div class="rad_button_list">
-                        <div class="labeled_con">
-                            <input type="radio" id="config_1" name="audio_mode" value="0" checked>
-                            <label for="config_1" translation="config_1">Default</label>
-                        </div>
-                        <div class="labeled_con">
-                            <input type="radio" id="config_2" name="audio_mode" value="1">
-                            <label for="config_2" translation="config_2">Animalese Only</label>
-                        </div>
-                        <div class="labeled_con">
-                            <input type="radio" id="config_3" name="audio_mode" value="2">
-                            <label for="config_3" translation="config_3">Sound Effects Only</label>
-                        </div>
-                        <div class="labeled_con">
-                            <input type="radio" id="config_4" name="audio_mode" value="3">
-                            <label for="config_4" translation="config_4">Randomized</label><p style="opacity: .6; font-size: 10px; margin: 3px 6px;" translation="config_4.description">(disguise typing)</p>
-                        </div>
-                    </div>
-                </div>
-            
-                <div class="catagory">
-                    <h3 translation="settings.apps"></h3>
-                    <div class="labeled_con">
-                        <input type="checkbox" id="check_always_enabled" onchange="updateAlwaysEnabled(this.checked)"/>
-                        <label for="check_always_enabled" translation="settings.always_enabled">Always Enabled</label>
-                    </div>
-                    <table id="apps_table" disabled="false">
-                        <thead>
-                            <tr>
-                                <th translation="settings.apps.description" style="font-size: 10px; opacity: .5;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="apps_tbody"></tbody>
-                    </table>
-                </div>
-
-                <div class="catagory">
-                    <!-- <h3 translation="settings.reset">Reset Settings</h3> -->
-                    <button id="reset_settings" type="button"><span translation="settings.reset"></span></button>
-                </div>
-
-                <div class="separator"></div>
-                <div class="footer" title="GitHub" style="cursor: pointer;">
-                    <p onclick="window.api.goToUrl('https:\/\/github.com/joshxviii/animalese-typing-desktop')">
-                        Animalese Typing <text id="version"></text>
-                    </p>
-                </div>
-            </div>
-            </div>
-
-
 
             <div id="top_row">
                 <div id="remap_controllers">
-                    <div class="remap_controller" show="true" ><h3 style="color: #95846d7d;text-align: center;margin-block: 70px;"></h3></div>
-                    <key-board layout-type="voice" class="remap_controller" show="false"></key-board>
+                    <div class="remap_controller" show="false" ><h3 style="color: #95846d7d;text-align: center;margin-block: 70px;"></h3></div>
+                    <key-board layout-type="voice" class="remap_controller" show="true"></key-board>
                     <piano-board class="remap_controller" show="false"></piano-board>
                     <key-board layout-type="sfx" class="remap_controller" show="false"></key-board>
                 </div>
@@ -125,8 +124,8 @@ author: joshxviii
 
 
                     <div id="remap_tabs">
-                        <svg-button class="remap_tab" onmousedown="changeTab(0)" icon="close" title="No Sound" pressed="true"></svg-button>
-                        <svg-button class="remap_tab" onmousedown="changeTab(1)" icon="speech" title="Speech" pressed="false"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(0)" icon="close" title="No Sound" pressed="false"></svg-button>
+                        <svg-button class="remap_tab" onmousedown="changeTab(1)" icon="speech" title="Speech" pressed="true"></svg-button>
                         <svg-button class="remap_tab" onmousedown="changeTab(2)" icon="note" title="Notes" pressed="false"></svg-button>
                         <svg-button class="remap_tab" onmousedown="changeTab(3)" icon="sfx" title="Sound Effects" pressed="false"></svg-button>
                     </div>
@@ -136,8 +135,8 @@ author: joshxviii
             <div class="separator"></div>
 
             <div id="bottom_row">
-                <div class="audio_editor" show="true">None</div>
-                <div class="audio_editor" id="voice_profile_editor" show="false">
+                <div class="audio_editor" show="false"></div>
+                <div class="audio_editor" id="voice_profile_editor" show="true">
                     <div id="sliders">
                         <div class="slider-group">
                             <label id="label_editor_1" class="editor_label" translation="editor_1">Pitch Shift</label>
@@ -191,18 +190,15 @@ author: joshxviii
                         </div>
                     </div>
                 </div>
-                <div class="audio_editor" show="false">Notes</div>
-                <div class="audio_editor" show="false">SFX</div>
+                <div class="audio_editor" show="false"></div>
+                <div class="audio_editor" show="false"></div>
             </div>
-            
         </div>
 
-        
         <div id="master_volume_group">
             <input id="master_volume" min="0" max="1" step=".01" orient="vertical" type="range" playing="false" defaultValue=".5">
             <input type="text" id="master_volume_out" class="editor_output" display="percent" />
         </div>
-
 
     </div>
 
