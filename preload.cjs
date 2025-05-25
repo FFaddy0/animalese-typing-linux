@@ -9,29 +9,30 @@ let settingsData = ipcRenderer.sendSync('get-store-data-sync');
 const appInfo = ipcRenderer.sendSync('get-app-info');
 const defaultKeyMap = keycodeToSound[appInfo.platform];
 
+function getKeyInfo(e) {// parse keyInfo from keyup/down event
+    const remappedKey = settingsData.remapped_keys[e.keycode]
+    const defaultKey = defaultKeyMap[e.keycode]
+    
+    if (defaultKey === undefined) return;
+    return {
+        key: defaultKey.key,
+        sound: remappedKey?.sound || defaultKey.sound,
+        shiftSound: remappedKey?.shiftSound || defaultKey.shiftSound,
+        keycode: e.keycode,
+        isShiftDown: e.shiftKey,
+        isCapsLock: isCapsLockActive()
+    }
+}
 
 // general app messages 
 contextBridge.exposeInMainWorld('api', {
     closeWindow: () => ipcRenderer.send('close-window'),
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     sendRemapData: (data) => ipcRenderer.send('remap-key-press', data),
-    onRemapReceived: (callback) => ipcRenderer.on('remap-key-set', (_event, data) => callback(data)),
+    onRemapReceived: (callback) => ipcRenderer.on('remap-key-set', (_, data) => callback(data)),
     getDefaultKey: (keycode) => defaultKeyMap[keycode],
-    onKeyPress: (callback) => ipcRenderer.on('keydown', (_event, e) => {
-        const remappedKey = settingsData.remapped_keys[e.keycode]
-        const defaultKey = defaultKeyMap[e.keycode]
-        
-        if (defaultKey === undefined) return;
-        const keyInfo = {
-            key: defaultKey.key,
-            sound: remappedKey?.sound || defaultKey.sound,
-            shiftSound: remappedKey?.shiftSound || defaultKey.shiftSound,
-            keycode: e.keycode,
-            isShiftDown: e.shiftKey,
-            isCapsLock: isCapsLockActive()
-        }
-        callback(keyInfo);
-    }),
+    onKeyDown: (callback) => ipcRenderer.on('keydown', (_, e) =>  callback( getKeyInfo(e) )),
+    onKeyUp: (callback) => ipcRenderer.on('keyup', (_, e) =>  callback( getKeyInfo(e) )),
     onSettingUpdate: (key, callback) => {
         const channel = `${key}`;
         const handler = (_, value) => {

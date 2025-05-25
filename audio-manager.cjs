@@ -8,12 +8,12 @@ ipcRenderer.on('updated-volume', (_, volume) => {
     Howler.masterGain.gain.value = volume * 2;
 });
 
-ipcRenderer.on('keyup', (_, e) => {
-    releaseSound(e.keycode);
-});
+// ipcRenderer.on('keyup', (_, e) => {
+//     releaseSound(e.keycode);
+// });
 
-function releaseSound(release_id) {
-    cutOffAudio(waitingForRelease[release_id], 0.075);
+function releaseSound(release_id, cut = true) {
+    if (cut) cutOffAudio(waitingForRelease[release_id], 0.15);
     delete waitingForRelease[release_id];
 }
 
@@ -141,6 +141,10 @@ function buildSoundBanks() {
             special: createAudioInstance(`${group}_special`, special_sprite)
         };
     }
+    bank['inst'] = {
+        whistle: createAudioInstance('inst_whistle', notes_sprite),
+        guitar: createAudioInstance('inst_guitar', notes_sprite)
+    }
     bank['sfx'] = createAudioInstance('sfx', sfx_sprite);
     return bank;
 }
@@ -184,23 +188,25 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
         if (!path || path === '') return;
         if (waitingForRelease[options.hold]) return;
 
-        const isAnimalese = path.startsWith('&');
+        const isVoice = path.startsWith('&.voice');
+        const isSing = path.startsWith('&.sing');
         const isSfx = path.startsWith('sfx')
         
         if (mode===1 && isSfx) path = 'sfx.default';
-        if (mode===2 && isAnimalese) path = 'sfx.default';
+        if (mode===2 && isSing) path = path.replace('&.sing', 'inst.guitar');
+        if (mode===2 && isVoice) path = 'sfx.default';
         if (mode===3) {
-            if (isAnimalese) {// play random animalese sound
+            if (isVoice) { // play random animalese sound
                 const sounds = Object.keys(voice_sprite)
                 path = `&.voice.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
             }
-            else if (isSfx) {// play random sound effect
+            else if (isSfx) { // play random sound effect
                 const sounds = Object.keys(sfx_sprite)
                 path = `sfx.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
             }
         }
 
-        if (isAnimalese) { // apply animalese voice profile
+        if (path.startsWith('&')) { // apply animalese voice profile
             const profileOptions = {
                 pitch_shift: options.pitch_shift ?? v.pitch_shift,
                 pitch_variation: options.pitch_variation ?? v.pitch_variation,
@@ -209,7 +215,7 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
             if (path.startsWith('&.voice')) {
                 Object.assign(options, profileOptions, {
                     volume: options.volume ?? 0.65,
-                    channel: options.channel ?? 1,
+                    channel: options.channel ?? 1
                 });
             }
             else if (path.startsWith('&.special')) {

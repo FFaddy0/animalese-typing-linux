@@ -32,31 +32,31 @@ const voiceLayout = [
         {label:'Z', btnType:'s', sound:`&.voice.z`}
     ],
     //TODO: create more phonemes
-    [
-        {label:'AA', btnType:'s', sound:`&.voice.a`},
-        {label:'AE', btnType:'s', sound:`&.voice.a`},
-        {label:'CH', btnType:'s', sound:`&.voice.a`},
-        {label:'EH', btnType:'s', sound:`&.voice.a`},
-        {label:'EU', btnType:'s', sound:`&.voice.a`},
-        {label:'IE', btnType:'s', sound:`&.voice.a`},
-        {label:'KH', btnType:'s', sound:`&.voice.a`},
-        {label:'NG', btnType:'s', sound:`&.voice.a`},
-        {label:'SH', btnType:'s', sound:`&.voice.a`},
-        {label:'WA', btnType:'s', sound:`&.voice.a`},
-        {label:'WA', btnType:'s', sound:`&.voice.a`},
-        {label:'WE', btnType:'s', sound:`&.voice.a`},
-        {label:'WI', btnType:'s', sound:`&.voice.a`}
-    ],
-    [
-        {label:'WO', btnType:'s', sound:`&.voice.a`},
-        {label:'Y', btnType:'s', sound:`&.voice.a`},
-        {label:'YA', btnType:'s', sound:`&.voice.a`},
-        {label:'YAE', btnType:'s', sound:`&.voice.a`},
-        {label:'YEH', btnType:'s', sound:`&.voice.a`},
-        {label:'YEO', btnType:'s', sound:`&.voice.a`},
-        {label:'YO', btnType:'s', sound:`&.voice.a`},
-        {label:'YU', btnType:'s', sound:`&.voice.a`},
-    ]
+    // [
+    //     {label:'AA', btnType:'s', sound:`&.voice.a`},
+    //     {label:'AE', btnType:'s', sound:`&.voice.a`},
+    //     {label:'CH', btnType:'s', sound:`&.voice.a`},
+    //     {label:'EH', btnType:'s', sound:`&.voice.a`},
+    //     {label:'EU', btnType:'s', sound:`&.voice.a`},
+    //     {label:'IE', btnType:'s', sound:`&.voice.a`},
+    //     {label:'KH', btnType:'s', sound:`&.voice.a`},
+    //     {label:'NG', btnType:'s', sound:`&.voice.a`},
+    //     {label:'SH', btnType:'s', sound:`&.voice.a`},
+    //     {label:'WA', btnType:'s', sound:`&.voice.a`},
+    //     {label:'WA', btnType:'s', sound:`&.voice.a`},
+    //     {label:'WE', btnType:'s', sound:`&.voice.a`},
+    //     {label:'WI', btnType:'s', sound:`&.voice.a`}
+    // ],
+    // [
+    //     {label:'WO', btnType:'s', sound:`&.voice.a`},
+    //     {label:'Y', btnType:'s', sound:`&.voice.a`},
+    //     {label:'YA', btnType:'s', sound:`&.voice.a`},
+    //     {label:'YAE', btnType:'s', sound:`&.voice.a`},
+    //     {label:'YEH', btnType:'s', sound:`&.voice.a`},
+    //     {label:'YEO', btnType:'s', sound:`&.voice.a`},
+    //     {label:'YO', btnType:'s', sound:`&.voice.a`},
+    //     {label:'YU', btnType:'s', sound:`&.voice.a`},
+    // ]
 ];
 
 const pianoLayout = [

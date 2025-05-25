@@ -239,9 +239,9 @@ function updateAlwaysEnabled(value) {
 }
 
 //#region Key press detect
-window.api.onKeyPress( (keyInfo) => {
+window.api.onKeyDown( (keyInfo) => {
     currentKey = keyInfo;
-    if (isRemapping || remapIn === document.activeElement) return;
+    //if (isRemapping || remapIn === document.activeElement) return;
     const path = (keyInfo.isShiftDown && keyInfo.shiftSound) || keyInfo.sound;
     if (path === undefined) return;
     switch (true) {
@@ -251,19 +251,38 @@ window.api.onKeyPress( (keyInfo) => {
                 volume: .75,
                 pitch_shift: 1.5 + voiceProfile.pitch_shift,
                 pitch_variation: 1 + voiceProfile.pitch_variation,
+                hold: keyInfo.keycode
             });
             // Lowercase
-            else window.audio.play(path);
+            else window.audio.play(path, {
+                hold: keyInfo.keycode
+            });
         break;
         case ( path.startsWith('&.sing') ):
             window.audio.play(path, {
                 hold: keyInfo.keycode// lock keycode until it is released with keyup 
             });
         break;
-        default: window.audio.play(path);
+        default: window.audio.play(path, {
+            hold: keyInfo.keycode
+        });
         break;
     }
 });
+//TODO: Added a toggle setting for whether sound should repeat when the key is held down.
+window.api.onKeyUp( (keyInfo) => {
+    const path = (keyInfo.isShiftDown && keyInfo.shiftSound) || keyInfo.sound;
+    if (path === undefined) return;
+    switch (true) {
+        case ( path.startsWith('&.sing') ):
+            window.audio.release(keyInfo.keycode, true /* cutOff */)
+        break;
+        default:
+            window.audio.release(keyInfo.keycode, false)
+        break;
+    }
+});
+
 //#endregion
 
 //#region Savable voice profiles
@@ -404,8 +423,8 @@ document.addEventListener('keydown', e => {
     remapMonitor.innerHTML = ((currentKey.isShiftDown && currentKey.key !== "Shift"?"Shift + ":"") + currentKey.key).toUpperCase();
 
     const sound = (currentKey.isShiftDown && currentKey.shiftSound) || currentKey.sound
-    window.audio.play(sound, { channel: 2, volume: 0.55 });
-    
+    //window.audio.play(sound, { channel: 2, volume: 0.55 });
+
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     document.querySelector(`[sound="${sound}"]`)?.classList.add('highlighted');
     changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
