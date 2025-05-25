@@ -5,6 +5,8 @@ import Store from 'electron-store';
 import isDev from 'electron-is-dev';
 import { spawn } from 'child_process';
 import { activeWindow as getActiveWindow } from '@deepfocus/get-windows';
+import { updateElectronApp } from 'update-electron-app';
+updateElectronApp()
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

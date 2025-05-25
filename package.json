@@ -24,7 +24,9 @@
     "asar": true,
     "appId": "com.joshxviii.animalese-typing",
     "productName": "Animalese Typing",
-    "files": [ "**/*" ],
+    "files": [
+      "**/*"
+    ],
     "directories": {
       "output": "exports"
     },
@@ -72,7 +74,8 @@
     "electron-is-dev": "^3.0.1",
     "electron-store": "^10.0.1",
     "howler": "^2.2.4",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "update-electron-app": "^3.1.1"
   },
   "devDependencies": {
     "electron": "^36.2.1",
