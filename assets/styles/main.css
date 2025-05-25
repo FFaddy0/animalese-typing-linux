@@ -650,8 +650,8 @@ input[type=text]::placeholder {
 #settings_overlay h3 {
     font-size: 15px;
     color: #6e5c44;
-    margin-block-start: 10px;
-    margin-block-end: 4px;
+    margin-block-start: 16px;
+    margin-block-end: 6px;
 }
 #settings_overlay label {
     font-size: 14px;

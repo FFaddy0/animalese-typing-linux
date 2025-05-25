@@ -45,8 +45,13 @@ author: joshxviii
         </div>
         
         <div class="catagory">
-            <h3 translation="settings.audio_mode"></h3>
+            <h3 translation="settings.key">Key Settings</h3>
+            <div class="labeled_con">
+                <input type="checkbox" id="check_hold_repeat" onchange="updateHoldRepeat(this.checked)"/>
+                <label for="check_hold_repeat" translation="settings.hold_repeat">Repeat sound when key is held down</label>
+            </div>
             <div class="rad_button_list">
+                <p translation="settings.audio_mode">Audio Mode</p>
                 <div class="labeled_con">
                     <input type="radio" id="config_1" name="audio_mode" value="0" checked>
                     <label for="config_1" translation="config_1">Default</label>
@@ -67,7 +72,7 @@ author: joshxviii
         </div>
     
         <div class="catagory">
-            <h3 translation="settings.apps"></h3>
+            <h3 translation="settings.apps">Enabled Apps</h3>
             <div class="labeled_con">
                 <input type="checkbox" id="check_always_enabled" onchange="updateAlwaysEnabled(this.checked)"/>
                 <label for="check_always_enabled" translation="settings.always_enabled">Always Enabled</label>
@@ -83,9 +88,11 @@ author: joshxviii
         </div>
 
         <div class="catagory">
-            <!-- <h3 translation="settings.reset">Reset Settings</h3> -->
-            <button id="reset_settings" type="button"><span translation="settings.reset"></span></button>
+            <!-- <h3 translation="settings.meta"></h3>
+            <button id="check_for_updates" translation="settings.update_check"></button> -->
+            <br/>
             <p translation="settings.reset.description"></p>
+            <button id="reset_settings" type="button"><span translation="settings.reset"></span></button>
         </div>
 
         <div class="separator"></div>
