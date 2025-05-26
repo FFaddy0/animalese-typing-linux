@@ -188,17 +188,26 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
         if (!path || path === '') return;
         if (waitingForRelease[options.hold]) return;
 
+        //
+        if(path === 'sfx.exclamation') playSound('&.special.Gwah');
+        if(path === 'sfx.question') playSound('&.special.Deska');
+
         const isVoice = path.startsWith('&.voice');
+        const isSpecial = path.startsWith('&.special');
         const isSing = path.startsWith('&.sing');
         const isSfx = path.startsWith('sfx')
         
         if (mode===1 && isSfx) path = 'sfx.default';
         if (mode===2 && isSing) path = path.replace('&.sing', 'inst.guitar');
-        if (mode===2 && isVoice) path = 'sfx.default';
+        if (mode===2 && isVoice || isSpecial) path = 'sfx.default';
         if (mode===3) {
             if (isVoice) { // play random animalese sound
                 const sounds = Object.keys(voice_sprite)
                 path = `&.voice.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
+            }
+            if (isSing) { // play random singing sound
+                const sounds = Object.keys(notes_sprite)
+                path = `&.sing.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
             }
             else if (isSfx) { // play random sound effect
                 const sounds = Object.keys(sfx_sprite)
@@ -206,20 +215,23 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
             }
         }
 
-        if (path.startsWith('&')) { // apply animalese voice profile
+        if (isVoice || isSpecial || isSing) { // apply animalese voice profile
             const profileOptions = {
                 pitch_shift: options.pitch_shift ?? v.pitch_shift,
                 pitch_variation: options.pitch_variation ?? v.pitch_variation,
                 intonation: options.intonation ?? v.intonation,
             };
-            if (path.startsWith('&.voice')) {
+            if (isVoice) {
                 Object.assign(options, profileOptions, {
                     volume: options.volume ?? 0.65,
                     channel: options.channel ?? 1
                 });
             }
-            else if (path.startsWith('&.special')) {
-                Object.assign(options, profileOptions);
+            else if (isSpecial) {
+                Object.assign(options, profileOptions,{
+                    volume: options.volume ?? 0.65,
+                    channel: options.channel ?? 1
+                });
             } 
             else {
                 Object.assign(options, {
