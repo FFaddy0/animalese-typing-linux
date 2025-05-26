@@ -289,16 +289,21 @@ svg-button:not([disabled=true]):active  {
     width: 24px;
     height: 24px;
 }
-#male {
+#male, #female {
     --alt1-color: #f3f3f3;
     --alt2-color: #4b4b4b;
     /* transition: all 0.4s ease-in-out; */
 }
-#female {
-    --alt1-color: #f3f3f3;
-    --alt2-color: #4b4b4b;
-    /* transition: all 0.4s ease-in-out; */
+#male g, #female g {
+    filter: drop-shadow(0px 2px 0px #dadada);
 }
+#male[pressed=true] g {
+    filter: drop-shadow(0px 2px 0px #ace3ff);
+}
+#female[pressed=true] g {
+    filter: drop-shadow(0px 2px 0px #ffc3f7);
+}
+
 #male[pressed=true] {
     --alt1-color: #f0feff;
     --alt2-color: #52e1fa;
