@@ -532,7 +532,7 @@ input[type=text]::placeholder {
 
 #voice_profile_buttons {
     background-color: #f8f2d7;
-    padding: 6px 13.5px;
+    padding: 8px 13.5px;
     margin: -1px;
     border-radius: 0px 0px 8px 8px;
 }

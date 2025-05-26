@@ -123,8 +123,8 @@ author: joshxviii
                             <input id="remap_in" type="text" maxlength="1" onclick="this.focus()" translation="remap"/>
                             <label id="remap_monitor" for="remap_in" translation="remap" class="highlighted"></label>
                             <div class="button_row">
-                                <svg-button id="remap_accept" onclick="remapStop()" icon="accept" title="Accept" disabled="true"></svg-button>
-                                <svg-button id="remap_reset" onclick="remapReset()" icon="reset" title="Reset" disabled="true"></svg-button>
+                                <svg-button id="remap_accept" onclick="remapStop()" onmousedown="window.audio.play('sfx.default', { channel: 2, volume: 0.55 })" icon="accept" title="Accept" disabled="true"></svg-button>
+                                <svg-button id="remap_reset" onclick="remapReset()" onmousedown="window.audio.play('sfx.default', { channel: 2, volume: 0.55 })" icon="reset" title="Reset" disabled="true"></svg-button>
                             </div>
                         </div>
                     </div>
@@ -194,8 +194,8 @@ author: joshxviii
                         <input type="text" id="voice_profile_name" translation="settings.none"/>
                         </div>
                         <div id="voice_profile_buttons" class="button_row">
-                            <svg-button icon="accept" id="save_profile_button" onclick="saveVoiceProfile()" title="Save" style="border-radius: 8px 0px 0px 8px;" disabled="false"></svg-button>
-                            <svg-button icon="close" id="delete_profile_button" onclick="deleteVoiceProfile()" title="Delete" style="border-radius: 0px 8px 8px 0px;" disabled="false"></svg-button>
+                            <svg-button icon="accept" id="save_profile_button" onclick="saveVoiceProfile()" onmousedown="window.audio.play('sfx.caret', { channel: 2, volume: 0.55 })" title="Save" style="border-radius: 8px 0px 0px 8px;" disabled="false"></svg-button>
+                            <svg-button icon="close" id="delete_profile_button" onclick="deleteVoiceProfile()" onmousedown="window.audio.play('sfx.at', { channel: 2, volume: 0.55 })" title="Delete" style="border-radius: 0px 8px 8px 0px;" disabled="false"></svg-button>
                         </div>
                     </div>
                 </div>
