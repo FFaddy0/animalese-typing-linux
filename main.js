@@ -251,7 +251,8 @@ async function startKeyListener() {
                 if (event.type === 'keydown' || event.type === 'keyup') {
                     bgwin.webContents.send(event.type, {
                         keycode: event.keycode,
-                        shiftKey: event.shift
+                        shiftKey: event.shift,
+                        ctrlKey: event.ctrl,
                     });
                 }
             } catch (err) {

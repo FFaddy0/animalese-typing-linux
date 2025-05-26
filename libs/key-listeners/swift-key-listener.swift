@@ -6,11 +6,13 @@ func keyCallback(proxy: CGEventTapProxy, type: CGEventType, event: CGEvent, refc
         let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
         let flags = event.flags
         let isShiftPressed = flags.contains(.maskShift) || flags.contains(.maskAlphaShift)
+        let isCtrlPressed = flags.contains(.maskControl)
 
         let eventData: [String: Any] = [
             "type": type == .keyDown ? "keydown" : "keyup",
             "keycode": keyCode,
-            "shift": isShiftPressed
+            "shift": isShiftPressed,
+            "ctrl": isCtrlPressed
         ]
 
         if let jsonData = try? JSONSerialization.data(withJSONObject: eventData),

@@ -8,9 +8,12 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
         KBDLLHOOKSTRUCT* p = (KBDLLHOOKSTRUCT*)lParam;
         if (wParam == WM_KEYDOWN || wParam == WM_KEYUP) {
             bool isShiftPressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
-            std::cout << "{\"type\":\"" << (wParam == WM_KEYDOWN ? "keydown" : "keyup")
-                      << "\",\"keycode\":" << p->vkCode
-                      << ",\"shift\":" << (isShiftPressed ? "true" : "false") << "}" << std::endl;
+            bool isCtrlPressed = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
+            std::cout   << "{\"type\":\"" << (wParam == WM_KEYDOWN ? "keydown" : "keyup")
+                        << "\",\"keycode\":" << p->vkCode
+                        << ",\"shift\":" << (isShiftPressed ? "true" : "false")
+                        << ",\"ctrl\":" << (isCtrlPressed ? "true" : "false")
+                        << "}" << std::endl;
         }
     }
     return CallNextHookEx(hHook, nCode, wParam, lParam);
