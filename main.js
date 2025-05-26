@@ -223,8 +223,8 @@ async function startKeyListener() {
 
     if (platform === 'win32') {
         listenerPath = isDev
-            ? path.join(__dirname, 'libs', 'key-listeners', 'cpp-key-listener.exe')
-            : path.join(process.resourcesPath, 'cpp-key-listener.exe');
+            ? path.join(__dirname, 'libs', 'key-listeners', 'animalese-listener.exe')
+            : path.join(process.resourcesPath, 'animalese-listener.exe');
     } else if (platform === 'darwin') {
         listenerPath = isDev
             ? path.join(__dirname, 'libs', 'key-listeners', 'swift-key-listener')
