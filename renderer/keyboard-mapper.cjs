@@ -229,10 +229,10 @@ function press(btn, holdKey=false) {
         const label = btn.getAttribute('label') ?? '';
         btn.classList.add('pressed');
         if (holdKey) {
-            window.audio.play(sound, {hold: 0});
+            window.audio.play(sound, {static: true, hold: 0});
         }
         else {
-            window.audio.play(sound);
+            window.audio.play(sound, {static: true});
             setTimeout(() => btn.classList.remove('pressed'), 100);
             setTimeout(() => btn.classList.remove('pressed'), 100);
         }

@@ -184,13 +184,13 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
     const soundBanks = buildSoundBanks();
 
     // main audio playback function
-    function playSound(path, options = {/*volume, pitch_shift, pitch_variation, intonation, channel*/}) {
+    function playSound(path, options = {/*volume, pitch_shift, pitch_variation, intonation, channel, hold, static*/}) {
         if (!path || path === '') return;
         if (waitingForRelease[options.hold]) return;
 
         //
-        if(path === 'sfx.exclamation') playSound('&.special.Gwah');
-        if(path === 'sfx.question') playSound('&.special.Deska');
+        if(path === 'sfx.exclamation' && mode!==3) playSound('&.special.Gwah');
+        if(path === 'sfx.question' && mode!==3) playSound('&.special.Deska');
 
         const isVoice = path.startsWith('&.voice');
         const isSpecial = path.startsWith('&.special');
@@ -199,10 +199,10 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
         
         if (mode===1 && isSfx) path = 'sfx.default';
         if (mode===2 && isSing) path = path.replace('&.sing', 'inst.guitar');
-        if (mode===2 && isVoice || isSpecial) path = 'sfx.default';
-        if (mode===3) {
+        if (mode===2 && (isVoice || isSpecial)) path = 'sfx.default';
+        if (mode===3 && !options.static) {
             if (isVoice) { // play random animalese sound
-                const sounds = Object.keys(voice_sprite)
+                const sounds = Object.assign(Object.keys(voice_sprite))
                 path = `&.voice.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
             }
             if (isSing) { // play random singing sound

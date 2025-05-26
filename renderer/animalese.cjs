@@ -88,14 +88,14 @@ function initControls() {
                 
                 if (el.getAttribute('playing')==='false') {
                     el.setAttribute('playing', 'true');
-                    window.audio.play('sfx.default', {channel: 3});
+                    window.audio.play('sfx.default', {static: true, channel: 2});
                     setTimeout(() => el.setAttribute('playing', 'false'), 50);
                 }
             }
             else {
                 voiceProfile[control] = value;
                 preferences.set('voice_profile', voiceProfile);
-                if(control==='voice_type') setTimeout(() => {window.audio.play('&.special.OK', {channel: 2, volume:.55});}, 10);
+                if(control==='voice_type') setTimeout(() => {window.audio.play('&.special.OK', {static: true, channel: 2, volume:.55});}, 10);
             }
         };
 
