@@ -245,7 +245,7 @@ window.api.onActiveWindowChanged((activeWindows) => {
 window.api.onKeyDown( (keyInfo) => {
     currentKey = keyInfo;
     //if (isRemapping || remapIn === document.activeElement) return;
-    const path = (keyInfo.isShiftDown && keyInfo.shiftSound) || keyInfo.sound;
+    const path = keyInfo.isShiftDown?keyInfo.shiftSound:keyInfo.sound;
     if (path === undefined) return;
     const options = {}
     if (!preferences.get('hold_repeat')) Object.assign(options, { hold: keyInfo.keycode });
@@ -268,7 +268,7 @@ window.api.onKeyDown( (keyInfo) => {
     window.audio.play(path, options);
 });
 window.api.onKeyUp( (keyInfo) => {
-    const path = (keyInfo.isShiftDown && keyInfo.shiftSound) || keyInfo.sound;
+    const path = keyInfo.isShiftDown?keyInfo.shiftSound:keyInfo.sound;
     if (path === undefined) return;
     switch (true) {
         case ( path.startsWith('&.sing') ):
@@ -418,7 +418,7 @@ document.addEventListener('keydown', e => {
     
     remapMonitor.innerHTML = ((currentKey.isShiftDown && currentKey.key !== "Shift"?"Shift + ":"") + currentKey.key).toUpperCase();
 
-    const sound = (currentKey.isShiftDown && currentKey.shiftSound) || currentKey.sound
+    const sound = currentKey.isShiftDown?currentKey.shiftSound:currentKey.sound
     //window.audio.play(sound, { channel: 2, volume: 0.55 });
 
     document.querySelector('.highlighted')?.classList.remove('highlighted');

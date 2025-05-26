@@ -13,11 +13,13 @@ function getKeyInfo(e) {// parse keyInfo from keyup/down event
     const remappedKey = settingsData.remapped_keys[e.keycode]
     const defaultKey = defaultKeyMap[e.keycode]
     
+    console.log(defaultKey.shiftSound)
+
     if (defaultKey === undefined) return;
     return {
         key: defaultKey.key,
-        sound: remappedKey?.sound || defaultKey.sound,
-        shiftSound: remappedKey?.shiftSound || defaultKey.shiftSound,
+        sound: remappedKey? remappedKey.sound : defaultKey.sound,
+        shiftSound: remappedKey? remappedKey.shiftSound : (defaultKey.shiftSound ?? defaultKey.sound),
         keycode: e.keycode,
         isShiftDown: e.shiftKey,
         isCapsLock: isCapsLockActive()
