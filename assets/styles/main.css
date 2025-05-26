@@ -610,6 +610,7 @@ input[type=text]::placeholder {
     line-height: 16px;
     transition: all 0.2s ease;
     border: 4px dashed transparent;
+    margin-block-end: 8px;
 }
 #remap_monitor[monitoring=true] {
     border: 4px dashed #6cd576ab;

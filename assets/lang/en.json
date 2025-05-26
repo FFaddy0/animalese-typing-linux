@@ -15,7 +15,6 @@
     "editor_2":"intonation",
     "editor_3":"pitch variation",
     "key-remapper":"key-remapper",
-
     "remap":"click to remap",
 
     "f1":"Sweet",
@@ -28,12 +27,14 @@
     "m4":"Cranky",
 
     "settings":"settings",
+    "settings.general":"general",
     "settings.startup":"Run on startup",
     "settings.disable":"Disable",
     "settings.audio_mode":"audio mode",
     "settings.apps":"animalese enabled apps",
     "settings.apps.description":"enabled when these apps are in focus",
     "settings.always_enabled":"always enabled",
+    "settings.hold_repeat":"repeat on hold",
     "settings.lang":"language",
     "settings.none":"none",
     "settings.reset":"reset",

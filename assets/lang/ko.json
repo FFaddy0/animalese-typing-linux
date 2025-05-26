@@ -15,6 +15,7 @@
     "editor_2":"억양",
     "editor_3":"음높이 변화",
     "key-remapper":"키 리매퍼",
+    "remap":"클릭하여 다시 지정",
 
     "f1":"친절함",
     "f2":"건강한",
@@ -26,14 +27,18 @@
     "m4":"무뚝뚝",
 
     "settings":"설정",
+    "settings.general":"일반",
     "settings.startup":"시작 시 실행",
     "settings.disable":"비활성화",
     "settings.audio_mode":"오디오 모드",
     "settings.apps":"아니말리즈 활성화 앱",
     "settings.apps.description":"포커스된 앱에서만 활성화",
     "settings.always_enabled":"항상 활성화",
+    "settings.hold_repeat":"길게 누르면 반복",
     "settings.lang":"언어 선택",
     "settings.none":"없음",
+    "settings.reset":"초기화",
+    "settings.reset.description":"길게 눌러 설정 초기화",
 
     "en": "영어/English",
     "es": "스페인어/Español",

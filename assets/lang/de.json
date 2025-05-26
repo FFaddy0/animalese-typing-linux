@@ -15,6 +15,7 @@
     "editor_2":"intonation",
     "editor_3":"tonvariation",
     "key-remapper":"tastenbelegung ändern",
+    "remap":"klicken zum ändern",
 
     "f1":"Ausgeglichen",
     "f2":"Schwungvoll",
@@ -26,14 +27,18 @@
     "m4":"Miesepeter",
 
     "settings":"einstellungen",
+    "settings.general":"allgemein",
     "settings.startup":"Beim Start",
     "settings.disable":"Deaktivieren",
     "settings.audio_mode":"audio-modus",
     "settings.apps":"animalese-fähige apps",
-    "settings.apps.description":"aktivieren bei Fokus dieser apps",
+    "settings.apps.description":"aktivieren bei fokus dieser apps",
     "settings.always_enabled":"immer aktiviert",
+    "settings.hold_repeat":"bei halten wiederholen",
     "settings.lang":"sprache",
     "settings.none":"keine",
+    "settings.reset":"zurücksetzen",
+    "settings.reset.description":"halten, um einstellungen zu resetten",
 
     "en": "Inglés/English",
     "es": "Español",

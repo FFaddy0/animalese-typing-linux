@@ -15,6 +15,7 @@
     "editor_2":"语调",
     "editor_3":"音高变化",
     "key-remapper":"按键重映射",
+    "remap":"点击以重映射",
 
     "f1":"Sweet",
     "f2":"Peppy",
@@ -26,14 +27,18 @@
     "m4":"Cranky",
 
     "settings":"设置",
+    "settings.general":"通用",
     "settings.startup":"启动时运行",
     "settings.disable":"禁用",
     "settings.audio_mode":"音频模式",
     "settings.apps":"支持动物语的应用",
     "settings.apps.description":"应用在前台时启用",
     "settings.always_enabled":"始终启用",
+    "settings.hold_repeat":"长按重复",
     "settings.lang":"选择语言",
     "settings.none":"无",
+    "settings.reset":"重置",
+    "settings.reset.description":"长按以重置设置",
 
     "en": "英语/English",
     "es": "西班牙语/Español",

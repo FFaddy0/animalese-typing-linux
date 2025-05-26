@@ -15,6 +15,7 @@
     "editor_2":"抑揚",
     "editor_3":"音程変化",
     "key-remapper":"キーリマッパー",
+    "remap":"クリックしてリマップ",
 
     "f1":"ふつう",
     "f2":"元気",
@@ -26,14 +27,18 @@
     "m4":"コワイ",
 
     "settings":"設定",
+    "settings.general":"一般",
     "settings.startup":"起動時に実行",
     "settings.disable":"無効",
     "settings.audio_mode":"オーディオモード",
     "settings.apps":"アニマリーズ対応アプリ",
     "settings.apps.description":"フォーカス中に有効化",
     "settings.always_enabled":"常に有効",
+    "settings.hold_repeat":"長押しで繰り返す",
     "settings.lang":"言語選択",
     "settings.none":"なし",
+    "settings.reset":"リセット",
+    "settings.reset.description":"長押しで設定をリセット",
 
     "en": "英語/English",
     "es": "スペイン語/Español",

@@ -11,10 +11,11 @@
     "config_4.description":"(masquer la saisie)",
 
     "editor_title":"Éditeur",
-    "editor_1":"déplacement de hauteur",
+    "editor_1":"variation hauteur",
     "editor_2":"intonation",
     "editor_3":"variation de ton",
-    "key-remapper":"reconfiguration des touches",
+    "key-remapper":"raccourcis clavier",
+    "remap":"clic pour modifier",
 
     "f1":"Normal",
     "f2":"Impétueuse",
@@ -26,14 +27,18 @@
     "m4":"Versatile",
 
     "settings":"paramètres",
+    "settings.general":"général",
     "settings.startup":"Lancer au démarrage",
     "settings.disable":"Désactiver",
     "settings.audio_mode":"mode audio",
     "settings.apps":"apps avec animalese",
     "settings.apps.description":"activer quand l’appli est active",
     "settings.always_enabled":"toujours activé",
+    "settings.hold_repeat":"répéter en maintenant",
     "settings.lang":"langue",
     "settings.none":"aucune",
+    "settings.reset":"réinitialiser",
+    "settings.reset.description":"maintenir pour réinitialiser",
 
     "en": "Anglais/English",
     "es": "Espagnol/Español",
