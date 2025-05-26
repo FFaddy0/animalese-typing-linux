@@ -43,6 +43,7 @@ const defaults = {
     lang: 'en',
     volume: 0.5,
     audio_mode: 0,
+    hold_repeat: false,
     always_enabled: true,
     enabled_apps: [],
     voice_profile: {

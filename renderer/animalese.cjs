@@ -51,6 +51,7 @@ function initControls() {
 
     document.getElementById('lang_select').value = preferences.get('lang');
     document.getElementById('check_always_enabled').checked = preferences.get('always_enabled');
+    document.getElementById('check_hold_repeat').checked = preferences.get('hold_repeat');
     document.getElementById('apps_table').setAttribute('disabled', preferences.get('always_enabled'));
     document.querySelectorAll('input[name="audio_mode"]').forEach(radio => {// audio mode initilize 
         //radio.replaceWith(radio.cloneNode(true));
@@ -240,43 +241,32 @@ window.api.onActiveWindowChanged((activeWindows) => {
     updatedActiveWindows(activeWindows);
 });
 
-function updateAlwaysEnabled(value) {
-    window.settings.set('always_enabled', value)
-    document.getElementById('apps_table').setAttribute('disabled', value)
-}
-
 //#region Key press detect
 window.api.onKeyDown( (keyInfo) => {
     currentKey = keyInfo;
     //if (isRemapping || remapIn === document.activeElement) return;
     const path = (keyInfo.isShiftDown && keyInfo.shiftSound) || keyInfo.sound;
     if (path === undefined) return;
+    const options = {}
+    if (!preferences.get('hold_repeat')) Object.assign(options, { hold: keyInfo.keycode });
     switch (true) {
-        case ( path.startsWith('&.voice') ):
-            // Uppercase
-            if (keyInfo.isCapsLock !== keyInfo.isShiftDown) window.audio.play(path, {
+        // uppercase typing has higher pitch and variation
+        case ( path.startsWith('&.voice') && keyInfo.isCapsLock !== keyInfo.isShiftDown ):
+            Object.assign(options, {
                 volume: .75,
                 pitch_shift: 1.5 + voiceProfile.pitch_shift,
                 pitch_variation: 1 + voiceProfile.pitch_variation,
-                hold: keyInfo.keycode
-            });
-            // Lowercase
-            else window.audio.play(path, {
-                hold: keyInfo.keycode
             });
         break;
+        // notes should always hold until released with keyup 
         case ( path.startsWith('&.sing') ):
-            window.audio.play(path, {
-                hold: keyInfo.keycode// lock keycode until it is released with keyup 
+            Object.assign(options, {
+                hold: keyInfo.keycode
             });
-        break;
-        default: window.audio.play(path, {
-            hold: keyInfo.keycode
-        });
         break;
     }
+    window.audio.play(path, options);
 });
-//TODO: Added a toggle setting for whether sound should repeat when the key is held down.
 window.api.onKeyUp( (keyInfo) => {
     const path = (keyInfo.isShiftDown && keyInfo.shiftSound) || keyInfo.sound;
     if (path === undefined) return;
@@ -289,7 +279,6 @@ window.api.onKeyUp( (keyInfo) => {
         break;
     }
 });
-
 //#endregion
 
 //#region Savable voice profiles

@@ -47,7 +47,7 @@ author: joshxviii
         <div class="catagory">
             <h3 translation="settings.general">General Settings</h3>
             <div class="labeled_con">
-                <input type="checkbox" id="check_hold_repeat" onchange="updateHoldRepeat(this.checked)"/>
+                <input type="checkbox" id="check_hold_repeat" onchange="window.settings.set('hold_repeat', this.checked)"/>
                 <label for="check_hold_repeat" translation="settings.hold_repeat">Repeat sound when key is held down</label>
             </div>
             <div class="rad_button_list">
@@ -74,7 +74,7 @@ author: joshxviii
         <div class="catagory">
             <h3 translation="settings.apps">Enabled Apps</h3>
             <div class="labeled_con">
-                <input type="checkbox" id="check_always_enabled" onchange="updateAlwaysEnabled(this.checked)"/>
+                <input type="checkbox" id="check_always_enabled" onchange="window.settings.set('always_enabled', this.checked);document.getElementById('apps_table').setAttribute('disabled', this.checked)"/>
                 <label for="check_always_enabled" translation="settings.always_enabled">Always Enabled</label>
             </div>
             <table id="apps_table" disabled="false">
