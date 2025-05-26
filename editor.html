@@ -147,7 +147,7 @@ author: joshxviii
                     <div id="sliders">
                         <div class="slider-group">
                             <label id="label_editor_1" class="editor_label" translation="editor_1">Pitch Shift</label>
-                            <input id="pitch_shift" class="editor_slider" type="range" min="-12" max="12" step="0.2" value="0" defaultValue="0"></input>
+                            <input id="pitch_shift" class="editor_slider" type="range" min="-12" max="12" step="0.1" value="0" defaultValue="0"></input>
                             <input type="text" id="pitch_shift_out" class="editor_output" />
                         </div>
 
@@ -182,18 +182,20 @@ author: joshxviii
                         </select>
                     </div>
 
-                    <div id="saved_profiles">
-                        <select id="voice_profile_slots" onchange="loadVoiceProfile()">
-                            <option id="save_1" value="1" selected>Empty</option>
-                            <option id="save_2" value="2">Empty</option>
-                            <option id="save_3" value="3">Empty</option>
-                            <option id="save_4" value="4">Empty</option>
-                            <option id="save_5" value="5">Empty</option>
+                    <div id="voice_profiles">
+                        <div id="voice_profile_select">
+                            <select id="voice_profile_slot" onchange="loadVoiceProfile()">
+                            <option id="save_1" value="1" selected>1</option>
+                            <option id="save_2" value="2">2</option>
+                            <option id="save_3" value="3">3</option>
+                            <option id="save_4" value="4">4</option>
+                            <option id="save_5" value="5">5</option>
                         </select>
-                        <input type="text" id="save_profile_name" translation="settings.none"/>
-                        <div class="button_row">
-                            <input type="button" id="save_profile_button" value="S" onclick="saveVoiceProfile()"/>
-                            <input type="button" id="delete_profile_button" value="D" onclick="deleteVoiceProfile()"/>
+                        <input type="text" id="voice_profile_name" translation="settings.none"/>
+                        </div>
+                        <div id="voice_profile_buttons" class="button_row">
+                            <svg-button icon="accept" id="save_profile_button" onclick="saveVoiceProfile()" title="Save" style="border-radius: 8px 0px 0px 8px;" disabled="false"></svg-button>
+                            <svg-button icon="close" id="delete_profile_button" onclick="deleteVoiceProfile()" title="Delete" style="border-radius: 0px 8px 8px 0px;" disabled="false"></svg-button>
                         </div>
                     </div>
                 </div>

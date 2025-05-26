@@ -318,6 +318,21 @@ svg-button:not([disabled=true]):active  {
 }
 .button_row svg-button {
     width: 100%;
+    background-color: #f4edcf;
+    border-radius: 32px;
+    margin: 0px 8px;
+    box-shadow: 0px 0px 0px #d9bd96;
+}
+.button_row svg-button[disabled=false]:not(:active) {
+    box-shadow: 0px 4px 0px #d9bd96;
+    translate: 0px -4px;
+}
+.button_row svg-button:hover  {
+    transform: scale(1);
+}
+.button_row svg-button:active  {
+    transform: scale(1);
+    translate: 0px 0px;
 }
 /*#endregion BUTTONS */
 
@@ -407,7 +422,7 @@ select {
     position: relative;
     display: inline-table;
     transition: all 0.33s ease;
-    background-color: #ECE4C1;
+    background-color: #ece4c1;
     text-align: center;
     text-align-last: center;
     outline-style: none;
@@ -418,7 +433,7 @@ select:hover{
 
 input[type=text] {
     width: 100px;
-    background-color: #ece5ca;
+    background-color: #ece4c1;
     border-radius: 8px;
     display: inline-block;
     color: #6e5c44;
@@ -443,11 +458,11 @@ input[type=text]::placeholder {
     padding: 0px 18px;
     display: flex;
     align-items: flex-start;
+    width: 89%;
 }
 
 #sliders {
     flex: 0 0 364px;
-    /* background-color: #ff5ce9; */
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -459,29 +474,29 @@ input[type=text]::placeholder {
 }
 
 #voice_type_group {
-    /* background-color: chartreuse; */
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#saved_profiles {
-    /* background-color: rgb(0, 157, 255); */
-    width: 80%;
-    margin: 4px 16px;
+#voice_profiles {
+    margin: 16px 16px;
     flex: 1;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
-#voice_profile_slots {
-    min-height: 32px;
-    background-color: #ece4c1;
+#voice_profile_select {
+    display: flex;
+}
+
+#voice_profile_slot {
     font-size: 18px;
-    border-radius: 6px;
-    overflow-y: auto;
-    text-align: center;
+    width: 22px;
+    height: 27px;
+    border-radius: 8px 0px 0px 0px;
 }
 
 #voice_profile_slots option {
@@ -491,14 +506,14 @@ input[type=text]::placeholder {
     text-align: center;
     padding: 4px 8px;
 }
-#save_profile_name {
-    min-height: 16px;
-    background-color: #ece4c1;
-    font-size: 12px;
-    border-radius: 6px;
+#voice_profile_name {
+    font-size: clamp(8px, 100%, calc(105px/ max(1, var(--label-length))));
     text-align: center;
+    width: 85px;
+    min-height: 26px;
+    max-height: 26px;
+    border-radius: 0px 8px 0px 0px;
 }
-
 
 #voice_profile_slots option:hover {
     background-color: #d1b48b;
@@ -508,6 +523,19 @@ input[type=text]::placeholder {
 #voice_profile_slots option:checked {
     background-color: #d1b48b;
     color: #ffffff;
+}
+
+#voice_profile_buttons {
+    background-color: #f8f2d7;
+    padding: 6px 13.5px;
+    margin: -1px;
+    border-radius: 0px 0px 8px 8px;
+}
+
+#voice_profile_buttons svg-button {
+    width: 42px;
+    height: 22px;
+    margin: 0px;
 }
 
 #voice_type {
@@ -547,9 +575,8 @@ input[type=text]::placeholder {
     margin: 8px 0px 0px 0px;
     padding: 8px;
     flex: 1;
-    display: flex; 
+    display: flex;
     align-items: center;
-    /* justify-content: center; */
     background-color: #f8f2d7;
     border-radius: 16px 16px 0px 0px;
     box-sizing: border-box;
@@ -591,7 +618,6 @@ input[type=text]::placeholder {
     padding: 0;
     margin: 0;
     border: 0;
-    /* font-size: 0; */
     position: absolute;
     background-color: #00aaff;
     caret-color: transparent;
@@ -632,9 +658,6 @@ input[type=text]::placeholder {
     width: 320px;
     height: 300px;
     position: absolute;
-    /* left: 50%; */
-    /* top: 45%; */
-    /* transform: translate(100%, 0%); */
     background-color: #fffae4;
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
