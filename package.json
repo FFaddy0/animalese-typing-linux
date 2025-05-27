@@ -30,6 +30,9 @@
     "directories": {
       "output": "exports"
     },
+    "nsis": {
+      "deleteAppDataOnUninstall": true
+    },
     "win": {
       "target": "nsis",
       "icon": "assets/images/icon.png",
