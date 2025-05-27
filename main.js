@@ -42,6 +42,7 @@ const defaults = {
     lang: 'en',
     volume: 0.5,
     audio_mode: 0,
+    startup_run: false,
     hold_repeat: true,
     always_enabled: true,
     enabled_apps: [],
@@ -65,9 +66,11 @@ ipcMain.on('get-store-data-sync', (e) => {
 ipcMain.handle('store-set', async (e, key, value) => {
     preferences.set(key, value);
     bgwin.webContents.send(`updated-${key}`, value);
+    if (key==='startup_run') updateTrayMenu();
 });
 ipcMain.handle('store-reset', async (e) => {// set settings to default and trigger store update messages
     const resetable = [
+        'startup_run',
         'hold_repeat',
         'audio_mode',
         'voice_profile',
@@ -79,6 +82,7 @@ ipcMain.handle('store-reset', async (e) => {// set settings to default and trigg
     resetable.forEach(r=>{
         preferences.reset(r);
         bgwin.webContents.send(`updated-${r}`, defaults[r]);
+        if (r==='startup_run') updateTrayMenu();
     });
 });
 ipcMain.on('close-window', (e) => {
@@ -97,6 +101,7 @@ ipcMain.on('get-app-info', (e) => {
         platform: process.platform
     }
 });
+ipcMain.on('set-run-on-startup', (e, value) => setRunOnStartup(value));
 
 var bgwin = null;
 var tray = null;
@@ -174,28 +179,26 @@ function createMainWin() {
     });
 }
 
-function createTrayIcon() {
-    if(tray !== null) return; // prevent dupe tray icons
-
-    tray = new Tray(SYSTRAY_ICON);
-    tray.setToolTip('Animalese Typing');
-
+function updateTrayMenu() {
     const contextMenu = Menu.buildFromTemplate([
         {
             label: 'Show Settings',
             click: () => { showIfAble(); }
         },
         {
+            id: 'startup',
             label: 'Run on startup',
             type: 'checkbox',
-            checked: app.getLoginItemSettings().openAtLogin,
+            checked: preferences.get('startup_run'),
             click: (menuItem) => {
+                const value = menuItem.checked;    
                 const settings = {
-                    openAtLogin: menuItem.checked,
+                    openAtLogin: value,
                     openAsHidden: true,
                 };
                 if (process.platform === 'win32') settings.path = app.isPackaged ? app.getPath('exe') : process.execPath;
-
+                preferences.set('startup_run', value);
+                bgwin.webContents.send(`updated-startup_run`, value);
                 app.setLoginItemSettings(settings);
             }
         },
@@ -207,7 +210,17 @@ function createTrayIcon() {
             }
         }
     ]);
-    tray.setContextMenu(contextMenu);
+    if(tray) tray.setContextMenu(contextMenu);
+}
+
+function createTrayIcon() {
+    if(tray !== null) return; // prevent dupe tray icons
+
+    tray = new Tray(SYSTRAY_ICON);
+    tray.setToolTip('Animalese Typing');
+
+    updateTrayMenu();
+
     // On Windows, clicking shows the window, while on macOS it shows the context menu
     if (process.platform != 'darwin') tray.on('click', () => { showIfAble(); });
     tray.displayBalloon({

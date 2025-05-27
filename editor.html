@@ -47,6 +47,10 @@ author: joshxviii
         <div class="catagory">
             <h3 translation="settings.general">General Settings</h3>
             <div class="labeled_con">
+                <input type="checkbox" id="check_startup_run" onchange="window.settings.set('startup_run', this.checked)"/>
+                <label for="check_startup_run" translation="settings.startup">Run on Startup</label>
+            </div>
+            <div class="labeled_con">
                 <input type="checkbox" id="check_hold_repeat" onchange="window.settings.set('hold_repeat', this.checked)"/>
                 <label for="check_hold_repeat" translation="settings.hold_repeat">Repeat sound when key is held down</label>
             </div>

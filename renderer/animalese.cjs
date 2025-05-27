@@ -38,10 +38,13 @@ const controls = [
 let voiceProfile = null;
 let voiceProfileSlots = null;
 const profileName = document.getElementById('voice_profile_name');
+const checkStartupRun = document.getElementById('check_startup_run');
 profileName.addEventListener('input', (e) => {
     e.target.value = e.target.value.replace(/[^\p{Letter}0-9\s]/gu, '').substring(0, 12);
     document.documentElement.style.setProperty('--label-length', e.target.value.length);
 });
+
+window.api.onSettingUpdate('updated-startup_run', (value) => checkStartupRun.checked = value );
 
 function initControls() {
     voiceProfile = preferences.get('voice_profile');
@@ -51,6 +54,7 @@ function initControls() {
     for (let i = 0; i < 5; i++) document.getElementById('voice_profile_slot').options[i].innerHTML = `${i+1}. ${(voiceProfileSlots[i+1]?.name || '')}`;
 
     document.getElementById('lang_select').value = preferences.get('lang');
+    checkStartupRun.checked = preferences.get('startup_run');
     document.getElementById('check_always_enabled').checked = preferences.get('always_enabled');
     document.getElementById('check_hold_repeat').checked = preferences.get('hold_repeat');
     document.getElementById('apps_table').setAttribute('disabled', preferences.get('always_enabled'));
@@ -305,7 +309,7 @@ function saveVoiceProfile() {
     const currentVoiceProfile = preferences.get('voice_profile');
     const selectedSlot = parseInt(document.getElementById('voice_profile_slot').value);
     
-    if (!profileName.value)  return;
+    if (!profileName.value) return;
 
     let savedVoiceProfiles = new Map(Object.entries(preferences.get('saved_voice_profiles')));
     savedVoiceProfiles.set(selectedSlot, { name: profileName.value, profile: currentVoiceProfile });

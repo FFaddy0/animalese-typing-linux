@@ -29,7 +29,7 @@
 
     "settings":"settings",
     "settings.general":"general",
-    "settings.startup":"Run on startup",
+    "settings.startup":"run on startup",
     "settings.disable":"Disable",
     "settings.audio_mode":"audio mode",
     "settings.apps":"animalese enabled apps",
