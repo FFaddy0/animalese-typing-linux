@@ -21,6 +21,11 @@
     "build:win": "npm run build:cpp && electron-builder --win"
   },
   "build": {
+    "publish": {
+      "provider": "github",
+      "owner": "joshxviii",
+      "repo": "animalese-typing-desktop"
+    },  
     "asar": true,
     "appId": "com.joshxviii.animalese-typing",
     "productName": "Animalese Typing",
@@ -76,9 +81,9 @@
     "child_process": "^1.0.2",
     "electron-is-dev": "^3.0.1",
     "electron-store": "^10.0.1",
+    "electron-updater": "^6.6.2",
     "howler": "^2.2.4",
-    "store": "^2.0.12",
-    "update-electron-app": "^3.1.1"
+    "store": "^2.0.12"
   },
   "devDependencies": {
     "electron": "^36.2.1",

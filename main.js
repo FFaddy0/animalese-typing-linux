@@ -5,8 +5,7 @@ import Store from 'electron-store';
 import isDev from 'electron-is-dev';
 import { spawn } from 'child_process';
 import { activeWindow as getActiveWindow } from '@deepfocus/get-windows';
-import { updateElectronApp } from 'update-electron-app';
-updateElectronApp()
+import pkg from 'electron-updater'; const { autoUpdater } = pkg;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,7 +42,7 @@ const defaults = {
     lang: 'en',
     volume: 0.5,
     audio_mode: 0,
-    hold_repeat: false,
+    hold_repeat: true,
     always_enabled: true,
     enabled_apps: [],
     voice_profile: {
@@ -69,6 +68,7 @@ ipcMain.handle('store-set', async (e, key, value) => {
 });
 ipcMain.handle('store-reset', async (e) => {// set settings to default and trigger store update messages
     const resetable = [
+        'hold_repeat',
         'audio_mode',
         'voice_profile',
         'saved_voice_profiles',
@@ -272,13 +272,15 @@ function stopKeyListener() {
     }
 }
 
-app.whenReady().then(() => {
+app.on('ready', () => {
     startActiveWindowMonitoring();
     createMainWin();
     createTrayIcon();
     if (!disabled) startKeyListener();
     if (process.platform === 'darwin') app.dock.hide();
     bgwin.hide();
+
+    if (app.isPackaged) autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('activate', function () {
