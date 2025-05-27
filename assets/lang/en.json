@@ -14,6 +14,7 @@
     "editor_1":"pitch shift",
     "editor_2":"intonation",
     "editor_3":"pitch variation",
+    "voice_profiles":"saved voices",
     "key-remapper":"key-remapper",
     "remap":"click to remap",
 
@@ -34,7 +35,7 @@
     "settings.apps":"animalese enabled apps",
     "settings.apps.description":"enabled when these apps are in focus",
     "settings.always_enabled":"always enabled",
-    "settings.hold_repeat":"repeat on hold",
+    "settings.hold_repeat":"repeat sound while held",
     "settings.lang":"language",
     "settings.none":"none",
     "settings.reset":"reset",
