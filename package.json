@@ -46,7 +46,8 @@
           "from": "libs/key-listeners/animalese-listener.exe",
           "to": "animalese-listener.exe"
         }
-      ]
+      ],
+      "artifactName": "AnimaleseTypingSetup.${ext}"
     },
     "mac": {
       "target": [
@@ -64,7 +65,8 @@
           "from": "swift-key-listener",
           "to": "swift-key-listener"
         }
-      ]
+      ],
+      "artifactName": "AnimaleseTypingSetup.${ext}"
     },
     "linux": {
       "target": [
@@ -72,7 +74,8 @@
         "deb"
       ],
       "category": "Utility",
-      "icon": "assets/images/icon.png"
+      "icon": "assets/images/icon.png",
+      "artifactName": "AnimaleseTypingSetup.${ext}"
     },
     "afterSign": "build/after-sign-hook.js"
   },
