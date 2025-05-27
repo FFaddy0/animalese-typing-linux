@@ -65,8 +65,7 @@
           "from": "swift-key-listener",
           "to": "swift-key-listener"
         }
-      ],
-      "artifactName": "AnimaleseTypingSetup.${ext}"
+      ]
     },
     "linux": {
       "target": [
