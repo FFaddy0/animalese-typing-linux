@@ -183,15 +183,16 @@ author: joshxviii
                     </div>
 
                     <div id="voice_profiles">
+                        <p style="margin-block-end: 4px;" translation="voice_profiles"></p>
                         <div id="voice_profile_select">
                             <select id="voice_profile_slot" onchange="loadVoiceProfile()">
-                            <option id="save_1" value="1" selected>1</option>
-                            <option id="save_2" value="2">2</option>
-                            <option id="save_3" value="3">3</option>
-                            <option id="save_4" value="4">4</option>
-                            <option id="save_5" value="5">5</option>
-                        </select>
-                        <input type="text" id="voice_profile_name" translation="settings.none"/>
+                                <option id="save_1" value="1" selected>1</option>
+                                <option id="save_2" value="2">2</option>
+                                <option id="save_3" value="3">3</option>
+                                <option id="save_4" value="4">4</option>
+                                <option id="save_5" value="5">5</option>
+                            </select>
+                            <input type="text" id="voice_profile_name" translation="settings.none"/>
                         </div>
                         <div id="voice_profile_buttons" class="button_row">
                             <svg-button icon="accept" id="save_profile_button" onclick="saveVoiceProfile()" onmousedown="window.audio.play('sfx.caret', { static: true, channel: 2, volume: 0.55 })" title="Save" style="border-radius: 8px 0px 0px 8px;" disabled="false"></svg-button>

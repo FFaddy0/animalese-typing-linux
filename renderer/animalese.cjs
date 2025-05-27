@@ -48,6 +48,7 @@ function initControls() {
     voiceProfileSlots = preferences.get('saved_voice_profiles');
     profileName.value = voiceProfileSlots[parseInt(document.getElementById('voice_profile_slot').value)]?.name || ``;
     profileName.dispatchEvent(new Event('input', { bubbles: true }));
+    for (let i = 0; i < 5; i++) document.getElementById('voice_profile_slot').options[i].innerHTML = `${i+1}. ${(voiceProfileSlots[i+1]?.name || '')}`;
 
     document.getElementById('lang_select').value = preferences.get('lang');
     document.getElementById('check_always_enabled').checked = preferences.get('always_enabled');
@@ -113,9 +114,8 @@ function initControls() {
 
             el.addEventListener('input', (e) => updateValue(e.target.value));
             el.addEventListener('wheel', (e) => {
-                e.preventDefault();
                 updateValue(parseFloat(el.value) + (e.deltaY < 0 ? step : -step));
-            });
+            }, {passive: true});
             el.addEventListener('dblclick', () => updateValue(el.getAttribute('defaultValue')));
             if (outputEl) {
                 outputEl.value = displayMode === 'percent' 
@@ -293,8 +293,11 @@ function deleteVoiceProfile() {
     savedVoiceProfiles = new Map(Object.entries(savedVoiceProfiles));
     savedVoiceProfiles.delete(selectedSlot);
     const savedProfilesObject = Object.fromEntries(savedVoiceProfiles);
+    document.getElementById('voice_profile_slot').options[parseInt(selectedSlot)-1].innerHTML = `${selectedSlot}. `;
 
     profileName.value = '';
+    profileName.dispatchEvent(new Event('input', { bubbles: true }));
+
     preferences.set('saved_voice_profiles', savedProfilesObject);
 }
 
@@ -302,18 +305,14 @@ function saveVoiceProfile() {
     const currentVoiceProfile = preferences.get('voice_profile');
     const selectedSlot = parseInt(document.getElementById('voice_profile_slot').value);
     
-    if (!profileName.value) {
-        //alert('Please enter a valid profile name');
-        return;
-    }
+    if (!profileName.value)  return;
 
     let savedVoiceProfiles = new Map(Object.entries(preferences.get('saved_voice_profiles')));
     savedVoiceProfiles.set(selectedSlot, { name: profileName.value, profile: currentVoiceProfile });
     const savedProfilesObject = Object.fromEntries(savedVoiceProfiles);
+    document.getElementById('voice_profile_slot').options[parseInt(selectedSlot)-1].innerHTML = `${selectedSlot}. ${profileName.value}`;
 
     preferences.set('saved_voice_profiles', savedProfilesObject);
-
-    //alert(`Voice profile "${profileName}" saved successfully`);
 }
 
 function loadVoiceProfile() {
@@ -323,14 +322,12 @@ function loadVoiceProfile() {
 
     if (selectedProfile) {
         profileName.value = selectedProfile.name;
-        profileName.dispatchEvent(new Event('input', { bubbles: true }));
         preferences.set('voice_profile', selectedProfile.profile);
         voiceProfile = preferences.get('voice_profile')
         initControls();
-    } else {
-        profileName.value = '';
-        //alert('No saved voice profile found in this slot.');
-    }
+    } else profileName.value = '';
+
+    profileName.dispatchEvent(new Event('input', { bubbles: true }));
 }
 //#endregion
 

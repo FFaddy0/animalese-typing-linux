@@ -98,6 +98,12 @@ div[show=false], div[show=false] text {
     border-radius: 8px;
 }
 
+::selection {
+    color: #ffffff;
+    background-color: #4e73ff;
+    border-radius: 8px;
+}
+
 .footer {
     padding-top:0px;
     padding-bottom:0px;
@@ -485,7 +491,7 @@ input[type=text]::placeholder {
 }
 
 #voice_profiles {
-    margin: 16px 16px;
+    margin: 4px 0px;
     flex: 1;
     display: inline-flex;
     flex-direction: column;
@@ -495,28 +501,46 @@ input[type=text]::placeholder {
 
 #voice_profile_select {
     display: flex;
+    position: relative;
+}
+
+#voice_profile_select::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    top: 51%;
+    width: 0;
+    height: 0;
+    border-radius: 2px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 5px solid #e0c49e;
+    transform: translate(7px, -50%);
 }
 
 #voice_profile_slot {
     font-size: 18px;
-    width: 22px;
-    height: 27px;
+    width: 25px;
+    height: 31px;
     border-radius: 8px 0px 0px 0px;
+    color: transparent;
+    position: relative;
 }
 
-#voice_profile_slots option {
-    background-color: #ece4c1;
-    color: #6e5c44; 
-    font-family: "Arial Rounded Bold";
-    text-align: center;
-    padding: 4px 8px;
+#voice_profile_slot option {
+    color: #6e5c44;
+    text-align: start;
 }
+#voice_profile_slot option:checked {
+    color: #6cd576;
+}
+
 #voice_profile_name {
     font-size: clamp(8px, 100%, calc(105px/ max(1, var(--label-length))));
     text-align: center;
-    width: 85px;
-    min-height: 26px;
-    max-height: 26px;
+    width: 82px;
+    min-height: 30px;
+    max-height: 30px;
     border-radius: 0px 8px 0px 0px;
 }
 
