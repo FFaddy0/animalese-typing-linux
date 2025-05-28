@@ -416,6 +416,7 @@ remapIn.addEventListener('selectstart', e => e.preventDefault());
 remapIn.addEventListener('mousedown', e => e.preventDefault());
 document.addEventListener('keydown', e => {
     if ( !(remapIn === document.activeElement || isRemapping) ) return;
+    e.preventDefault();
     remapStart();
     
     let { key, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = currentKey;
