@@ -41,11 +41,11 @@
     "settings.reset":"zurücksetzen",
     "settings.reset.description":"halten, um einstellungen zu resetten",
 
-    "en": "Inglés/English",
-    "es": "Español",
-    "de": "Alemán/Deutsch",
-    "fr": "Francés/French",
-    "ko": "Coreano/Korean",
-    "ja": "Japonés/Japanese",
-    "zh_CN": "Chino/Chinese"
+    "en": "Englisch/English",
+    "es": "Spanisch/Español",
+    "de": "Deutsch",
+    "fr": "Französisch/Français",
+    "ko": "Koreanisch/한국어",
+    "ja": "Japanisch/日本語",
+    "zh_CN": "Chinesisch/中文"
 }
