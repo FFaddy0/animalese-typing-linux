@@ -85,7 +85,7 @@ key-button .button-top {
 }
 
 key-button.pressed .button-top {
-    fill:#a1e19a;
+    fill:var(--input-highlight-color);
     transform: translate(0px,4px);
     transition: transform 0.07s ease;
 }
@@ -167,7 +167,7 @@ piano-key .button-top:hover {
     transition: transform 0.33s ease-out;
 }
 piano-key.pressed .button-top {
-    fill:#a1e19a;
+    fill:var(--input-highlight-color);
     transform: translate(0px,4px);
     transition: transform 0.07s ease;
 }
