@@ -250,7 +250,7 @@ window.api.onKeyDown( (keyInfo) => {
     currentKey = keyInfo;
     //if (isRemapping || remapIn === document.activeElement) return;
     const { keycode, isCapsLock, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = keyInfo;
-    const path = isShiftDown?shiftSound:isCtrlDown?ctrlSound:sound;
+    const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound);
     if (path === undefined) return;
     const options = {}
     if (!preferences.get('hold_repeat')) Object.assign(options, { hold: keycode });
@@ -274,7 +274,7 @@ window.api.onKeyDown( (keyInfo) => {
 });
 window.api.onKeyUp( (keyInfo) => {
     const { keycode, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = keyInfo;
-    const path = isShiftDown?shiftSound:isCtrlDown?ctrlSound:sound;
+    const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound)
     if (path === undefined) return;
     switch (true) {
         case ( path.startsWith('&.sing') ):
@@ -382,9 +382,10 @@ function remapStop() {
 
 function remapReset() {
     const defaultKey = window.api.getDefaultKey(currentKey.keycode);
-    const sound = currentKey.isShiftDown? defaultKey.shiftSound ?? defaultKey.sound:currentKey.isCtrlDown? defaultKey.ctrlSound ?? defaultKey.sound:defaultKey.sound;
+    const sound = currentKey.isCtrlDown?defaultKey.ctrlSound:(isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
     changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
     window.api.sendRemapData({ sound });
+    console.log(defaultKey);
 }
 
 window.api.onRemapReceived((remapButton) => {
@@ -392,14 +393,16 @@ window.api.onRemapReceived((remapButton) => {
 
     const keycode = `${currentKey.keycode}`;
     const defaultKey = window.api.getDefaultKey(keycode);
-    const defaultSound = currentKey.isShiftDown? defaultKey.shiftSound ?? defaultKey.sound:currentKey.isCtrlDown? defaultKey.ctrlSound ?? defaultKey.sound:defaultKey.sound;
+    //const defaultSound = currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):currentKey.isCtrlDown?(defaultKey.ctrlSound):'';
+    const defaultSound = currentKey.isCtrlDown?defaultKey.ctrlSound:(isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
+    
     const reset = remapButton.sound === defaultSound;// if the key is being mapped to it's default sound, reset and clear the mapping in settings
 
     const remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
     const mapping = { ...remappedKeys.get(keycode) || {} };
 
-    if (reset) delete mapping[currentKey.isShiftDown?'shiftSound':currentKey.isCtrlDown?'ctrlSound':'sound'];
-    else mapping[currentKey.isShiftDown?'shiftSound':currentKey.isCtrlDown?'ctrlSound':'sound'] = remapButton.sound;
+    if (reset) delete mapping[currentKey.isCtrlDown?'ctrlSound':(currentKey.isShiftDown?'shiftSound':'sound')];
+    else mapping[currentKey.isCtrlDown?'ctrlSound':(currentKey.isShiftDown?'shiftSound':'sound')] = remapButton.sound;
 
     if (Object.keys(mapping).length === 0) remappedKeys.delete(keycode);
     else remappedKeys.set(keycode, mapping);
@@ -421,11 +424,11 @@ document.addEventListener('keydown', e => {
     
     let { key, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = currentKey;
     if ((key === "Shift") || (key === "Ctrl"))  key = key;
-    else if (isShiftDown) key = `Shift + ${key}`;
     else if (isCtrlDown) key = `Ctrl + ${key}`;
+    else if (isShiftDown) key = `Shift + ${key}`;
     remapMonitor.innerHTML = key.toUpperCase();
 
-    const path = isShiftDown?shiftSound:isCtrlDown?ctrlSound:sound;
+    const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound);
     //window.audio.play(sound, { channel: 2, volume: 0.55 });
 
     document.querySelector('.highlighted')?.classList.remove('highlighted');

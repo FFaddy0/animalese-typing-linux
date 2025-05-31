@@ -18,7 +18,7 @@ function getKeyInfo(e) {// parse keyInfo from keyup/down event
         key: defaultKey.key,
         sound: remappedKey?.sound ?? defaultKey.sound,
         shiftSound: remappedKey?.shiftSound ?? (defaultKey.shiftSound ?? defaultKey.sound),
-        ctrlSound: remappedKey?.ctrlSound ?? (defaultKey.ctrlSound ?? defaultKey.sound),
+        ctrlSound: remappedKey?.ctrlSound ?? (defaultKey.ctrlSound),
         keycode: e.keycode,
         isShiftDown: e.shiftKey,
         isCtrlDown: e.ctrlKey,
