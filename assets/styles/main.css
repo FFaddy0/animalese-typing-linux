@@ -16,6 +16,8 @@ author: joshxviii
     --input-main-color: #e0c49e;
     --input-accent-color: #d1b48b;
     --input-highlight-color: #6cd576;
+    --input-highlight-color-2: #00ccff;
+    --input-highlight-color-3: #ff4343;
 }
 
 @font-face {
@@ -236,7 +238,7 @@ input[type=checkbox]:checked::after {
     transform: rotate(45deg);
 }
 
-.x-checkbox[type=checkbox]:checked::after, .x-checkbox[type=checkbox]:checked::before {
+[inactive=true] input[type=checkbox]:checked::after, [inactive=true] input[type=checkbox]:checked::before {
     content: '';
     transform: rotate(45deg);
     position: absolute;
@@ -244,11 +246,11 @@ input[type=checkbox]:checked::after {
     left: 3px;
     width: 0px;
     height: 13px;
-    border: solid #ff4343;
+    border: solid var(--input-highlight-color-3);
     border-radius: 2px;
     border-width: 1px 3px 1px 0px;
 }
-.x-checkbox[type=checkbox]:checked::before {
+[inactive=true]  input[type=checkbox]:checked::before {
     transform: rotate(-45deg);
 }
 
@@ -335,7 +337,6 @@ input[type=radio]:checked::before {
 }
 input:checked + .slider:before {
     transform: translateX(calc(var(--toggle-width) - 4px - 100%));
-    
 }
 
 svg-button {
@@ -707,7 +708,7 @@ input[type=text]::placeholder {
     border: 4px dashed rgb(from var(--input-highlight-color) r g b / 0.65);
 }
 #remap_monitor.remapping {
-    border-color: rgb(0, 204, 255);
+    border-color: var(--input-highlight-color-2);
 }
 
 #remap_in {
@@ -751,8 +752,8 @@ input[type=text]::placeholder {
 }
 
 #settings_overlay {
-    width: 320px;
-    height: 300px;
+    width: 328px;
+    height: 302px;
     position: absolute;
     background-color: var(--main-bg-color);
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
@@ -778,6 +779,7 @@ input[type=text]::placeholder {
     display: inline-flex;
     align-self: flex-start;
     align-items: center;
+    margin-block: 2px;
 }
 #settings_overlay label input {
     margin: 3px 7px 0px 7px;
@@ -847,13 +849,12 @@ input[type=text]::placeholder {
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
     padding-block: 7px;
 }
 
 table {
     width: 84%;
-    height: 100px;
+    height: 122px;
     background-color: var(--secondary-bg-color);
     border-radius: 8px;
     overflow-y: auto;

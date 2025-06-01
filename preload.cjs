@@ -50,7 +50,7 @@ contextBridge.exposeInMainWorld('api', {
             ipcRenderer.removeListener(channel, handler);
         };
     },
-    onActiveWindowChanged: (callback) => ipcRenderer.on('active-windows-updated', (_event, e) => callback(e)),
+    onFocusedWindowChanged: (callback) => ipcRenderer.on('focused-window-changed', (_event, e) => callback(e)),
     getAppInfo: () => appInfo,
     goToUrl: (url) => shell.openExternal(url),
     onPermissionError: (callback) => {

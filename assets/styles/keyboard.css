@@ -18,8 +18,8 @@
 }
 
 .highlighted, .highlighted .key-label, .highlighted .button-top, .highlighted[btn-type=b] .button-top {
-    fill: rgb(0, 204, 255);
-    --alt1-color: rgb(0, 204, 255);
+    fill: var(--input-highlight-color-2);
+    --alt1-color: var(--input-highlight-color-2);
     color: white;
 }
 .highlighted .key-icon {

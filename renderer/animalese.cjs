@@ -55,11 +55,13 @@ function initControls() {
 
     document.getElementById('lang_select').value = preferences.get('lang');
     checkStartupRun.checked = preferences.get('startup_run');
-    document.getElementById('check_always_enabled').checked = preferences.get('always_enabled');
+    document.getElementById('check_always_active').checked = preferences.get('always_active');
     document.getElementById('check_hold_repeat').checked = preferences.get('hold_repeat');
-    document.getElementById('apps_table').setAttribute('disabled', preferences.get('always_enabled'));
+    document.querySelectorAll('#apps_table, #apps_toggle').forEach(el => el.setAttribute('disabled', preferences.get('always_active')));
+    document.getElementById('check_disable_selected').checked = preferences.get('disable_selected')
+    document.getElementById('apps_description').setAttribute('translation', preferences.get('disable_selected')?'settings.apps.disabled':'settings.apps.enabled');
+    document.getElementById('apps_tbody').setAttribute('inactive', preferences.get('disable_selected'));
     document.querySelectorAll('input[name="audio_mode"]').forEach(radio => {// audio mode initilize 
-        //radio.replaceWith(radio.cloneNode(true));
         radio.checked = parseInt(radio.value) === preferences.get('audio_mode');
         radio.addEventListener('change', () => {
             if (radio.checked) preferences.set('audio_mode', parseInt(radio.value));
@@ -202,8 +204,8 @@ function updateLanguage(lang) {// language selection update
 }
 //#endregion
 
-function updatedActiveWindows(activeWindows = []) {
-    const enabledApps = preferences.get('enabled_apps');
+function updatedFocusedWindows(activeWindows = []) {
+    const enabledApps = preferences.get('selected_apps');
     const tableBody = document.getElementById('apps_tbody');
     tableBody.innerHTML = '';
     [...new Set([...enabledApps, ...activeWindows])].forEach(appName => {
@@ -234,21 +236,19 @@ function updatedActiveWindows(activeWindows = []) {
 }
 
 function updateEnabledApps(appName, isChecked) {
-    let enabledApps = preferences.get('enabled_apps')
+    let enabledApps = preferences.get('selected_apps')
 
     if (isChecked && !enabledApps.includes(appName)) enabledApps.push(appName);
     else enabledApps = enabledApps.filter(name => name !== appName);
 
-    preferences.set('enabled_apps', enabledApps)
+    preferences.set('selected_apps', enabledApps)
 }
-window.api.onActiveWindowChanged((activeWindows) => {
-    updatedActiveWindows(activeWindows);
-});
+window.api.onFocusedWindowChanged((activeWindows) => updatedFocusedWindows(activeWindows));
+updatedFocusedWindows();
 
 //#region Key press detect
 window.api.onKeyDown( (keyInfo) => {
     currentKey = keyInfo;
-    //if (isRemapping || remapIn === document.activeElement) return;
     const { keycode, isCapsLock, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = keyInfo;
     const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound);
     if (path === undefined) return;
@@ -429,7 +429,6 @@ document.addEventListener('keydown', e => {
     remapMonitor.innerHTML = key.toUpperCase();
 
     const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound);
-    //window.audio.play(sound, { channel: 2, volume: 0.55 });
 
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     document.querySelector(`[sound="${path}"]`)?.classList.add('highlighted');

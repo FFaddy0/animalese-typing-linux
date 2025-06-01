@@ -32,19 +32,6 @@ author: joshxviii
         <div class="separator"></div>
         
         <div class="catagory">
-            <h3 translation="settings.lang"></h3>
-            <select id="lang_select" onchange="updateLanguage(`${this.value}`)">
-                <option value="en"      translation="en"></option>
-                <option value="es"      translation="es"></option>
-                <option value="de"      translation="de"></option>
-                <option value="fr"      translation="fr"></option>
-                <option value="ko"      translation="ko"></option>
-                <option value="ja"      translation="ja"></option>
-                <option value="zh_CN"   translation="zh_CN"></option>
-            </select>
-        </div>
-        
-        <div class="catagory">
             <h3 translation="settings.general"></h3>
 
             <label translation="settings.startup">
@@ -79,18 +66,31 @@ author: joshxviii
                 
             </div>
         </div>
+
+        <div class="catagory">
+            <h3 translation="settings.lang"></h3>
+            <select id="lang_select" onchange="updateLanguage(`${this.value}`)">
+                <option value="en"      translation="en"></option>
+                <option value="es"      translation="es"></option>
+                <option value="de"      translation="de"></option>
+                <option value="fr"      translation="fr"></option>
+                <option value="ko"      translation="ko"></option>
+                <option value="ja"      translation="ja"></option>
+                <option value="zh_CN"   translation="zh_CN"></option>
+            </select>
+        </div>
     
         <div class="catagory">
             <h3 translation="settings.apps"></h3>
-            <label translation="settings.always_enabled">
-                <input type="checkbox" id="check_always_enabled" onchange="window.settings.set('always_enabled', this.checked);document.getElementById('apps_toggle').setAttribute('disabled', this.checked);document.getElementById('apps_table').setAttribute('disabled', this.checked)"/>
+            <label translation="settings.always_active">
+                <input type="checkbox" id="check_always_active" onchange="window.settings.set('always_active', this.checked);document.querySelectorAll('#apps_table, #apps_toggle').forEach(el => el.setAttribute('disabled', this.checked))"/>
             </label>
 
 
-            <label translation="settings.apps.toggle" id="apps_toggle" disabled="false">
+            <label translation="settings.apps.mode" id="apps_toggle" disabled="false">
 
                 <label class="toggle">
-                    <input type="checkbox" onchange="document.getElementById('apps_description').setAttribute('translation', this.checked?'settings.apps.disabled':'settings.apps.enabled');document.getElementById('apps_tbody').querySelectorAll('[type=checkbox]').forEach(el => {if (this.checked) el.classList.add('x-checkbox'); else el.classList.remove('x-checkbox')}); "/>
+                    <input type="checkbox" id="check_disable_selected" onchange="window.settings.set('disable_selected', this.checked);document.getElementById('apps_description').setAttribute('translation', this.checked?'settings.apps.disabled':'settings.apps.enabled');document.getElementById('apps_tbody').setAttribute('inactive', this.checked);"/>
                     <span class="slider"></span>
                 </label>
 
@@ -100,7 +100,7 @@ author: joshxviii
             <table id="apps_table" disabled="false">
                 <thead>
                     <tr>
-                        <th id="apps_description" translation="settings.apps.enabled" style="font-size: 10px; opacity: .5;"></th>
+                        <th id="apps_description" translation="settings.apps.enabled" style="font-size: 10px; opacity: .7;"></th>
                     </tr>
                 </thead>
                 <tbody id="apps_tbody"></tbody>

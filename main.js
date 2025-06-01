@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import Store from 'electron-store';
 import isDev from 'electron-is-dev';
 import { spawn } from 'child_process';
-import { activeWindow as getActiveWindow } from '@deepfocus/get-windows';
+import { activeWindow as getFocusedWindow } from '@deepfocus/get-windows';
 import pkg from 'electron-updater'; const { autoUpdater } = pkg;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +23,7 @@ function showIfAble() { // focus the existing window if it exists
 }
 
 function setDisable(value) {
-    value = preferences.get('always_enabled') ? false : value;
+    value = preferences.get('always_active') ? false : value;
     if (disabled === value) return;
     disabled = value;
     if (tray) {
@@ -44,10 +44,11 @@ const defaults = {
     audio_mode: 0,
     startup_run: false,
     hold_repeat: true,
-    always_enabled: true,
-    enabled_apps: [],
+    always_active: true,
+    selected_apps: [],
+    disable_selected: false,
     voice_profile: {
-        voice_type: 'f2',
+        voice_type: 'f1',
         pitch_shift: 0.0,
         pitch_variation: 0.2,
         intonation: 0.0
@@ -76,8 +77,9 @@ ipcMain.handle('store-reset', async (e) => {// set settings to default and trigg
         'voice_profile',
         'saved_voice_profiles',
         'remapped_keys',
-        'enabled_apps',
-        'always_enabled'
+        'selected_apps',
+        'disable_selected',
+        'always_active'
     ];
     resetable.forEach(r=>{
         preferences.reset(r);
@@ -105,34 +107,35 @@ ipcMain.on('set-run-on-startup', (e, value) => setRunOnStartup(value));
 
 var bgwin = null;
 var tray = null;
-var disabled = !preferences.get('always_enabled');
-let lastActiveWindow = null;
-let activeWindows = [];
+var disabled = !preferences.get('always_active');
+let lastFocusedWindow = null;
+let focusedWindows = [];
 
-// check for active window changes and update `lastActiveWindow` when the window changes
-async function monitorActiveWindow() {
-    const activeWindow = await getActiveWindow();
+// check for active window changes and update `lastFocusedWindow` when the window changes
+async function monitorFocusedWindow() {
+    const focusedWindow = await getFocusedWindow();
 
-    if (!activeWindow?.owner?.name) return;// return early if invlaid window
+    if (!focusedWindow?.owner?.name) return;// return early if invlaid window
 
-    const winName = activeWindow.owner.name
-    if (winName === lastActiveWindow?.owner?.name) return;// return early if the active window hasn't changed.
+    const winName = focusedWindow.owner.name
+    if (winName === lastFocusedWindow?.owner?.name) return;// return early if the active window hasn't changed.
     
-    const enabledApps = preferences.get('enabled_apps');
+    const selectedApps = preferences.get('selected_apps');
 
-    // change disable value when focusing in or out of an animalese-enabled app.
-    setDisable( !(enabledApps.includes(winName) || activeWindow?.owner?.processId === process.pid) )
+    // change disable value when focusing in or out of selecte-apps.
+    setDisable( (preferences.get('disable_selected')?selectedApps.includes(winName):!selectedApps.includes(winName)) && 
+    (focusedWindow?.owner?.processId !== process.pid || winName === 'Animalese Typing') );
 
-    lastActiveWindow = activeWindow;
-    if (!activeWindows.includes(winName)) {
-        activeWindows.push(winName);
-        if (activeWindows.length > 8) activeWindows.shift();
-        bgwin.webContents.send(`active-windows-updated`, activeWindows);
+    lastFocusedWindow = focusedWindow;
+    if (!focusedWindows.includes(winName)) {
+        focusedWindows.push(winName);
+        if (focusedWindows.length > 8) focusedWindows.shift();
+        bgwin.webContents.send('focused-window-changed', focusedWindows);
     }
 }
 
-function startActiveWindowMonitoring() {
-    setInterval(monitorActiveWindow, 500); // check window every .5 seconds
+function startWindowMonitoring() {
+    setInterval(monitorFocusedWindow, 500); // check window every .5 seconds
 }
 function createMainWin() {
     if(bgwin !== null) return;
@@ -286,7 +289,7 @@ function stopKeyListener() {
 }
 
 app.on('ready', () => {
-    startActiveWindowMonitoring();
+    startWindowMonitoring();
     createMainWin();
     createTrayIcon();
     if (!disabled) startKeyListener();
