@@ -45,25 +45,25 @@ const keyDefinitions = [
   { keycodes: [89, 16, null], key: 'y', sound: '&.voice.y', ctrlSound: 'sfx.ampersand' },
   { keycodes: [90, 6, null], key: 'z', sound: '&.voice.z', ctrlSound: 'sfx.ampersand' },
   // Function Keys
-  { keycodes: [112, 122, null], key: 'F1', sound: '' },
-  { keycodes: [113, 120, null], key: 'F2', sound: '' },
-  { keycodes: [114, 99, null], key: 'F3', sound: '' },
-  { keycodes: [115, 118, null], key: 'F4', sound: '' },
-  { keycodes: [116, 96, null], key: 'F5', sound: '' },
-  { keycodes: [117, 97, null], key: 'F6', sound: '' },
-  { keycodes: [118, 98, null], key: 'F7', sound: '' },
-  { keycodes: [119, 100, null], key: 'F8', sound: '' },
-  { keycodes: [120, 101, null], key: 'F9', sound: '' },
-  { keycodes: [121, 109, null], key: 'F10', sound: '' },
-  { keycodes: [122, 103, null], key: 'F11', sound: '' },
-  { keycodes: [123, 111, null], key: 'F12', sound: '' },
-  { keycodes: [124, 105, null], key: 'F13', sound: '' },
-  { keycodes: [125, 107, null], key: 'F14', sound: '' },
-  { keycodes: [126, 113, null], key: 'F15', sound: '' },
+  { keycodes: [112, 122, null], key: 'F1'},
+  { keycodes: [113, 120, null], key: 'F2'},
+  { keycodes: [114, 99, null], key: 'F3'},
+  { keycodes: [115, 118, null], key: 'F4'},
+  { keycodes: [116, 96, null], key: 'F5'},
+  { keycodes: [117, 97, null], key: 'F6'},
+  { keycodes: [118, 98, null], key: 'F7'},
+  { keycodes: [119, 100, null], key: 'F8'},
+  { keycodes: [120, 101, null], key: 'F9'},
+  { keycodes: [121, 109, null], key: 'F10'},
+  { keycodes: [122, 103, null], key: 'F11'},
+  { keycodes: [123, 111, null], key: 'F12'},
+  { keycodes: [124, 105, null], key: 'F13'},
+  { keycodes: [125, 107, null], key: 'F14'},
+  { keycodes: [126, 113, null], key: 'F15'},
   // Special Keys and Characters
   { keycodes: [27, 53, null], key: 'Esc', sound: 'sfx.enter' },
   { keycodes: [9, 48, null], key: 'Tab', sound: 'sfx.tab' },
-  { keycodes: [20, 57, null], key: 'Caps Lock', sound: '' },
+  { keycodes: [20, 57, null], key: 'Caps Lock'},
   { keycodes: [192, 50, null], key: '`', sound: '', shiftSound: 'sfx.tilde' },
   { keycodes: [189, 27, null], key: '-', sound: '%.77', shiftSound: 'sfx.default' },
   { keycodes: [187, 24, null], key: '=', sound: '%.79', shiftSound: 'sfx.default' },
@@ -77,34 +77,34 @@ const keyDefinitions = [
   { keycodes: [190, 47, null], key: '.', sound: 'sfx.default', shiftSound: 'sfx.default' },
   { keycodes: [13, 36, null], key: 'Enter', sound: 'sfx.enter' },
   { keycodes: [8, 51, null], key: 'Backspace', sound: 'sfx.backspace' },
-  { keycodes: [32, 49, null], key: 'Space', sound: '' },
+  { keycodes: [32, 49, null], key: 'Space'},
   // Navigation Keys
-  { keycodes: [45, null, null], key: 'Insert', sound: '' },
+  { keycodes: [45, null, null], key: 'Insert'},
   { keycodes: [46, 51, null], key: 'Delete', sound: 'sfx.at' },
-  { keycodes: [36, 115, null], key: 'Home', sound: '' },
-  { keycodes: [35, 119, null], key: 'End', sound: '' },
-  { keycodes: [33, 116, null], key: 'PageUp', sound: '' },
-  { keycodes: [34, 121, null], key: 'PageDown', sound: '' },
+  { keycodes: [36, 115, null], key: 'Home'},
+  { keycodes: [35, 119, null], key: 'End'},
+  { keycodes: [33, 116, null], key: 'PageUp'},
+  { keycodes: [34, 121, null], key: 'PageDown'},
   { keycodes: [38, 126, null], key: 'Up', sound: 'sfx.arrow_up' },
   { keycodes: [37, 123, null], key: 'Left', sound: 'sfx.arrow_left' },
   { keycodes: [39, 124, null], key: 'Right', sound: 'sfx.arrow_right' },
   { keycodes: [40, 125, null], key: 'Down', sound: 'sfx.arrow_down' },
   // Modifier Keys
-  { keycodes: [160, 56, null], key: 'Shift', sound: '' }, // Left Shift
-  { keycodes: [161, 60, null], key: 'Shift', sound: '' }, // Right Shift
-  { keycodes: [162, 59, null], key: 'Ctrl', sound: '' }, // Left Ctrl
-  { keycodes: [163, 62, null], key: 'Ctrl', sound: '' }, // Right Ctrl
-  { keycodes: [164, 58, null], key: 'Alt', sound: '' }, // Left Alt
-  { keycodes: [165, 61, null], key: 'Alt', sound: '' }, // Right Alt
-  { keycodes: [91, 55, null], key: 'Meta', sound: '' }, // Left Meta (Win/Cmd)
-  { keycodes: [92, 54, null], key: 'Meta', sound: '' }, // Right Meta (Win/Cmd)
-  { keycodes: [93, null, null], key: 'Menu', sound: '' },
+  { keycodes: [160, 56, null], key: 'Shift'}, // Left Shift
+  { keycodes: [161, 60, null], key: 'Shift'}, // Right Shift
+  { keycodes: [162, 59, null], key: 'Ctrl'}, // Left Ctrl
+  { keycodes: [163, 62, null], key: 'Ctrl'}, // Right Ctrl
+  { keycodes: [164, 58, null], key: 'Alt'}, // Left Alt
+  { keycodes: [165, 61, null], key: 'Alt'}, // Right Alt
+  { keycodes: [91, 55, null], key: 'Meta'}, // Left Meta (Win/Cmd)
+  { keycodes: [92, 54, null], key: 'Meta'}, // Right Meta (Win/Cmd)
+  { keycodes: [93, null, null], key: 'Menu'},
   // Numpad Keys
-  { keycodes: [144, 71, null], key: 'Num Lock', sound: '' },
+  { keycodes: [144, 71, null], key: 'Num Lock'},
   { keycodes: [111, 75, null], key: 'Num /', sound: 'sfx.slash_forward' },
   { keycodes: [106, 67, null], key: 'Num *', sound: 'sfx.asterisk' },
-  { keycodes: [109, 78, null], key: 'Num -', sound: '' },
-  { keycodes: [107, 69, null], key: 'Num +', sound: '' },
+  { keycodes: [109, 78, null], key: 'Num -'},
+  { keycodes: [107, 69, null], key: 'Num +'},
   { keycodes: [13, 76, null], key: 'Num Enter', sound: 'sfx.enter' },
   { keycodes: [110, 65, null], key: 'Num .', sound: 'sfx.default' },
   { keycodes: [96, 82, null], key: 'Num 0', sound: '%.58' },
@@ -130,8 +130,8 @@ function buildKeyMap(platform) {
 
     map[code] = {
       key: def.key,
-      sound: def.sound,
-      shiftSound: def.shiftSound ?? def.sound,
+      sound: def.sound ?? '',
+      shiftSound: def.shiftSound ?? def.sound ?? '',
       ctrlSound: def.ctrlSound ?? '',
       altSound: def.altSound ?? '',
     };

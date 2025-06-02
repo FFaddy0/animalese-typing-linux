@@ -53,7 +53,7 @@ const defaults = {
         pitch_variation: 0.2,
         intonation: 0.0
     },
-    inst_type: 'guitar',
+    instrument: 'guitar',
     saved_voice_profiles: new Map(),
     remapped_keys: new Map()
 }
@@ -76,6 +76,7 @@ ipcMain.handle('store-reset', async (e) => {// set settings to default and trigg
         'hold_repeat',
         'audio_mode',
         'voice_profile',
+        'instrument',
         'saved_voice_profiles',
         'remapped_keys',
         'selected_apps',

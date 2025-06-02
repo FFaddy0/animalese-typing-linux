@@ -12,20 +12,27 @@ const defaultKeyMap = keycodeToSound[appInfo.platform];
 function getKeyInfo(e) {// parse keyInfo from keyup/down event
     const remappedKey = settingsData.remapped_keys[e.keycode]
     const defaultKey = defaultKeyMap[e.keycode]
-
     if (defaultKey === undefined) return;
+
+    const { sound = defaultKey.sound, shiftSound = defaultKey.shiftSound, ctrlSound = defaultKey.ctrlSound, altSound = defaultKey.altSound} = remappedKey || {};
+    const { shiftKey, ctrlKey, altKey } = e;
+    const finalSound = ctrlKey ? ctrlSound : altKey ? altSound : shiftKey ? shiftSound : sound;
+    const defaultSound = ctrlKey ? defaultKey.ctrlSound : altKey ? defaultKey.altSound : shiftKey ? defaultKey.shiftSound : defaultKey.sound;
+
     return {
-        key: defaultKey.key,
-        sound: remappedKey?.sound ?? defaultKey.sound,
-        shiftSound: remappedKey?.shiftSound ?? (defaultKey.shiftSound ?? defaultKey.sound),
-        ctrlSound: remappedKey?.ctrlSound ?? (defaultKey.ctrlSound),
-        altSound: remappedKey?.altSound ?? (defaultKey.altSound),
         keycode: e.keycode,
-        isShiftDown: e.shiftKey,
-        isCtrlDown: e.ctrlKey,
-        isAltDown: e.altKey,
+        key: defaultKey.key,
+        sound,
+        isShiftDown: shiftKey,
+        shiftSound,
+        isCtrlDown: ctrlKey,
+        ctrlSound,
+        isAltDown: altKey,
+        altSound,
+        finalSound,
+        defaultSound,
         isCapsLock: isCapsLockActive()
-    }
+    };
 }
 
 // general app messages 
@@ -34,23 +41,17 @@ contextBridge.exposeInMainWorld('api', {
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     sendRemapData: (data) => ipcRenderer.send('remap-key-press', data),
     onRemapReceived: (callback) => ipcRenderer.on('remap-key-set', (_, data) => callback(data)),
-    getDefaultKey: (keycode) => defaultKeyMap[keycode],
     onKeyDown: (callback) => ipcRenderer.on('keydown', (_, e) =>  callback( getKeyInfo(e) )),
     onKeyUp: (callback) => ipcRenderer.on('keyup', (_, e) =>  callback( getKeyInfo(e) )),
     onSettingUpdate: (key, callback) => {
         const channel = `${key}`;
         const handler = (_, value) => {
-            if (document.readyState === 'loading') {
-                window.addEventListener('load', () => callback(value));
-            } else {
-                callback(value);
-            }
+            if (document.readyState === 'loading') window.addEventListener('load', () => callback(value));
+            else callback(value);
         };
         ipcRenderer.on(channel, handler);
         
-        return () => {
-            ipcRenderer.removeListener(channel, handler);
-        };
+        return () => ipcRenderer.removeListener(channel, handler);
     },
     onFocusedWindowChanged: (callback) => ipcRenderer.on('focused-window-changed', (_event, e) => callback(e)),
     getAppInfo: () => appInfo,

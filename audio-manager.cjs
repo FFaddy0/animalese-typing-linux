@@ -19,8 +19,8 @@ function releaseSound(release_id, cut = true) {
 
 let v = ipcRenderer.sendSync('get-store-data-sync').voice_profile;
 ipcRenderer.on('updated-voice_profile', (_, value) => v = value);
-let inst_type = ipcRenderer.sendSync('get-store-data-sync').inst_type;
-ipcRenderer.on('updated-inst_type', (_, value) => inst_type = value);
+let instrument = ipcRenderer.sendSync('get-store-data-sync').instrument;
+ipcRenderer.on('updated-instrument', (_, value) => instrument = value);
 let mode = ipcRenderer.sendSync('get-store-data-sync').audio_mode;
 ipcRenderer.on('updated-audio_mode', (_, value) => mode = value);
 
@@ -204,7 +204,7 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
             if (isNaN(note)) return;
             Object.assign(options, { note: note });
             if ( mode===2 ) path = 'inst.guitar'
-            else  path = 'inst.'+inst_type;
+            else  path = 'inst.'+instrument;
         }
 
         if (isVoice || isSpecial) { // apply animalese voice profile
