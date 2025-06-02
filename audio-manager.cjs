@@ -18,9 +18,11 @@ function releaseSound(release_id, cut = true) {
 }
 
 let v = ipcRenderer.sendSync('get-store-data-sync').voice_profile;
-ipcRenderer.on('updated-voice_profile', (_, voice_profile) => v = voice_profile);
+ipcRenderer.on('updated-voice_profile', (_, value) => v = value);
+let inst_type = ipcRenderer.sendSync('get-store-data-sync').inst_type;
+ipcRenderer.on('updated-inst_type', (_, value) => inst_type = value);
 let mode = ipcRenderer.sendSync('get-store-data-sync').audio_mode;
-ipcRenderer.on('updated-audio_mode', (_, audio_mode) => mode = audio_mode);
+ipcRenderer.on('updated-audio_mode', (_, value) => mode = value);
 
 const audio_path = path.join(__dirname, './assets/audio/');
 const file_type = ".ogg";
@@ -59,40 +61,21 @@ const voice_sprite = {
     z: [200 * 25,   200],
 }
 
-// TODO: change the note's pitch with js rather than having a different hard-coded sound sprite per note.
-// This will make adding custom sounds much easier later.
-// (60,000) / 60bpm = 1000ms
-const notes_sprite = {
-    C4:  [1000 * 0,  1000],
-    Db4: [1000 * 1,  1000],
-    D4:  [1000 * 2,  1000],
-    Eb4: [1000 * 3,  1000],
-    E4:  [1000 * 4,  1000],
-    F4:  [1000 * 5,  1000],
-    Gb4: [1000 * 6,  1000],
-    G4:  [1000 * 7,  1000],
-    Ab4: [1000 * 8,  1000],
-    A4:  [1000 * 9,  1000],
-    Bb4: [1000 * 10, 1000],
-    B4:  [1000 * 11, 1000],
-    C5:  [1000 * 12, 1000],
-    Db5: [1000 * 13, 1000],
-    D5:  [1000 * 14, 1000],
-    Eb5: [1000 * 15, 1000],
-    E5:  [1000 * 16, 1000],
-    F5:  [1000 * 17, 1000],
-    Gb5: [1000 * 18, 1000],
-    G5:  [1000 * 19, 1000],
-    Ab5: [1000 * 20, 1000],
-    A5:  [1000 * 21, 1000],
-    Bb5: [1000 * 22, 1000],
-    B5:  [1000 * 23, 1000],
+const sing = { 
+    Nah: [2000 * 0,  2000],
+    Me:  [2000 * 1,  2000],
+    Now: [2000 * 2,  2000],
+    Way: [2000 * 3,  2000],
+    Oh:  [2000 * 4,  2000],
+    Oh2: [2000 * 5,  2000],
+    Me2: [2000 * 6,  2000],
 }
+
 // (60,000) / 100bpm = 600ms
 const special_sprite = {
     OK:     [600 * 0, 600],
     Gwah:   [600 * 1, 600],
-    Deska:      [600 * 2, 600]
+    Deska:  [600 * 2, 600]
 }
 // 60,000 / 100bpm = 600ms
 const sfx_sprite = {
@@ -137,13 +120,16 @@ function buildSoundBanks() {
     for (const group of groups) {
         bank[group] = {
             voice: createAudioInstance(`${group}_voice`, voice_sprite),
-            sing: createAudioInstance(`${group}_sing`, notes_sprite),
             special: createAudioInstance(`${group}_special`, special_sprite)
         };
     }
     bank['inst'] = {
-        whistle: createAudioInstance('inst_whistle', notes_sprite),
-        guitar: createAudioInstance('inst_guitar', notes_sprite)
+        guitar: createAudioInstance('inst/guitar'),
+        girl: createAudioInstance('inst/girl', sing),
+        boy: createAudioInstance('inst/boy', sing),
+        cranky: createAudioInstance('inst/cranky', sing),
+        kk_slider: createAudioInstance('inst/kk_slider', sing),
+        whistle: createAudioInstance('inst/whistle'),
     }
     bank['sfx'] = createAudioInstance('sfx', sfx_sprite);
     return bank;
@@ -184,7 +170,7 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
     const soundBanks = buildSoundBanks();
 
     // main audio playback function
-    function playSound(path, options = {/*volume, pitch_shift, pitch_variation, intonation, channel, hold, static*/}) {
+    function playSound(path, options = {/*volume, pitch_shift, pitch_variation, intonation, channel, note, hold, static*/}) {
         if (!path || path === '') return;
         if (waitingForRelease[options.hold]) return;
 
@@ -194,20 +180,18 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
 
         const isVoice = path.startsWith('&.voice');
         const isSpecial = path.startsWith('&.special');
-        const isSing = path.startsWith('&.sing');
+        const isInstrument = path.startsWith('%');
         const isSfx = path.startsWith('sfx')
         
         if (mode===1 && isSfx) path = 'sfx.default';
-        if (mode===2 && isSing) path = path.replace('&.sing', 'inst.guitar');
         if (mode===2 && (isVoice || isSpecial)) path = 'sfx.default';
         if (mode===3 && !options.static) {
             if (isVoice) { // play random animalese sound
                 const sounds = Object.assign(Object.keys(voice_sprite))
                 path = `&.voice.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
             }
-            if (isSing) { // play random singing sound
-                const sounds = Object.keys(notes_sprite)
-                path = `&.sing.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
+            else if (isInstrument) { // play random note pitch
+                path = `%.${ Math.floor(Math.random() * 36) + 36 }`;
             }
             else if (isSfx) { // play random sound effect
                 const sounds = Object.keys(sfx_sprite)
@@ -215,7 +199,15 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
             }
         }
 
-        if (isVoice || isSpecial || isSing) { // apply animalese voice profile
+        if (isInstrument) {
+            const note = parseInt(path.replace('%.', ''));
+            if (isNaN(note)) return;
+            Object.assign(options, { note: note });
+            if ( mode===2 ) path = 'inst.guitar'
+            else  path = 'inst.'+inst_type;
+        }
+
+        if (isVoice || isSpecial) { // apply animalese voice profile
             const profileOptions = {
                 pitch_shift: options.pitch_shift ?? v.pitch_shift,
                 pitch_variation: options.pitch_variation ?? v.pitch_variation,
@@ -233,12 +225,6 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
                     channel: options.channel ?? 1
                 });
             } 
-            else {
-                Object.assign(options, {
-                    volume: options.volume ?? 1.0,
-                    channel: options.channel ?? path
-                });
-            }
             path = path.replace('&', v.voice_type);
         }
 
@@ -275,10 +261,21 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
                 return;
         }
 
+        if (isInstrument){
+            bank = bank[`${sprite}`];
+            if (bank._sprite.length === 0) bank._sprite = {[`${sprite}`]: [0, 1000]};
+            else {
+                const sounds = Object.keys(bank._sprite);
+                sprite = `${ sounds[Math.floor(Math.random() * sounds.length)] }`;
+            }
+        } 
+
         if (!bank) {
             console.warn(`Sound not found: ${path}`);
             return;
         }
+
+        console.log(bank, sprite);
 
         // AUDIO OPTIONS
         if (options.channel !== undefined) cutOffAudio(activeChannels[options.channel]);
@@ -287,12 +284,18 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
 
         // apply volume
         if (options.volume !== undefined) bank.volume(options.volume, id);
+
         // calculate pitch with variation
         if (options.pitch_shift !== undefined || options.pitch_variation !== undefined) {
             const basePitch = options.pitch_shift ?? 0;
             const variation = options.pitch_variation ?? 0;
             const finalPitch = basePitch + (Math.random()*2-1.0)*variation;
             rate = Math.min(Math.max( Math.pow(2, finalPitch / 12.0) , 0.5), 2.0);
+            bank.rate(rate, id);
+        }
+        if (options.note !== undefined) {// note has no variation
+            const note = options.note;
+            const rate = Math.max( Math.pow(2, (note - 60) / 12.0) , 0.5);
             bank.rate(rate, id);
         }
         // apply intonation

@@ -162,26 +162,25 @@ author: joshxviii
             <div class="separator"></div>
 
             <div id="bottom_row">
+                <!-- NONE -->
                 <div class="audio_editor" show="false"></div>
+                <!-- VOICE -->
                 <div class="audio_editor" id="voice_profile_editor" show="true">
                     <div id="sliders">
-                        <div class="slider-group">
-                            <label id="label_editor_1" class="editor_label" translation="editor_1"></label>
+                        <label class="editor_label" translation="editor_1">
                             <input id="pitch_shift" class="editor_slider" type="range" min="-12" max="12" step="0.1" value="0" defaultValue="0"></input>
                             <input type="text" id="pitch_shift_out" class="editor_output" />
-                        </div>
+                        </label>
 
-                        <div class="slider-group">
-                            <label id="label_editor_2" class="editor_label" translation="editor_2"></label>
+                        <label id="label_editor_2" class="editor_label" translation="editor_2">
                             <input id="intonation" class="editor_slider" type="range" min="-1.0" max="2.0" step="0.1" value="0" defaultValue="0"></input>
                             <input type="text" id="intonation_out" class="editor_output" />
-                        </div>
-
-                        <div class="slider-group">
-                            <label id="label_editor_3" class="editor_label" translation="editor_3"></label>
+                        </label>
+                    
+                        <label id="label_editor_3" class="editor_label" translation="editor_3">
                             <input id="pitch_variation" class="editor_slider" type="range" min="0" max="12" step="0.1" value="0" defaultValue="0.5"></input>
                             <input type="text" id="pitch_variation_out" class="editor_output" />
-                        </div>
+                        </label>
                     </div>
 
                     <div id="voice_type_group">
@@ -220,7 +219,20 @@ author: joshxviii
                         </div>
                     </div>
                 </div>
-                <div class="audio_editor" show="false"></div>
+                <!-- NOTES -->
+                <div class="audio_editor" show="false">
+                    <label class="editor_label" style="display: flex" translation="instrument">
+                        <select id="inst_type" onchange="window.settings.set('inst_type', this.value);console.log(this.value);">
+                            <option value="guitar" selected>guitar</option>
+                            <option value="girl">girl</option>
+                            <option value="boy">boy</option>
+                            <option value="cranky">cranky</option>
+                            <option value="kk_slider">kk_slider</option>
+                            <option value="whistle">whistle</option>
+                        </select>
+                    </label>
+                </div>
+                <!-- SOUND EFFECTS -->
                 <div class="audio_editor" show="false"></div>
             </div>
         </div>

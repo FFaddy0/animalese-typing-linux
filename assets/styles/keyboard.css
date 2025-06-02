@@ -109,7 +109,7 @@ key-button.pressed .key-icon {
 piano-board {
     display: inherit;
 }
-#paino_back {
+#piano_back {
     background-color: bisque;
     border-radius: 8px;
     filter: drop-shadow(0 16px 0px #d1b48b);
@@ -119,7 +119,9 @@ piano-board {
     height: calc(var(--key-size)*3);
     transform: translateY(-8px);
 }
-#paino_keys {
+#piano_keys {
+    width: 100%;
+    overflow: auto hidden;
     flex: 0 0 auto;
     display: inline-flex;
     justify-content:flex-start;

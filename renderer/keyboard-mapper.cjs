@@ -60,28 +60,44 @@ const voiceLayout = [
 ];
 
 const pianoLayout = [
-    {label:'C4', btnType:'l',sound:'&.sing.C4'},
-    {label:'Db4', btnType:'b',sound:'&.sing.Db4'},
-    {label:'D4', btnType:'m',sound:'&.sing.D4'},
-    {label:'Eb4', btnType:'b',sound:'&.sing.Eb4'},
-    {label:'E4', btnType:'r',sound:'&.sing.E4'},
-    {label:'F4', btnType:'l',sound:'&.sing.F4'},
-    {label:'Gb4', btnType:'b',sound:'&.sing.Gb4'},
-    {label:'G4', btnType:'m',sound:'&.sing.G4'},
-    {label:'Ab4', btnType:'b',sound:'&.sing.Ab4'},
-    {label:'A4', btnType:'m',sound:'&.sing.A4'},
-    {label:'Bb4', btnType:'b',sound:'&.sing.Bb4'},
-    {label:'B4', btnType:'r',sound:'&.sing.B4'},
-    {label:'C5', btnType:'l',sound:'&.sing.C5'},
-    {label:'Db5', btnType:'b',sound:'&.sing.Db5'},
-    {label:'D5', btnType:'m',sound:'&.sing.D5'},
-    {label:'Eb5', btnType:'b',sound:'&.sing.Eb5'},
-    {label:'E5', btnType:'r',sound:'&.sing.E5'},
-    {label:'F5', btnType:'l',sound:'&.sing.F5'},
-    {label:'Gb5', btnType:'b',sound:'&.sing.Gb5'},
-    {label:'G5', btnType:'m',sound:'&.sing.G5'},
-    {label:'Ab5', btnType:'b',sound:'&.sing.Ab5'},
-    {label:'A5', btnType:'r',sound:'&.sing.A5'}
+    {label:'C3', btnType:'l', sound:'%.48'},
+    {label:'Db3', btnType:'b',sound:'%.49'},
+    {label:'D3', btnType:'m', sound:'%.50'},
+    {label:'Eb3', btnType:'b',sound:'%.51'},
+    {label:'E3', btnType:'r', sound:'%.52'},
+    {label:'F3', btnType:'l', sound:'%.53'},
+    {label:'Gb3', btnType:'b',sound:'%.54'},
+    {label:'G3', btnType:'m', sound:'%.55'},
+    {label:'Ab3', btnType:'b',sound:'%.56'},
+    {label:'A3', btnType:'m', sound:'%.57'},
+    {label:'Bb3', btnType:'b',sound:'%.58'},
+    {label:'B3', btnType:'r', sound:'%.59'},
+
+    {label:'C4', btnType:'l', sound:'%.60'},
+    {label:'Db4', btnType:'b',sound:'%.61'},
+    {label:'D4', btnType:'m', sound:'%.62'},
+    {label:'Eb4', btnType:'b',sound:'%.63'},
+    {label:'E4', btnType:'r', sound:'%.64'},
+    {label:'F4', btnType:'l', sound:'%.65'},
+    {label:'Gb4', btnType:'b',sound:'%.66'},
+    {label:'G4', btnType:'m', sound:'%.67'},
+    {label:'Ab4', btnType:'b',sound:'%.68'},
+    {label:'A4', btnType:'m', sound:'%.69'},
+    {label:'Bb4', btnType:'b',sound:'%.70'},
+    {label:'B4', btnType:'r', sound:'%.71'},
+
+    {label:'C5', btnType:'l', sound:'%.72'},
+    {label:'Db5', btnType:'b',sound:'%.73'},
+    {label:'D5', btnType:'m', sound:'%.74'},
+    {label:'Eb5', btnType:'b',sound:'%.75'},
+    {label:'E5', btnType:'r', sound:'%.76'},
+    {label:'F5', btnType:'l', sound:'%.77'},
+    {label:'Gb5', btnType:'b',sound:'%.78'},
+    {label:'G5', btnType:'m', sound:'%.79'},
+    {label:'Ab5', btnType:'b',sound:'%.80'},
+    {label:'A5', btnType:'m', sound:'%.81'},
+    {label:'Bb5', btnType:'b',sound:'%.82'},
+    {label:'B5', btnType:'r', sound:'%.83'},
 ]
 
 const sfxLayout = [
@@ -206,8 +222,8 @@ customElements.define('piano-key', class extends HTMLElement {
 
 customElements.define('piano-board', class extends HTMLElement {
     connectedCallback() {
-        const back = $(`<div id="paino_back"></div>`);
-        const keys = $(`<div id="paino_keys"></div>`);
+        const back = $(`<div id="piano_back"></div>`);
+        const keys = $(`<div id="piano_keys"></div>`);
         keys.appendTo(this);
         for (let key of pianoLayout) {
             const label = key.label?`label=${key.label}`:'';

@@ -15,7 +15,7 @@ author: joshxviii
     --input-bg-color: #ece4c1;
     --input-main-color: #e0c49e;
     --input-accent-color: #d1b48b;
-    --input-highlight-color: #6cd576;
+    --input-highlight-color: #7ee988;
     --input-highlight-color-2: #00ccff;
     --input-highlight-color-3: #ff4343;
 }
@@ -99,6 +99,7 @@ div[show=false], div[show=false] text {
 
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -489,6 +490,7 @@ input[type=range]::-webkit-slider-thumb:hover {
 select {
     height: 18px;
     width: 100px;
+    margin-inline: 8px;
     opacity: 40%;
     font-size: 14px;
     color: var(--main-text-color);
@@ -534,7 +536,6 @@ input[type=text]::placeholder {
 
 /* STLYE FOR EDITOR */
 #voice_profile_editor {
-    padding: 0px 18px;
     display: flex;
     align-items: flex-start;
     width: 89%;
@@ -590,6 +591,7 @@ input[type=text]::placeholder {
     font-size: 18px;
     width: 25px;
     height: 31px;
+    margin: 0;
     border-radius: 8px 0px 0px 0px;
     color: transparent;
     position: relative;
@@ -635,9 +637,6 @@ input[type=text]::placeholder {
     margin: 0px;
 }
 
-#voice_type {
-    margin: 0 auto;
-}
 #voice_type.female, #voice_type.female option.female {
     background-color: #ffe9ff;
     color: #ff8bcb;
@@ -661,11 +660,13 @@ input[type=text]::placeholder {
     font-weight: 200;
     color: var(--main-text-color);
     font-size: 14px;
-    width: 116px;
     display: inline-block;
+    align-items: center;
+    flex-direction: column-reverse;
 }
 .editor_output {
     max-width: 48px;
+    margin-inline: 8px;
 }
 
 #key_remapper {
@@ -869,5 +870,6 @@ table thead {
 }
 
 .audio_editor {
+    padding: 0px 18px;
     position: absolute;
 }

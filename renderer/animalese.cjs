@@ -55,6 +55,7 @@ function initControls() {
 
     document.getElementById('lang_select').value = preferences.get('lang');
     checkStartupRun.checked = preferences.get('startup_run');
+    document.getElementById('inst_type').value = preferences.get('inst_type');
     document.getElementById('check_always_active').checked = preferences.get('always_active');
     document.getElementById('check_hold_repeat').checked = preferences.get('hold_repeat');
     document.querySelectorAll('#apps_table, #apps_toggle').forEach(el => el.setAttribute('disabled', preferences.get('always_active')));
@@ -264,10 +265,8 @@ window.api.onKeyDown( (keyInfo) => {
             });
         break;
         // notes should always hold until released with keyup 
-        case ( path.startsWith('&.sing') ):
-            Object.assign(options, {
-                hold: keycode
-            });
+        case ( path.startsWith('%') ):
+            Object.assign(options, { hold: keycode });
         break;
     }
     window.audio.play(path, options);
@@ -277,7 +276,7 @@ window.api.onKeyUp( (keyInfo) => {
     const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound)
     if (path === undefined) return;
     switch (true) {
-        case ( path.startsWith('&.sing') ):
+        case ( path.startsWith('%') ):
             window.audio.release(keycode, true /* cutOff */)
         break;
         default:
@@ -382,7 +381,7 @@ function remapStop() {
 
 function remapReset() {
     const defaultKey = window.api.getDefaultKey(currentKey.keycode);
-    const sound = currentKey.isCtrlDown?defaultKey.ctrlSound:(isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
+    const sound = currentKey.isCtrlDown?defaultKey.ctrlSound:(currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
     changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
     window.api.sendRemapData({ sound });
     console.log(defaultKey);
@@ -394,8 +393,9 @@ window.api.onRemapReceived((remapButton) => {
     const keycode = `${currentKey.keycode}`;
     const defaultKey = window.api.getDefaultKey(keycode);
     //const defaultSound = currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):currentKey.isCtrlDown?(defaultKey.ctrlSound):'';
-    const defaultSound = currentKey.isCtrlDown?defaultKey.ctrlSound:(isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
-    
+    const defaultSound = currentKey.isCtrlDown?defaultKey.ctrlSound:(currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
+    console.log(defaultKey, remapButton);
+
     const reset = remapButton.sound === defaultSound;// if the key is being mapped to it's default sound, reset and clear the mapping in settings
 
     const remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
@@ -432,7 +432,7 @@ document.addEventListener('keydown', e => {
 
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     document.querySelector(`[sound="${path}"]`)?.classList.add('highlighted');
-    changeTab(!path||path===''?0:path.startsWith('&.voice')?1:path.startsWith('&.sing')?2:path.startsWith('sfx')?3:0);
+    changeTab(!path||path===''?0:path.startsWith('&')?1:path.startsWith('%')?2:path.startsWith('sfx')?3:0);
 });
 
 function changeTab(newTabIndex = 1) {
