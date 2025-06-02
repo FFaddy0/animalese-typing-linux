@@ -2,23 +2,10 @@ const { Howl, Howler } = require('howler');
 const path = require('path');
 const { ipcRenderer } = require('electron');
 
-// listens for volume changes and update master volume
-ipcRenderer.on('updated-volume', (_, volume) => {
-    Howler.volume(volume);
-    Howler.masterGain.gain.value = volume * 2;
-});
-
-// ipcRenderer.on('keyup', (_, e) => {
-//     releaseSound(e.keycode);
-// });
-
-function releaseSound(release_id, cut = true) {
-    if (cut) cutOffAudio(waitingForRelease[release_id], 0.15);
-    delete waitingForRelease[release_id];
-}
-
-let v = ipcRenderer.sendSync('get-store-data-sync').voice_profile;
-ipcRenderer.on('updated-voice_profile', (_, value) => v = value);
+let master_volume = ipcRenderer.sendSync('get-store-data-sync').volume;
+ipcRenderer.on('updated-volume', (_, value) => master_volume = value);
+let voice_type = ipcRenderer.sendSync('get-store-data-sync').voice_profile.voice_type;
+ipcRenderer.on('updated-voice_profile', (_, value) => voice_type = value.voice_type);
 let instrument = ipcRenderer.sendSync('get-store-data-sync').instrument;
 ipcRenderer.on('updated-instrument', (_, value) => instrument = value);
 let mode = ipcRenderer.sendSync('get-store-data-sync').audio_mode;
@@ -59,6 +46,9 @@ const voice_sprite = {
     x: [200 * 23,   200],
     y: [200 * 24,   200],
     z: [200 * 25,   200],
+    OK:     [200 * 26 + 600 * 0, 600],
+    Gwah:   [200 * 26 + 600 * 1, 600],
+    Deska:  [200 * 26 + 600 * 2, 600]
 }
 
 const sing = { 
@@ -71,12 +61,6 @@ const sing = {
     Me2: [2000 * 6,  2000],
 }
 
-// (60,000) / 100bpm = 600ms
-const special_sprite = {
-    OK:     [600 * 0, 600],
-    Gwah:   [600 * 1, 600],
-    Deska:  [600 * 2, 600]
-}
 // 60,000 / 100bpm = 600ms
 const sfx_sprite = {
     backspace           : [600 * 0,  600],
@@ -115,39 +99,51 @@ function createAudioInstance(fileName, sprite = null) {
     });
 }
 function buildSoundBanks() {
-    const groups = ['f1', 'f2', 'f3', 'f4', 'm1', 'm2', 'm3', 'm4'];
+    const voices = ['f1', 'f2', 'f3', 'f4', 'm1', 'm2', 'm3', 'm4'];
+
+    const instrumentVoices = ['girl', 'boy', 'cranky', 'kk_slider'];
+    const instruments = ['organ', 'guitar', 'e_piano', 'synth', 'whistle'];
+
     const bank = {};
-    for (const group of groups) {
-        bank[group] = {
-            voice: createAudioInstance(`${group}_voice`, voice_sprite),
-            special: createAudioInstance(`${group}_special`, special_sprite)
-        };
+    for (const voice of voices) {
+        bank[voice] = createAudioInstance(`voice/${voice}`, voice_sprite)
     }
-    bank['inst'] = {
-        guitar: createAudioInstance('inst/guitar'),
-        girl: createAudioInstance('inst/girl', sing),
-        boy: createAudioInstance('inst/boy', sing),
-        cranky: createAudioInstance('inst/cranky', sing),
-        kk_slider: createAudioInstance('inst/kk_slider', sing),
-        whistle: createAudioInstance('inst/whistle'),
-    }
+
+    bank['inst'] = {}
+    for (const inst of instrumentVoices) bank.inst[inst] = createAudioInstance(`instrument/${inst}`, sing); 
+    for (const inst of instruments) bank.inst[inst] = createAudioInstance(`instrument/${inst}`);
+
     bank['sfx'] = createAudioInstance('sfx', sfx_sprite);
     return bank;
 }
-// audio intonation logic TODO
-function applyIntonation(bank, id, intonation, currentRate) {
-    const duration = 400; // ms duration for ramp
+
+function releaseSound(release_id, cut = true) {
+    if (cut) cutOffAudio(waitingForRelease[release_id], 0.15);
+    delete waitingForRelease[release_id];
+}
+
+function applyIntonation(bank, id, intonation, currentRate, ramp = 2) {
+const duration = 3200; // ms duration for ramp
     const startRate = currentRate;
-    const endRate = startRate*(1 + intonation * 0.8);
-    const steps = 20;
+    const endRate = startRate * (
+        intonation >= 0
+            ? 1 + intonation * 3
+            : 1 - ((Math.sqrt(Math.abs(1 - intonation * 3)) - 1) * 0.75)
+    );
+    const steps = 64;
     const interval = duration / steps;
 
     for (let i = 1; i <= steps; i++) {
-        const progress = i / steps;
-        const rate = startRate * Math.pow(endRate / startRate, progress);
-        setTimeout(() => {
-            bank.rate(rate, id);
-        }, i * interval);
+        const t = i / steps;
+
+        let easedT;
+        if (ramp < 0) easedT = Math.pow(t, 1 - ramp); // ease-in
+        else if (ramp > 0) easedT = 1 - Math.pow(1 - t, 1 + ramp); // ease-out
+        else easedT = t; // linear
+    
+        const rate = startRate * ((endRate / startRate) ** easedT);
+
+        setTimeout(() => bank.rate(rate, id), i * interval);
     }
 }
 
@@ -162,33 +158,29 @@ function cutOffAudio(audio, release=0.025) {
 };
 
 //#region Init Audio Manager
-function createAudioManager(userVolume /* volume settings are passed in from [preload.js] */) {
-    Howler.volume(userVolume);
-    Howler.masterGain.gain.value = userVolume * 2;
+function createAudioManager() {
 
     const audioFileCache = {};
     const soundBanks = buildSoundBanks();
 
     // main audio playback function
-    function playSound(path, options = {/*volume, pitch_shift, pitch_variation, intonation, channel, note, hold, static*/}) {
+    function playSound(path, {volume=1, pitchShift=0, pitchVariation=0, intonation=0, note=60, channel=undefined, hold=undefined, noRandom=false} = {}) {
         if (!path || path === '') return;
-        if (waitingForRelease[options.hold]) return;
+        if (waitingForRelease[hold]) return;
 
-        //
-        if(path === 'sfx.exclamation' && mode!==3) playSound('&.special.Gwah');
-        if(path === 'sfx.question' && mode!==3) playSound('&.special.Deska');
+        if(path === '&.Gwah' && mode!==3) playSound('sfx.exclamation');
+        if(path === '&.Deska' && mode!==3) playSound('sfx.question');
 
-        const isVoice = path.startsWith('&.voice');
-        const isSpecial = path.startsWith('&.special');
+        const isVoice = path.startsWith('&');
         const isInstrument = path.startsWith('%');
         const isSfx = path.startsWith('sfx')
         
         if (mode===1 && isSfx) path = 'sfx.default';
-        if (mode===2 && (isVoice || isSpecial)) path = 'sfx.default';
-        if (mode===3 && !options.static) {
+        if (mode===2 && isVoice) path = 'sfx.default';
+        if (mode===3 && !noRandom) {
             if (isVoice) { // play random animalese sound
                 const sounds = Object.assign(Object.keys(voice_sprite))
-                path = `&.voice.${ sounds[Math.floor(Math.random() * sounds.length)] }`;
+                path = `&.${ sounds[Math.floor(Math.random() * 26)] }`;
             }
             else if (isInstrument) { // play random note pitch
                 path = `%.${ Math.floor(Math.random() * 36) + 36 }`;
@@ -200,32 +192,15 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
         }
 
         if (isInstrument) {
-            const note = parseInt(path.replace('%.', ''));
-            if (isNaN(note)) return;
-            Object.assign(options, { note: note });
+            const parsedNote = parseInt(path.replace('%.', ''));
+            note = isNaN(parsedNote) ? note : parsedNote;
             if ( mode===2 ) path = 'inst.guitar'
             else  path = 'inst.'+instrument;
         }
 
-        if (isVoice || isSpecial) { // apply animalese voice profile
-            const profileOptions = {
-                pitch_shift: options.pitch_shift ?? v.pitch_shift,
-                pitch_variation: options.pitch_variation ?? v.pitch_variation,
-                intonation: options.intonation ?? v.intonation,
-            };
-            if (isVoice) {
-                Object.assign(options, profileOptions, {
-                    volume: options.volume ?? 0.65,
-                    channel: options.channel ?? 1
-                });
-            }
-            else if (isSpecial) {
-                Object.assign(options, profileOptions,{
-                    volume: options.volume ?? 0.65,
-                    channel: options.channel ?? 1
-                });
-            } 
-            path = path.replace('&', v.voice_type);
+        if (isVoice ) { // apply animalese voice profile
+            channel = channel ?? 1;
+            path = path.replace('&', voice_type);
         }
 
         const parts = path.split(".");
@@ -274,33 +249,24 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
             console.warn(`Sound not found: ${path}`);
             return;
         }
+        if (channel !== undefined) cutOffAudio(activeChannels[channel]);
 
-        // AUDIO OPTIONS
-        if (options.channel !== undefined) cutOffAudio(activeChannels[options.channel]);
-
+        // play the audio
         const id = (bank._sprite) ? bank.play(sprite) : bank.play();
 
         // apply volume
-        if (options.volume !== undefined) bank.volume(options.volume, id);
+        bank.volume(master_volume*volume, id);
 
         // calculate pitch with variation
-        if (options.pitch_shift !== undefined || options.pitch_variation !== undefined) {
-            const basePitch = options.pitch_shift ?? 0;
-            const variation = options.pitch_variation ?? 0;
-            const finalPitch = basePitch + (Math.random()*2-1.0)*variation;
-            rate = Math.min(Math.max( Math.pow(2, finalPitch / 12.0) , 0.5), 2.0);
-            bank.rate(rate, id);
-        }
-        if (options.note !== undefined) {// note has no variation
-            const note = options.note;
-            const rate = Math.max( Math.pow(2, (note - 60) / 12.0) , 0.5);
-            bank.rate(rate, id);
-        }
+        const finalPitch = (note - 60) + pitchShift + (Math.random()*2-1.0)*pitchVariation;
+        const rate = Math.pow(2, finalPitch / 12.0);
+        bank.rate(rate, id);
+        
         // apply intonation
-        if (options.intonation !== undefined) applyIntonation(bank, id, options.intonation, bank.rate(id));
+        if (intonation !== undefined) applyIntonation(bank, id, intonation, bank.rate(id));
         // add this sound to a cutoff channel
-        if (options.channel !== undefined) activeChannels[options.channel] = { bank, id };
-        if (options.hold !== undefined) waitingForRelease[options.hold] = { bank, id };
+        if (channel !== undefined) activeChannels[channel] = { bank, id };
+        if (hold !== undefined) waitingForRelease[hold] = { bank, id };
     }
     return { play: playSound, release: releaseSound };
 }
