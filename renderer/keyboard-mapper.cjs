@@ -236,6 +236,45 @@ customElements.define('piano-board', class extends HTMLElement {
         }
         back.appendTo(this);
         keys.appendTo(this);
+
+        // auto scroll keys when near the edges
+        const piano_keys = document.getElementById('piano_keys');
+        let scrollDirection = 0;
+        let animationFrameId = null;
+
+        function scrollPianoKeys() {
+            if (scrollDirection !== 0) {
+                piano_keys.scrollLeft += scrollDirection;
+                animationFrameId = requestAnimationFrame(scrollPianoKeys);
+            }
+        }
+
+        piano_keys.addEventListener('mousemove', (e) => {
+            const bounds = piano_keys.getBoundingClientRect();
+            const x = e.clientX - bounds.left;
+            const threshold = bounds.width * 0.15;
+            const maxSpeed = 10;
+
+            if (x < threshold) scrollDirection = -maxSpeed * (1 - x / threshold);
+            else if (x > bounds.width - threshold) scrollDirection = maxSpeed * ((x - (bounds.width - threshold)) / threshold);
+            else scrollDirection = 0;
+
+            if (scrollDirection !== 0 && !animationFrameId) {
+                animationFrameId = requestAnimationFrame(scrollPianoKeys);
+            }
+            if (scrollDirection === 0 && animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        });
+
+        piano_keys.addEventListener('mouseleave', () => {
+            scrollDirection = 0;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        });
     }
 });
 
