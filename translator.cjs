@@ -39,12 +39,16 @@ function updateElementTranslation(el) {
         if (
             (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('translation-html')) ||
             node.nodeType === Node.TEXT_NODE
-        ) el.removeChild(node);
+        ) {
+            el.removeChild(node);
+        }
     });
 
     const temp = document.createElement('span');
     temp.className = 'translation-html';
     temp.innerHTML = translate(key);
+    // recursively update translations for child elements
+    Array.from(temp.childNodes).forEach(node => {if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('translation')) updateElementTranslation(node)});
     el.appendChild(temp);
 }
 

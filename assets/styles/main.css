@@ -306,10 +306,8 @@ input[type=radio]:checked::before {
 .toggle {
     --toggle-width: 25px;
     position: relative;
-    display: inline-block;
     width: var(--toggle-width);
     height: 14px;
-    margin: 3px 7px 0px 6px;
 }
 .toggle input {
   display: none;
@@ -393,8 +391,9 @@ svg-button:active  {
 .button_row {
     display: flex;
     flex-direction: row;
-    margin: 6px;
     justify-content: center;
+    align-content: center;
+    align-items: center;
 }
 .button_row svg-button {
     width: 100%;
@@ -682,6 +681,8 @@ input[type=text]::placeholder {
     font-size: 14px;
     text-align: center;
     flex-direction: column;
+    min-height: 147px;
+    max-height: 147px;
 }
 
 #remap_monitor {
@@ -779,11 +780,10 @@ input[type=text]::placeholder {
     color: rgb(from var(--main-text-color) r g b / 0.8);
     display: inline-flex;
     align-self: flex-start;
-    align-items: center;
-    margin-block: 2px;
 }
-#settings_overlay label input {
-    margin: 3px 7px 0px 7px;
+#settings_overlay label input, .toggle {
+    margin: 2px 7px 4px 7px;
+    align-self: baseline;
 }
 
 #settings_overlay .catagory {

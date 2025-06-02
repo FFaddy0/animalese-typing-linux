@@ -86,21 +86,22 @@ author: joshxviii
                 <input type="checkbox" id="check_always_active" onchange="window.settings.set('always_active', this.checked);document.querySelectorAll('#apps_table, #apps_toggle').forEach(el => el.setAttribute('disabled', this.checked))"/>
             </label>
 
-
-            <label translation="settings.apps.mode" id="apps_toggle" disabled="false">
-
+            <label id="apps_toggle" disabled="false">
                 <label class="toggle">
-                    <input type="checkbox" id="check_disable_selected" onchange="window.settings.set('disable_selected', this.checked);document.getElementById('apps_description').setAttribute('translation', this.checked?'settings.apps.disabled':'settings.apps.enabled');document.getElementById('apps_tbody').setAttribute('inactive', this.checked);"/>
+                    <input type="checkbox" id="check_selected_active" onchange="window.settings.set('selected_active', this.checked);document.querySelectorAll(`[translation='settings.apps.active'], [translation='settings.apps.inactive']`).forEach(el => el.setAttribute('translation', this.checked?'settings.apps.active':'settings.apps.inactive'));document.getElementById('apps_tbody').setAttribute('inactive', !this.checked);"/>
                     <span class="slider"></span>
                 </label>
-
+                <label translation="settings.apps.mode"></label>
+                <label translation="settings.apps.active"></label>
             </label>
-
 
             <table id="apps_table" disabled="false">
                 <thead>
                     <tr>
-                        <th id="apps_description" translation="settings.apps.enabled" style="font-size: 10px; opacity: .7;"></th>
+                        <th id="apps_description" style="font-size: 10px; opacity: .7;padding-inline: 15px;">
+                            <span translation="settings.apps.description"></span>
+                            <span translation="settings.apps.active"></span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="apps_tbody"></tbody>
@@ -108,8 +109,6 @@ author: joshxviii
         </div>
 
         <div class="catagory">
-            <!-- <h3 translation="settings.meta"></h3>
-            <button id="check_for_updates" translation="settings.update_check"></button> -->
             <br/>
             <p translation="settings.reset.description"></p>
             <button id="reset_settings" type="button"><span translation="settings.reset"></span></button>

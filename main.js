@@ -46,7 +46,7 @@ const defaults = {
     hold_repeat: true,
     always_active: true,
     selected_apps: [],
-    disable_selected: false,
+    selected_active: true,
     voice_profile: {
         voice_type: 'f1',
         pitch_shift: 0.0,
@@ -80,7 +80,7 @@ ipcMain.handle('store-reset', async (e) => {// set settings to default and trigg
         'saved_voice_profiles',
         'remapped_keys',
         'selected_apps',
-        'disable_selected',
+        'selected_active',
         'always_active'
     ];
     resetable.forEach(r=>{
@@ -125,7 +125,7 @@ async function monitorFocusedWindow() {
     const selectedApps = preferences.get('selected_apps');
 
     // change disable value when focusing in or out of selecte-apps.
-    setDisable( (preferences.get('disable_selected')?selectedApps.includes(winName):!selectedApps.includes(winName)) && 
+    setDisable( (preferences.get('selected_active')?selectedApps.includes(winName):!selectedApps.includes(winName)) && 
     (focusedWindow?.owner?.processId !== process.pid || winName === 'Animalese Typing') );
 
     lastFocusedWindow = focusedWindow;

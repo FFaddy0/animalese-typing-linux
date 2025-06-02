@@ -58,9 +58,9 @@ function initControls() {
     document.getElementById('check_always_active').checked = preferences.get('always_active');
     document.getElementById('check_hold_repeat').checked = preferences.get('hold_repeat');
     document.querySelectorAll('#apps_table, #apps_toggle').forEach(el => el.setAttribute('disabled', preferences.get('always_active')));
-    document.getElementById('check_disable_selected').checked = preferences.get('disable_selected')
-    document.getElementById('apps_description').setAttribute('translation', preferences.get('disable_selected')?'settings.apps.disabled':'settings.apps.enabled');
-    document.getElementById('apps_tbody').setAttribute('inactive', preferences.get('disable_selected'));
+    document.getElementById('check_selected_active').checked = preferences.get('selected_active')
+    document.querySelectorAll(`[translation='settings.apps.active'], [translation='settings.apps.inactive']`).forEach(el => el.setAttribute('translation', preferences.get('selected_active')?'settings.apps.active':'settings.apps.inactive'));
+    document.getElementById('apps_tbody').setAttribute('inactive', !preferences.get('selected_active'));
     document.querySelectorAll('input[name="audio_mode"]').forEach(radio => {// audio mode initilize 
         radio.checked = parseInt(radio.value) === preferences.get('audio_mode');
         radio.addEventListener('change', () => {
@@ -158,7 +158,6 @@ function initControls() {
 
     document.querySelectorAll('#apps_tbody tr input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
 }
-initControls();
 
 function selectVoiceType(type) {
     const oppositeType = type === 'male' ? 'female' : 'male';
@@ -192,8 +191,6 @@ window.addEventListener('load', scaleWindow);
 scaleWindow();
 
 //#region Translation stuff
-updateLanguage(preferences.get('lang'));
-
 function updateLanguage(lang) {// language selection update
     preferences.set('lang', lang);
     window.translator.load(lang);
@@ -241,7 +238,6 @@ function updateEnabledApps(appName, isChecked) {
     preferences.set('selected_apps', enabledApps)
 }
 window.api.onFocusedWindowChanged((activeWindows) => updatedFocusedWindows(activeWindows));
-updatedFocusedWindows();
 
 //#region Key press detect
 window.api.onKeyDown( (keyInfo) => {
@@ -446,6 +442,10 @@ function changeTab(newTabIndex = 1) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateLanguage(preferences.get('lang'));
+    initControls();
+    updatedFocusedWindows();
+    
     // close settings when clicking outside
     const focusOut = document.getElementById('focus_out');
     const settingsOverlay = document.getElementById('settings_overlay');
