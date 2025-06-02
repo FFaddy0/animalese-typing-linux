@@ -2,60 +2,65 @@ const noneLayout = []
 
 const voiceLayout = [
     [
-        {label:'A', btnType:'s', sound:`&.voice.a`},
-        {label:'B', btnType:'s', sound:`&.voice.b`},
-        {label:'C', btnType:'s', sound:`&.voice.c`},
-        {label:'D', btnType:'s', sound:`&.voice.d`},
-        {label:'E', btnType:'s', sound:`&.voice.e`},
-        {label:'F', btnType:'s', sound:`&.voice.f`},
-        {label:'G', btnType:'s', sound:`&.voice.g`},
-        {label:'H', btnType:'s', sound:`&.voice.h`},
-        {label:'I', btnType:'s', sound:`&.voice.i`},
-        {label:'J', btnType:'s', sound:`&.voice.j`},
-        {label:'K', btnType:'s', sound:`&.voice.k`},
-        {label:'L', btnType:'s', sound:`&.voice.l`},
-        {label:'M', btnType:'s', sound:`&.voice.m`}
+        {label:'A', btnType:'s', sound:`&.a`},
+        {label:'B', btnType:'s', sound:`&.b`},
+        {label:'C', btnType:'s', sound:`&.c`},
+        {label:'D', btnType:'s', sound:`&.d`},
+        {label:'E', btnType:'s', sound:`&.e`},
+        {label:'F', btnType:'s', sound:`&.f`},
+        {label:'G', btnType:'s', sound:`&.g`},
+        {label:'H', btnType:'s', sound:`&.h`},
+        {label:'I', btnType:'s', sound:`&.i`},
+        {label:'J', btnType:'s', sound:`&.j`},
+        {label:'K', btnType:'s', sound:`&.k`},
+        {label:'L', btnType:'s', sound:`&.l`},
+        {label:'M', btnType:'s', sound:`&.m`}
     ],
     [
-        {label:'N', btnType:'s', sound:`&.voice.n`},
-        {label:'O', btnType:'s', sound:`&.voice.o`},
-        {label:'P', btnType:'s', sound:`&.voice.p`},
-        {label:'Q', btnType:'s', sound:`&.voice.q`},
-        {label:'R', btnType:'s', sound:`&.voice.r`},
-        {label:'S', btnType:'s', sound:`&.voice.s`},
-        {label:'T', btnType:'s', sound:`&.voice.t`},
-        {label:'U', btnType:'s', sound:`&.voice.u`},
-        {label:'V', btnType:'s', sound:`&.voice.v`},
-        {label:'W', btnType:'s', sound:`&.voice.w`},
-        {label:'X', btnType:'s', sound:`&.voice.x`},
-        {label:'Y', btnType:'s', sound:`&.voice.y`},
-        {label:'Z', btnType:'s', sound:`&.voice.z`}
+        {label:'N', btnType:'s', sound:`&.n`},
+        {label:'O', btnType:'s', sound:`&.o`},
+        {label:'P', btnType:'s', sound:`&.p`},
+        {label:'Q', btnType:'s', sound:`&.q`},
+        {label:'R', btnType:'s', sound:`&.r`},
+        {label:'S', btnType:'s', sound:`&.s`},
+        {label:'T', btnType:'s', sound:`&.t`},
+        {label:'U', btnType:'s', sound:`&.u`},
+        {label:'V', btnType:'s', sound:`&.v`},
+        {label:'W', btnType:'s', sound:`&.w`},
+        {label:'X', btnType:'s', sound:`&.x`},
+        {label:'Y', btnType:'s', sound:`&.y`},
+        {label:'Z', btnType:'s', sound:`&.z`}
     ],
+    [
+        {label:'OK', btnType:'s', sound:`&.OK`},
+        {label:'Gwah', btnType:'m', sound:`&.Gwah`},
+        {label:'Deska', btnType:'m', sound:`&.Deska`},
+    ]
     //TODO: create more phonemes
     // [
-    //     {label:'AA', btnType:'s', sound:`&.voice.a`},
-    //     {label:'AE', btnType:'s', sound:`&.voice.a`},
-    //     {label:'CH', btnType:'s', sound:`&.voice.a`},
-    //     {label:'EH', btnType:'s', sound:`&.voice.a`},
-    //     {label:'EU', btnType:'s', sound:`&.voice.a`},
-    //     {label:'IE', btnType:'s', sound:`&.voice.a`},
-    //     {label:'KH', btnType:'s', sound:`&.voice.a`},
-    //     {label:'NG', btnType:'s', sound:`&.voice.a`},
-    //     {label:'SH', btnType:'s', sound:`&.voice.a`},
-    //     {label:'WA', btnType:'s', sound:`&.voice.a`},
-    //     {label:'WA', btnType:'s', sound:`&.voice.a`},
-    //     {label:'WE', btnType:'s', sound:`&.voice.a`},
-    //     {label:'WI', btnType:'s', sound:`&.voice.a`}
+    //     {label:'AA', btnType:'s', sound:`&.a`},
+    //     {label:'AE', btnType:'s', sound:`&.a`},
+    //     {label:'CH', btnType:'s', sound:`&.a`},
+    //     {label:'EH', btnType:'s', sound:`&.a`},
+    //     {label:'EU', btnType:'s', sound:`&.a`},
+    //     {label:'IE', btnType:'s', sound:`&.a`},
+    //     {label:'KH', btnType:'s', sound:`&.a`},
+    //     {label:'NG', btnType:'s', sound:`&.a`},
+    //     {label:'SH', btnType:'s', sound:`&.a`},
+    //     {label:'WA', btnType:'s', sound:`&.a`},
+    //     {label:'WA', btnType:'s', sound:`&.a`},
+    //     {label:'WE', btnType:'s', sound:`&.a`},
+    //     {label:'WI', btnType:'s', sound:`&.a`}
     // ],
     // [
-    //     {label:'WO', btnType:'s', sound:`&.voice.a`},
-    //     {label:'Y', btnType:'s', sound:`&.voice.a`},
-    //     {label:'YA', btnType:'s', sound:`&.voice.a`},
-    //     {label:'YAE', btnType:'s', sound:`&.voice.a`},
-    //     {label:'YEH', btnType:'s', sound:`&.voice.a`},
-    //     {label:'YEO', btnType:'s', sound:`&.voice.a`},
-    //     {label:'YO', btnType:'s', sound:`&.voice.a`},
-    //     {label:'YU', btnType:'s', sound:`&.voice.a`},
+    //     {label:'WO', btnType:'s', sound:`&.a`},
+    //     {label:'Y', btnType:'s', sound:`&.a`},
+    //     {label:'YA', btnType:'s', sound:`&.a`},
+    //     {label:'YAE', btnType:'s', sound:`&.a`},
+    //     {label:'YEH', btnType:'s', sound:`&.a`},
+    //     {label:'YEO', btnType:'s', sound:`&.a`},
+    //     {label:'YO', btnType:'s', sound:`&.a`},
+    //     {label:'YU', btnType:'s', sound:`&.a`},
     // ]
 ];
 
@@ -284,10 +289,10 @@ function press(btn, holdKey=false) {
         const label = btn.getAttribute('label') ?? '';
         btn.classList.add('pressed');
         if (holdKey) {
-            window.audio.play(sound, {static: true, hold: 0});
+            window.audio.play(sound, {noRandom: true, hold: 0});
         }
         else {
-            window.audio.play(sound, {static: true});
+            window.audio.play(sound, {noRandom: true});
             setTimeout(() => btn.classList.remove('pressed'), 100);
             setTimeout(() => btn.classList.remove('pressed'), 100);
         }

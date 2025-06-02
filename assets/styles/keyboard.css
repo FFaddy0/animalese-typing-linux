@@ -66,13 +66,9 @@ key-board {
     height: calc(1.05 * var(--key-size * 2));
 }
 key-button, .key_s, .key_m, .key_l, .key_blank {
-    min-width: calc(var(--key-size) * 2);
-    min-height: calc(var(--key-size) * 2);
     width: calc(var(--key-size) * 2);
     height: calc(var(--key-size) * 2);
-    max-width: calc(var(--key-size) * 2);
-    max-height: calc(var(--key-size) * 2);
-    display: inline-block;
+    margin-right: -2px;
 }
 .key_s {min-width: calc(1* var(--key-size) * 2);}
 .key_m {min-width: calc(2* var(--key-size) * 2);}

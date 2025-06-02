@@ -57,7 +57,7 @@ contextBridge.exposeInMainWorld('api', {
     getAppInfo: () => appInfo,
     goToUrl: (url) => shell.openExternal(url),
     onPermissionError: (callback) => {
-      ipcRenderer.on('permission-error', (_event, message) => callback(message));
+        ipcRenderer.on('permission-error', (_event, message) => callback(message));
     }
 });
 
@@ -81,4 +81,4 @@ contextBridge.exposeInMainWorld('settings', {
 });
 
 // audio manager
-contextBridge.exposeInMainWorld('audio', createAudioManager(settingsData.volume || 0.5));
+contextBridge.exposeInMainWorld('audio', createAudioManager());

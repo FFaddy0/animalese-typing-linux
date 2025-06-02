@@ -125,7 +125,7 @@ async function monitorFocusedWindow() {
     const selectedApps = preferences.get('selected_apps');
 
     // change disable value when focusing in or out of selecte-apps.
-    setDisable( (preferences.get('selected_active')?selectedApps.includes(winName):!selectedApps.includes(winName)) && 
+    setDisable( (preferences.get('selected_active')?!selectedApps.includes(winName):selectedApps.includes(winName)) && 
     (focusedWindow?.owner?.processId !== process.pid || winName === 'Animalese Typing') );
 
     lastFocusedWindow = focusedWindow;

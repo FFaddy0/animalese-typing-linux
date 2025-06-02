@@ -95,14 +95,14 @@ function initControls() {
                 
                 if (el.getAttribute('playing')==='false') {
                     el.setAttribute('playing', 'true');
-                    window.audio.play('sfx.default', {static: true, channel: 2});
+                    window.audio.play('sfx.default', {noRandom: true, channel: 2});
                     setTimeout(() => el.setAttribute('playing', 'false'), 50);
                 }
             }
             else {
                 voiceProfile[control] = value;
                 preferences.set('voice_profile', voiceProfile);
-                if(control==='voice_type') setTimeout(() => {window.audio.play('&.special.OK', {static: true, channel: 2, volume:.55});}, 10);
+                if(control==='voice_type') setTimeout(() => {window.audio.play('&.OK', {noRandom: true, channel: 2, volume:.55});}, 10);
             }
         };
 
@@ -163,7 +163,7 @@ function selectVoiceType(type) {
     const oppositeType = type === 'male' ? 'female' : 'male';
 
     if (document.getElementById(type).getAttribute('pressed') === 'true') {
-        window.audio.play('&.special.OK', { channel: 2, volume: 0.55 });
+        window.audio.play('&.OK', { channel: 2, volume: 0.55 });
         return;
     }
 
@@ -245,20 +245,28 @@ window.api.onKeyDown( (keyInfo) => {
     const { keycode, isCapsLock, isShiftDown, finalSound } = keyInfo;
 
     if (finalSound === undefined) return;
+    const isVoice = finalSound.startsWith('&');
+    const isInstrument = finalSound.startsWith('%');
+    const isSfx = finalSound.startsWith('sfx')
     const options = {}
     if (!preferences.get('hold_repeat')) Object.assign(options, { hold: keycode });
     switch (true) {
-        // uppercase typing has higher pitch and variation
-        case ( finalSound.startsWith('&.voice') && isCapsLock !== isShiftDown ):
+        case ( isVoice ):
+            // uppercase typing has higher pitch and variation
+            const yelling = isCapsLock !== isShiftDown;
             Object.assign(options, {
-                volume: .75,
-                pitch_shift: 1.5 + voiceProfile.pitch_shift,
-                pitch_variation: 1 + voiceProfile.pitch_variation,
+                volume: yelling? .75: .65,
+                pitchShift: (yelling? 1.5: 0) + voiceProfile.pitch_shift,
+                pitchVariation: (yelling? 1: 0) +  voiceProfile.pitch_variation,
+                intonation: voiceProfile.intonation,
             });
         break;
         // notes should always hold until released with keyup 
-        case ( finalSound.startsWith('%') ):
-            Object.assign(options, { hold: keycode });
+        case ( isInstrument ):
+            Object.assign(options, {
+                hold: keycode,
+                pitchShift: isCapsLock? -12 : 0
+            });
         break;
     }
     window.audio.play(finalSound, options);
@@ -369,7 +377,7 @@ function remapStop() {
 
 function remapReset() {
     const { defaultSound } = currentKey;
-    changeTab(!defaultSound||defaultSound===''?0:defaultSound.startsWith('&.voice')?1:defaultSound.startsWith('&.sing')?2:defaultSound.startsWith('sfx')?3:0);
+    changeTab(!defaultSound||defaultSound===''?0:defaultSound.startsWith('&')?1:defaultSound.startsWith('%')?2:defaultSound.startsWith('sfx')?3:0);
     window.api.sendRemapData({ defaultSound });
 }
 
@@ -415,7 +423,10 @@ document.addEventListener('keydown', e => {
     remapMonitor.innerHTML = keyLabel.toUpperCase();
 
     document.querySelector('.highlighted')?.classList.remove('highlighted');
-    document.querySelector(`[sound="${finalSound}"]`)?.classList.add('highlighted');
+    const highlightedBtn = document.querySelector(`[sound="${finalSound}"]`);
+    highlightedBtn?.classList.add('highlighted');
+    highlightedBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
     changeTab(!finalSound||finalSound===''?0:finalSound.startsWith('&')?1:finalSound.startsWith('%')?2:finalSound.startsWith('sfx')?3:0);
 });
 

@@ -172,7 +172,7 @@ author: joshxviii
                         </label>
 
                         <label id="label_editor_2" class="editor_label" translation="editor_2">
-                            <input id="intonation" class="editor_slider" type="range" min="-1.0" max="2.0" step="0.1" value="0" defaultValue="0"></input>
+                            <input id="intonation" class="editor_slider" type="range" min="-1" max="1" step="0.01" value="0" defaultValue="0"></input>
                             <input type="text" id="intonation_out" class="editor_output" />
                         </label>
                     
@@ -222,11 +222,14 @@ author: joshxviii
                 <div class="audio_editor" show="false">
                     <label class="editor_label" style="display: flex" translation="instrument">
                         <select id="inst_type" onchange="window.settings.set('instrument', this.value);console.log(this.value);">
-                            <option value="guitar" selected>guitar</option>
                             <option value="girl">girl</option>
                             <option value="boy">boy</option>
                             <option value="cranky">cranky</option>
                             <option value="kk_slider">kk_slider</option>
+                            <option value="guitar" selected>guitar</option>
+                            <option value="e_piano">e_piano</option>
+                            <option value="organ">organ</option>
+                            <option value="synth">synth</option>
                             <option value="whistle">whistle</option>
                         </select>
                     </label>
