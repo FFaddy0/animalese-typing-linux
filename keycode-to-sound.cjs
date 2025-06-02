@@ -7,16 +7,16 @@ const platforms = {
 };
 
 const keyDefinitions = [
-  { keycodes: [49, 18, null], key: '1', sound: '%.60', shiftSound: 'sfx.exclamation' },
-  { keycodes: [50, 19, null], key: '2', sound: '%.62', shiftSound: 'sfx.at' },
-  { keycodes: [51, 20, null], key: '3', sound: '%.64', shiftSound: 'sfx.pound' },
-  { keycodes: [52, 21, null], key: '4', sound: '%.65', shiftSound: 'sfx.dollar' },
-  { keycodes: [53, 23, null], key: '5', sound: '%.67', shiftSound: 'sfx.percent' },
-  { keycodes: [54, 22, null], key: '6', sound: '%.69', shiftSound: 'sfx.caret' },
-  { keycodes: [55, 26, null], key: '7', sound: '%.71', shiftSound: 'sfx.ampersand' },
-  { keycodes: [56, 28, null], key: '8', sound: '%.72', shiftSound: 'sfx.asterisk' },
-  { keycodes: [57, 25, null], key: '9', sound: '%.74', shiftSound: 'sfx.parenthesis_open' },
-  { keycodes: [48, 29, null], key: '0', sound: '%.76', shiftSound: 'sfx.parenthesis_closed' },
+  { keycodes: [49, 18, null], key: '1', sound: '%.60', ctrlSound:'%.61', shiftSound: 'sfx.exclamation' },
+  { keycodes: [50, 19, null], key: '2', sound: '%.62', ctrlSound:'%.63', shiftSound: 'sfx.at' },
+  { keycodes: [51, 20, null], key: '3', sound: '%.64', ctrlSound:'%.65', shiftSound: 'sfx.pound' },
+  { keycodes: [52, 21, null], key: '4', sound: '%.65', ctrlSound:'%.66', shiftSound: 'sfx.dollar' },
+  { keycodes: [53, 23, null], key: '5', sound: '%.67', ctrlSound:'%.68', shiftSound: 'sfx.percent' },
+  { keycodes: [54, 22, null], key: '6', sound: '%.69', ctrlSound:'%.70', shiftSound: 'sfx.caret' },
+  { keycodes: [55, 26, null], key: '7', sound: '%.71', ctrlSound:'%.72', shiftSound: 'sfx.ampersand' },
+  { keycodes: [56, 28, null], key: '8', sound: '%.72', ctrlSound:'%.73', shiftSound: 'sfx.asterisk' },
+  { keycodes: [57, 25, null], key: '9', sound: '%.74', ctrlSound:'%.75', shiftSound: 'sfx.parenthesis_open' },
+  { keycodes: [48, 29, null], key: '0', sound: '%.76', ctrlSound:'%.77', shiftSound: 'sfx.parenthesis_closed' },
   //Letters
   { keycodes: [65, 0, null], key: 'a', sound: '&.voice.a', ctrlSound: 'sfx.parenthesis_open' },
   { keycodes: [66, 11, null], key: 'b', sound: '&.voice.b' },
@@ -131,8 +131,9 @@ function buildKeyMap(platform) {
     map[code] = {
       key: def.key,
       sound: def.sound,
-      shiftSound: def.shiftSound,
-      ctrlSound: def.ctrlSound,
+      shiftSound: def.shiftSound ?? def.sound,
+      ctrlSound: def.ctrlSound ?? '',
+      altSound: def.altSound ?? '',
     };
   }
   return map;

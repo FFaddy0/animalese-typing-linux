@@ -19,9 +19,11 @@ function getKeyInfo(e) {// parse keyInfo from keyup/down event
         sound: remappedKey?.sound ?? defaultKey.sound,
         shiftSound: remappedKey?.shiftSound ?? (defaultKey.shiftSound ?? defaultKey.sound),
         ctrlSound: remappedKey?.ctrlSound ?? (defaultKey.ctrlSound),
+        altSound: remappedKey?.altSound ?? (defaultKey.altSound),
         keycode: e.keycode,
         isShiftDown: e.shiftKey,
         isCtrlDown: e.ctrlKey,
+        isAltDown: e.altKey,
         isCapsLock: isCapsLockActive()
     }
 }

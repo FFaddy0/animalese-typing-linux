@@ -275,8 +275,6 @@ function createAudioManager(userVolume /* volume settings are passed in from [pr
             return;
         }
 
-        console.log(bank, sprite);
-
         // AUDIO OPTIONS
         if (options.channel !== undefined) cutOffAudio(activeChannels[options.channel]);
 

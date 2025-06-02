@@ -233,6 +233,7 @@ function createTrayIcon() {
     });
 }
 
+//#region KeyListener
 let keyListener;
 
 async function startKeyListener() {
@@ -270,6 +271,7 @@ async function startKeyListener() {
                         keycode: event.keycode,
                         shiftKey: event.shift,
                         ctrlKey: event.ctrl,
+                        altKey: event.alt,
                     });
                 }
             } catch (err) {
@@ -281,6 +283,7 @@ async function startKeyListener() {
         console.error(`${platform} error:`, data.toString());
     });
 }
+//#endregion
 
 function stopKeyListener() {
     if (keyListener) {

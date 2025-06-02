@@ -250,8 +250,9 @@ updatedFocusedWindows();
 //#region Key press detect
 window.api.onKeyDown( (keyInfo) => {
     currentKey = keyInfo;
-    const { keycode, isCapsLock, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = keyInfo;
-    const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound);
+    const { keycode, isCapsLock, isShiftDown, shiftSound, isCtrlDown, ctrlSound, isAltDown, altSound, sound } = keyInfo;
+    const path = isCtrlDown?ctrlSound:isAltDown?altSound:isShiftDown?shiftSound:sound;
+
     if (path === undefined) return;
     const options = {}
     if (!preferences.get('hold_repeat')) Object.assign(options, { hold: keycode });
@@ -272,8 +273,8 @@ window.api.onKeyDown( (keyInfo) => {
     window.audio.play(path, options);
 });
 window.api.onKeyUp( (keyInfo) => {
-    const { keycode, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = keyInfo;
-    const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound)
+    const { keycode, isShiftDown, shiftSound, isCtrlDown, ctrlSound, isAltDown, altSound, sound } = keyInfo;
+    const path = isCtrlDown?ctrlSound:isAltDown?altSound:isShiftDown?shiftSound:sound;
     if (path === undefined) return;
     switch (true) {
         case ( path.startsWith('%') ):
@@ -381,10 +382,11 @@ function remapStop() {
 
 function remapReset() {
     const defaultKey = window.api.getDefaultKey(currentKey.keycode);
-    const sound = currentKey.isCtrlDown?defaultKey.ctrlSound:(currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
+    const { isShiftDown, isCtrlDown, isAltDown } = currentKey;
+    const sound = isCtrlDown?defaultKey.ctrlSound:isAltDown?defaultKey.altSound:isShiftDown?(defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound;
+    //const sound = currentKey.isCtrlDown?defaultKey.ctrlSound:currentKey.isCtrlDown?defaultKey.ctrlSound:(currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
     changeTab(!sound||sound===''?0:sound.startsWith('&.voice')?1:sound.startsWith('&.sing')?2:sound.startsWith('sfx')?3:0);
     window.api.sendRemapData({ sound });
-    console.log(defaultKey);
 }
 
 window.api.onRemapReceived((remapButton) => {
@@ -392,17 +394,19 @@ window.api.onRemapReceived((remapButton) => {
 
     const keycode = `${currentKey.keycode}`;
     const defaultKey = window.api.getDefaultKey(keycode);
+
     //const defaultSound = currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):currentKey.isCtrlDown?(defaultKey.ctrlSound):'';
-    const defaultSound = currentKey.isCtrlDown?defaultKey.ctrlSound:(currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
-    console.log(defaultKey, remapButton);
+    const { isShiftDown, isCtrlDown, isAltDown } = currentKey;
+    const defaultSound = isCtrlDown?defaultKey.ctrlSound:isAltDown?defaultKey.altSound:isShiftDown?(defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound;
+    //const defaultSound = currentKey.isCtrlDown?defaultKey.ctrlSound:(currentKey.isShiftDown? (defaultKey.shiftSound ?? defaultKey.sound):defaultKey.sound);
 
     const reset = remapButton.sound === defaultSound;// if the key is being mapped to it's default sound, reset and clear the mapping in settings
 
     const remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
     const mapping = { ...remappedKeys.get(keycode) || {} };
 
-    if (reset) delete mapping[currentKey.isCtrlDown?'ctrlSound':(currentKey.isShiftDown?'shiftSound':'sound')];
-    else mapping[currentKey.isCtrlDown?'ctrlSound':(currentKey.isShiftDown?'shiftSound':'sound')] = remapButton.sound;
+    if (reset) delete mapping[currentKey.isCtrlDown?'ctrlSound':currentKey.isAltDown?'altSound':currentKey.isShiftDown?'shiftSound':'sound'];
+    else mapping[currentKey.isCtrlDown?'ctrlSound':currentKey.isAltDown?'altSound':currentKey.isShiftDown?'shiftSound':'sound'] = remapButton.sound;
 
     if (Object.keys(mapping).length === 0) remappedKeys.delete(keycode);
     else remappedKeys.set(keycode, mapping);
@@ -422,13 +426,14 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     remapStart();
     
-    let { key, isShiftDown, shiftSound, isCtrlDown, ctrlSound, sound } = currentKey;
-    if ((key === "Shift") || (key === "Ctrl"))  key = key;
+    let { key, isShiftDown, shiftSound, isCtrlDown, ctrlSound, isAltDown, altSound, sound } = currentKey;
+    if ((key === "Shift") || (key === "Ctrl") || (key === "Alt"))  key = key;
     else if (isCtrlDown) key = `Ctrl + ${key}`;
+    else if (isAltDown) key = `Alt + ${key}`;
     else if (isShiftDown) key = `Shift + ${key}`;
     remapMonitor.innerHTML = key.toUpperCase();
 
-    const path = isCtrlDown?ctrlSound:(isShiftDown?shiftSound:sound);
+    const path = isCtrlDown?ctrlSound:isAltDown?altSound:isShiftDown?shiftSound:sound;
 
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     document.querySelector(`[sound="${path}"]`)?.classList.add('highlighted');
