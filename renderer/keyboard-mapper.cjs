@@ -246,39 +246,35 @@ customElements.define('piano-board', class extends HTMLElement {
         const piano_keys = document.getElementById('piano_keys');
         let scrollDirection = 0;
         let animationFrameId = null;
+        let wheelTimeoutId = null;
 
         function scrollPianoKeys() {
             if (scrollDirection !== 0) {
                 piano_keys.scrollLeft += scrollDirection;
                 animationFrameId = requestAnimationFrame(scrollPianoKeys);
-            }
-        }
-
-        piano_keys.addEventListener('mousemove', (e) => {
-            const bounds = piano_keys.getBoundingClientRect();
-            const x = e.clientX - bounds.left;
-            const threshold = bounds.width * 0.15;
-            const maxSpeed = 10;
-
-            if (x < threshold) scrollDirection = -maxSpeed * (1 - x / threshold);
-            else if (x > bounds.width - threshold) scrollDirection = maxSpeed * ((x - (bounds.width - threshold)) / threshold);
-            else scrollDirection = 0;
-
-            if (scrollDirection !== 0 && !animationFrameId) {
-                animationFrameId = requestAnimationFrame(scrollPianoKeys);
-            }
-            if (scrollDirection === 0 && animationFrameId) {
+            } else if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
-        });
+        }
 
-        piano_keys.addEventListener('mouseleave', () => {
+        function startScroll() {
+            if (!animationFrameId) animationFrameId = requestAnimationFrame(scrollPianoKeys);
+        }
+        function stopScroll() {
             scrollDirection = 0;
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
+        }
+
+        piano_keys.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            scrollDirection = (e.deltaY || e.detail || e.wheelDelta) > 0 ? 10 : -10;
+            startScroll();
+            if (wheelTimeoutId) clearTimeout(wheelTimeoutId);
+            wheelTimeoutId = setTimeout(stopScroll, 80);
         });
     }
 });
