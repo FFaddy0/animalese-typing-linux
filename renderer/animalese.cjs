@@ -253,12 +253,8 @@ window.api.onKeyDown( (keyInfo) => {
     switch (true) {
         case ( isVoice ):
             // uppercase typing has higher pitch and variation
-            const yelling = isCapsLock !== isShiftDown;
             Object.assign(options, {
-                volume: yelling? .75: .65,
-                pitchShift: (yelling? 1.5: 0) + voiceProfile.pitch_shift,
-                pitchVariation: (yelling? 1: 0) +  voiceProfile.pitch_variation,
-                intonation: voiceProfile.intonation,
+                yelling: isCapsLock !== isShiftDown
             });
         break;
         // notes should always hold until released with keyup 

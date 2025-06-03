@@ -1,11 +1,12 @@
-const { Howl, Howler } = require('howler');
+const { Howl, Howler } = require('howler');// TODO: handle audio plakback manually, without howler.js.
+// handling it manually will allow me to change pitch without changing playback rate, which is not supported by howler.js
 const path = require('path');
 const { ipcRenderer } = require('electron');
 
 let master_volume = ipcRenderer.sendSync('get-store-data-sync').volume;
 ipcRenderer.on('updated-volume', (_, value) => master_volume = value);
-let voice_type = ipcRenderer.sendSync('get-store-data-sync').voice_profile.voice_type;
-ipcRenderer.on('updated-voice_profile', (_, value) => voice_type = value.voice_type);
+let v = ipcRenderer.sendSync('get-store-data-sync').voice_profile;
+ipcRenderer.on('updated-voice_profile', (_, value) => v = value);
 let instrument = ipcRenderer.sendSync('get-store-data-sync').instrument;
 ipcRenderer.on('updated-instrument', (_, value) => instrument = value);
 let mode = ipcRenderer.sendSync('get-store-data-sync').audio_mode;
@@ -46,9 +47,9 @@ const voice_sprite = {
     x: [200 * 23,   200],
     y: [200 * 24,   200],
     z: [200 * 25,   200],
-    OK:     [200 * 26 + 600 * 0, 600],
-    Gwah:   [200 * 26 + 600 * 1, 600],
-    Deska:  [200 * 26 + 600 * 2, 600]
+    OK:     [600 * 0 +200*26, 600],
+    Gwah:   [600 * 1 +200*26, 600],
+    Deska:  [600 * 2 +200*26, 600]
 }
 
 const sing = { 
@@ -105,9 +106,7 @@ function buildSoundBanks() {
     const instruments = ['organ', 'guitar', 'e_piano', 'synth', 'whistle'];
 
     const bank = {};
-    for (const voice of voices) {
-        bank[voice] = createAudioInstance(`voice/${voice}`, voice_sprite)
-    }
+    for (const voice of voices) bank[voice] = createAudioInstance(`voice/${voice}`, voice_sprite)
 
     bank['inst'] = {}
     for (const inst of instrumentVoices) bank.inst[inst] = createAudioInstance(`instrument/${inst}`, sing); 
@@ -164,7 +163,7 @@ function createAudioManager() {
     const soundBanks = buildSoundBanks();
 
     // main audio playback function
-    function playSound(path, {volume=1, pitchShift=0, pitchVariation=0, intonation=0, note=60, channel=undefined, hold=undefined, noRandom=false} = {}) {
+    function playSound(path, {volume=1, pitchShift=0, pitchVariation=0, intonation=0, note=60, channel=undefined, hold=undefined, noRandom=false, yelling=false} = {}) {
         if (!path || path === '') return;
         if (waitingForRelease[hold]) return;
 
@@ -199,8 +198,12 @@ function createAudioManager() {
         }
 
         if (isVoice ) { // apply animalese voice profile
+            volume = yelling? .75: .65;
+            pitchShift = (yelling? 1.5: 0) + v.pitch_shift;
+            pitchVariation = (yelling? 1: 0) +  v.pitch_variation;
+            intonation = v.intonation;
             channel = channel ?? 1;
-            path = path.replace('&', voice_type);
+            path = path.replace('&', v.voice_type);
         }
 
         const parts = path.split(".");

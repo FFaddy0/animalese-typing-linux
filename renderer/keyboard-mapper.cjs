@@ -33,8 +33,8 @@ const voiceLayout = [
     ],
     [
         {label:'OK', btnType:'s', sound:`&.OK`},
-        {label:'Gwah', btnType:'m', sound:`&.Gwah`},
-        {label:'Deska', btnType:'m', sound:`&.Deska`},
+        {label:'GWAH', btnType:'m', sound:`&.Gwah`},
+        {label:'DESKA', btnType:'m', sound:`&.Deska`},
     ]
     //TODO: create more phonemes
     // [
