@@ -47,19 +47,19 @@ const voice_sprite = {
     x: [200 * 23,   200],
     y: [200 * 24,   200],
     z: [200 * 25,   200],
-    OK:     [600 * 0 +200*26, 600],
-    Gwah:   [600 * 1 +200*26, 600],
-    Deska:  [600 * 2 +200*26, 600]
+    oK:     [600 * 0 +200*26, 600],
+    gwah:   [600 * 1 +200*26, 600],
+    deska:  [600 * 2 +200*26, 600]
 }
 
 const sing = { 
-    Nah: [2000 * 0,  2000],
-    Me:  [2000 * 1,  2000],
-    Now: [2000 * 2,  2000],
-    Way: [2000 * 3,  2000],
-    Oh:  [2000 * 4,  2000],
-    Oh2: [2000 * 5,  2000],
-    Me2: [2000 * 6,  2000],
+    nah: [2000 * 0,  2000],
+    me:  [2000 * 1,  2000],
+    now: [2000 * 2,  2000],
+    way: [2000 * 3,  2000],
+    oh:  [2000 * 4,  2000],
+    oh2: [2000 * 5,  2000],
+    me2: [2000 * 6,  2000],
 }
 
 // 60,000 / 100bpm = 600ms
@@ -167,8 +167,8 @@ function createAudioManager() {
         if (!path || path === '') return;
         if (waitingForRelease[hold]) return;
 
-        if(path === '&.Gwah' && mode!==3) playSound('sfx.exclamation');
-        if(path === '&.Deska' && mode!==3) playSound('sfx.question');
+        if(path === '&.gwah' && mode!==3) playSound('sfx.exclamation');
+        if(path === '&.deska' && mode!==3) playSound('sfx.question');
 
         const isVoice = path.startsWith('&');
         const isInstrument = path.startsWith('%');

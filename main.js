@@ -98,6 +98,13 @@ ipcMain.on('minimize-window', (e) => {
 ipcMain.on('remap-key-press', (e, data) => {
     if (bgwin) bgwin.webContents.send(`remap-key-set`, data);
 });
+ipcMain.on('open-remap-settings', (e) => {
+    if(remapwin) remapwin.focus();
+    else createRemapWin();
+});
+ipcMain.on('close-remap-settings', (e) => {
+    if(remapwin) remapwin.close();
+});
 ipcMain.on('get-app-info', (e) => {
     e.returnValue = {
         version: app.getVersion(),
@@ -108,6 +115,7 @@ ipcMain.on('get-app-info', (e) => {
 ipcMain.on('set-run-on-startup', (e, value) => setRunOnStartup(value));
 
 var bgwin = null;
+var remapwin = null;
 var tray = null;
 var disabled = !preferences.get('always_active');
 let lastFocusedWindow = null;
@@ -177,6 +185,39 @@ function createMainWin() {
     bgwin.webContents.on('before-input-event', (e, input) => {
         if (input.control && input.shift && input.key.toLowerCase() === 'i') {
             const wc = bgwin.webContents;
+            if (wc.isDevToolsOpened()) wc.closeDevTools();
+            else  wc.openDevTools({ mode: 'detach' });
+            e.preventDefault();
+        }
+    });
+}
+function createRemapWin() {
+    if(remapwin !== null) return;
+    remapwin = new BrowserWindow({
+        width: 526,
+        height: 420,
+        icon: ICON,
+        resizable: true,
+        frame: true,
+        skipTaskbar: false,
+        show: true,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.cjs'),
+            contextIsolation: true,
+            nodeIntegration: false,
+            sandbox: false
+        }
+    });
+    remapwin.removeMenu();
+    remapwin.loadFile('remap.html');
+
+    remapwin.on('closed', function () {
+        remapwin = null;
+    });
+
+    remapwin.webContents.on('before-input-event', (e, input) => {
+        if (input.control && input.shift && input.key.toLowerCase() === 'i') {
+            const wc = remapwin.webContents;
             if (wc.isDevToolsOpened()) wc.closeDevTools();
             else  wc.openDevTools({ mode: 'detach' });
             e.preventDefault();

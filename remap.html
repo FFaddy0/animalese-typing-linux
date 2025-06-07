@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+    <title>Animalese Typing</title>
+    <link rel="stylesheet" href="assets\styles\main.css">
+</head>
+<style>
+    tr {
+        width: 100%;
+    }
+    td, th {
+        align-content: start;
+        width: 25%;
+    } 
+</style>
+</html>
+<body>
+
+    <div style="width: 100%; height: 100%;">
+        <table id="remap-table" style="width: 100%; height: 100%;">
+            <thead>
+                <tr>
+                    <th>Sound</th>
+                    <th>Key</th>
+                </tr>
+            </thead>
+            <tbody style="background-color: var(--main-text-color); color: white;">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="./assets/jquery.js"></script>
+    <script src="./renderer/animalese.cjs"></script>
+    <script src="./renderer/remapper.cjs"></script>
+</body>

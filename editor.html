@@ -19,9 +19,10 @@ author: joshxviii
         </div>
 
         <div style="display: flex; padding: 0px 16px; gap: 16px;">
+            <svg-button onclick="window.api.openRemapSettings()" icon="keyboard" title="Remapped Keys"></svg-button>
             <svg-button onclick="openSettings()" icon="config" title="Settings"></svg-button>
             <svg-button onclick="window.api.minimizeWindow()" icon="minimize" title="Minimize"></svg-button>
-            <svg-button onclick="window.api.closeWindow();" icon="close" title="Close"></svg-button>
+            <svg-button onclick="window.api.closeWindow()" icon="close" title="Close"></svg-button>
         </div>
     </div>
 
@@ -92,14 +93,12 @@ author: joshxviii
                     <span class="slider"></span>
                 </label>
                 <label translation="settings.apps.mode"></label>
-                <label translation="settings.apps.active"></label>
             </label>
 
             <table id="apps_table" disabled="false">
                 <thead>
                     <tr>
                         <th id="apps_description" style="font-size: 10px; opacity: .7;padding-inline: 15px;">
-                            <span translation="settings.apps.description"></span>
                             <span translation="settings.apps.active"></span>
                         </th>
                     </tr>
@@ -247,7 +246,7 @@ author: joshxviii
     </div>
 
     <script src="./assets/jquery.js"></script>
-    <script src="./renderer/keyboard-mapper.cjs"></script>
     <script src="./renderer/animalese.cjs"></script>
+    <script src="./renderer/editor.cjs"></script>
 </body>
 </html>

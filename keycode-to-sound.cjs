@@ -7,7 +7,8 @@ const platforms = {
 };
 
 const keyDefinitions = [
-  { keycodes: [49, 18, null], key: '1', sound: '%.60', ctrlSound:'%.61', shiftSound: '&.Gwah' },
+  // Numbers
+  { keycodes: [49, 18, null], key: '1', sound: '%.60', ctrlSound:'%.61', shiftSound: '&.gwah' },
   { keycodes: [50, 19, null], key: '2', sound: '%.62', ctrlSound:'%.63', shiftSound: 'sfx.at' },
   { keycodes: [51, 20, null], key: '3', sound: '%.64', ctrlSound:'%.65', shiftSound: 'sfx.pound' },
   { keycodes: [52, 21, null], key: '4', sound: '%.65', ctrlSound:'%.66', shiftSound: 'sfx.dollar' },
@@ -17,7 +18,7 @@ const keyDefinitions = [
   { keycodes: [56, 28, null], key: '8', sound: '%.72', ctrlSound:'%.73', shiftSound: 'sfx.asterisk' },
   { keycodes: [57, 25, null], key: '9', sound: '%.74', ctrlSound:'%.75', shiftSound: 'sfx.parenthesis_open' },
   { keycodes: [48, 29, null], key: '0', sound: '%.76', ctrlSound:'%.77', shiftSound: 'sfx.parenthesis_closed' },
-  //Letters
+  // Letters
   { keycodes: [65, 0, null], key: 'a', sound: '&.a', ctrlSound: 'sfx.parenthesis_open' },
   { keycodes: [66, 11, null], key: 'b', sound: '&.b' },
   { keycodes: [67, 8, null], key: 'c', sound: '&.c', ctrlSound: 'sfx.slash_forward' },
@@ -70,7 +71,7 @@ const keyDefinitions = [
   { keycodes: [219, 33, null], key: '[', sound: 'sfx.bracket_open', shiftSound: 'sfx.brace_open' },
   { keycodes: [221, 30, null], key: ']', sound: 'sfx.bracket_closed', shiftSound: 'sfx.brace_closed' },
   { keycodes: [220, 42, null], key: '\\', sound: 'sfx.slash_back', shiftSound: 'sfx.default' },
-  { keycodes: [191, 44, null], key: '/', sound: 'sfx.slash_forward', shiftSound: '&.Deska' },
+  { keycodes: [191, 44, null], key: '/', sound: 'sfx.slash_forward', shiftSound: '&.deska' },
   { keycodes: [186, 41, null], key: ';', sound: 'sfx.default', shiftSound: 'sfx.default' },
   { keycodes: [222, 39, null], key: '\'', sound: 'sfx.default', shiftSound: 'sfx.default' },
   { keycodes: [188, 43, null], key: ',', sound: 'sfx.default', shiftSound: 'sfx.default' },
@@ -117,6 +118,17 @@ const keyDefinitions = [
   { keycodes: [103, 89, null], key: 'Num 7', sound: '%.70' },
   { keycodes: [104, 91, null], key: 'Num 8', sound: '%.72' },
   { keycodes: [105, 92, null], key: 'Num 9', sound: '%.74' },
+  // Media Keys
+  { keycodes: [173, null, null], key: 'Vol Mute' },
+  { keycodes: [174, null, null], key: 'Vol Down' },
+  { keycodes: [175, null, null], key: 'Vol Up' },
+  { keycodes: [176, null, null], key: 'Next'},
+  { keycodes: [177, null, null], key: 'Prev'},
+  { keycodes: [179, null, null], key: 'Play' },
+  // Other
+  { keycodes: [145, null, null], key: 'Scroll Lock'},
+  { keycodes: [19, null, null], key: 'Pause'},
+  { keycodes: [44, null, null], key: 'Print Screen'},
 ];
 
 function buildKeyMap(platform) {
@@ -131,9 +143,9 @@ function buildKeyMap(platform) {
     map[code] = {
       key: def.key,
       sound: def.sound ?? '',
-      shiftSound: def.shiftSound ?? def.sound ?? '',
-      ctrlSound: def.ctrlSound ?? '',
-      altSound: def.altSound ?? '',
+      shiftSound: def.shiftSound ?? undefined,
+      ctrlSound: def.ctrlSound ?? undefined,
+      altSound: def.altSound ?? undefined,
     };
   }
   return map;

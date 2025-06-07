@@ -75,7 +75,9 @@ div[show=false], div[show=false] text {
     align-items: center;
     justify-content: space-between;
     padding: 0px 10px;
-    padding-block-end: 4px;
+    padding-block: 4px;
+    transform: translateY(-4px);
+    position: fixed;
 }
 #resize-border {
     height: 4px;
@@ -824,6 +826,7 @@ input[type=text]::placeholder {
 
 #apps_table label {
     font-size: 11px;
+    align-items: anchor-center;
 }
 #apps_table td {
     display: inline-flex;
@@ -866,10 +869,17 @@ table {
 
 table thead {
     color: var(--main-text-color);
-    align-self: center;
 }
 
 .audio_editor {
     padding: 0px 18px;
     position: absolute;
 }
+
+
+#remap-table tbody tr:nth-child(even) {
+    background: rgb(from var(--input-main-color) r g b / 1.0);
+}
+#remap-table tbody tr:nth-child(odd) {
+    background: rgb(from var(--input-main-color) r g b / 0.5);
+}  

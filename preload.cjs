@@ -14,10 +14,12 @@ function getKeyInfo(e) {// parse keyInfo from keyup/down event
     const defaultKey = defaultKeyMap[e.keycode]
     if (defaultKey === undefined) return;
 
-    const { sound = defaultKey.sound, shiftSound = defaultKey.shiftSound, ctrlSound = defaultKey.ctrlSound, altSound = defaultKey.altSound} = remappedKey || {};
+
+    console.log(defaultKey.shiftSound);
+    const { sound = defaultKey.sound, shiftSound = defaultKey.shiftSound ?? defaultKey.sound, ctrlSound = defaultKey.ctrlSound, altSound = defaultKey.altSound} = remappedKey || {};
     const { shiftKey, ctrlKey, altKey } = e;
     const finalSound = ctrlKey ? ctrlSound : altKey ? altSound : shiftKey ? shiftSound : sound;
-    const defaultSound = ctrlKey ? defaultKey.ctrlSound : altKey ? defaultKey.altSound : shiftKey ? defaultKey.shiftSound : defaultKey.sound;
+    const defaultSound = ctrlKey ? defaultKey.ctrlSound : altKey ? defaultKey.altSound : shiftKey ? defaultKey.shiftSound ?? defaultKey.sound : defaultKey.sound;
 
     return {
         keycode: e.keycode,
@@ -39,8 +41,11 @@ function getKeyInfo(e) {// parse keyInfo from keyup/down event
 contextBridge.exposeInMainWorld('api', {
     closeWindow: () => ipcRenderer.send('close-window'),
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
+    getDefaultMapping: () => defaultKeyMap,
     sendRemapData: (data) => ipcRenderer.send('remap-key-press', data),
     onRemapReceived: (callback) => ipcRenderer.on('remap-key-set', (_, data) => callback(data)),
+    openRemapSettings: () => ipcRenderer.send('open-remap-settings'),
+    closeRemapSettings: () => ipcRenderer.send('close-remap-settings'),
     onKeyDown: (callback) => ipcRenderer.on('keydown', (_, e) =>  callback( getKeyInfo(e) )),
     onKeyUp: (callback) => ipcRenderer.on('keyup', (_, e) =>  callback( getKeyInfo(e) )),
     onSettingUpdate: (key, callback) => {
