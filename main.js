@@ -1,4 +1,4 @@
-import { app, Tray, BrowserWindow, Menu, ipcMain } from 'electron';
+import { app, powerMonitor, Tray, BrowserWindow, Menu, ipcMain } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Store from 'electron-store';
@@ -341,6 +341,14 @@ app.on('ready', () => {
     if (!disabled) startKeyListener();
     if (process.platform === 'darwin') app.dock.hide();
     bgwin.hide();
+
+    // stop keylisteners on sleep
+    powerMonitor.on('suspend', () => {
+        stopKeyListener();
+    });
+    powerMonitor.on('resume', () => {
+        if (!disabled) startKeyListener();
+    });
 
     if (app.isPackaged) autoUpdater.checkForUpdatesAndNotify();
 });
