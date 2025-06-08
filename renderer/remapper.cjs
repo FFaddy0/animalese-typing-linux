@@ -1,8 +1,6 @@
 const currentMapping = preferences.get('remapped_keys');
 const defatulMapping = window.api.getDefaultMapping();
 
-console.log(currentMapping);
-
 function renderSoundToKeysTable(mapping) {
     const tbody = document.querySelector('#remap-table tbody');
     tbody.innerHTML = '';

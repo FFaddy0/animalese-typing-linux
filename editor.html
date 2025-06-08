@@ -96,9 +96,9 @@ author: joshxviii
             </label>
 
             <table id="apps_table" disabled="false">
-                <thead>
+                <thead style="justify-items: center;">
                     <tr>
-                        <th id="apps_description" style="font-size: 10px; opacity: .7;padding-inline: 15px;">
+                        <th id="apps_description" style="font-size: 10px; opacity: .7;">
                             <span translation="settings.apps.active"></span>
                         </th>
                     </tr>
@@ -220,7 +220,7 @@ author: joshxviii
                 <!-- NOTES -->
                 <div class="audio_editor" show="false">
                     <label class="editor_label" style="display: flex" translation="instrument">
-                        <select id="inst_type" onchange="window.settings.set('instrument', this.value);console.log(this.value);">
+                        <select id="inst_type" onchange="window.settings.set('instrument', this.value);">
                             <option value="girl">girl</option>
                             <option value="boy">boy</option>
                             <option value="cranky">cranky</option>

@@ -47,7 +47,7 @@ const voice_sprite = {
     x: [200 * 23,   200],
     y: [200 * 24,   200],
     z: [200 * 25,   200],
-    oK:     [600 * 0 +200*26, 600],
+    ok:     [600 * 0 +200*26, 600],
     gwah:   [600 * 1 +200*26, 600],
     deska:  [600 * 2 +200*26, 600]
 }
@@ -121,9 +121,9 @@ function releaseSound(release_id, cut = true) {
     delete waitingForRelease[release_id];
 }
 
-function applyIntonation(bank, id, intonation, currentRate, ramp = 2) {
+function applyIntonation(bank, id, intonation, currentRate = 1, ramp = 2) {
 const duration = 3200; // ms duration for ramp
-    const startRate = currentRate;
+    const startRate = Math.max(currentRate, 0.01);
     const endRate = startRate * (
         intonation >= 0
             ? 1 + intonation * 3
@@ -142,6 +142,7 @@ const duration = 3200; // ms duration for ramp
     
         const rate = startRate * ((endRate / startRate) ** easedT);
 
+        console.log("startRate:", startRate);
         setTimeout(() => bank.rate(rate, id), i * interval);
     }
 }
@@ -197,10 +198,10 @@ function createAudioManager() {
             else  path = 'inst.'+instrument;
         }
 
-        if (isVoice ) { // apply animalese voice profile
+        if (isVoice) { // apply animalese voice profile
             volume = yelling? .75: .65;
             pitchShift = (yelling? 1.5: 0) + v.pitch_shift;
-            pitchVariation = (yelling? 1: 0) +  v.pitch_variation;
+            pitchVariation = (yelling? 1: 0) + v.pitch_variation;
             intonation = v.intonation;
             channel = channel ?? 1;
             path = path.replace('&', v.voice_type);

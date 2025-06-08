@@ -95,9 +95,7 @@ ipcMain.on('close-window', (e) => {
 ipcMain.on('minimize-window', (e) => {
     if (bgwin) bgwin.minimize();
 });
-ipcMain.on('remap-key-press', (e, data) => {
-    if (bgwin) bgwin.webContents.send(`remap-key-set`, data);
-});
+ipcMain.on('remap-send', (e, sound) => { if (bgwin) bgwin.webContents.send(`remap-sound`, sound)});
 ipcMain.on('open-remap-settings', (e) => {
     if(remapwin) remapwin.focus();
     else createRemapWin();
