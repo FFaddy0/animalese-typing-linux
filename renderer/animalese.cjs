@@ -34,8 +34,8 @@ function updateLanguage(lang) {// language selection update
 //#region Key press detect
 window.api.onKeyDown( (keyInfo) => {
     const { keycode, isCapsLock, isShiftDown, finalSound } = keyInfo;
-
-    if (finalSound === undefined) return;
+    
+    if (finalSound === undefined || finalSound === '') return;
     const isVoice = finalSound.startsWith('&');
     const isInstrument = finalSound.startsWith('%');
     const isSfx = finalSound.startsWith('sfx')

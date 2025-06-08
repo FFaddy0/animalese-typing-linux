@@ -97,7 +97,7 @@ function initControls() {
             else {
                 voiceProfile[control] = value;
                 preferences.set('voice_profile', voiceProfile);
-                if(control==='voice_type') setTimeout(() => {window.audio.play('&.OK', {noRandom: true, channel: 2, volume:.55});}, 10);
+                if(control==='voice_type') setTimeout(() => {window.audio.play('&.ok', {noRandom: true, channel: 2, volume:.55});}, 10);
             }
         };
 
@@ -158,7 +158,7 @@ function selectVoiceType(type) {
     const oppositeType = type === 'male' ? 'female' : 'male';
 
     if (document.getElementById(type).getAttribute('pressed') === 'true') {
-        window.audio.play('&.OK', { channel: 2, volume: 0.55 });
+        window.audio.play('&.ok', { channel: 2, volume: 0.55 });
         return;
     }
 
@@ -303,7 +303,7 @@ const remapMonitor = document.getElementById('remap_monitor');
 const remapIn = document.getElementById('remap_in');
 
 function remapStop() {
-    if (tabIndex == 0) window.api.sendRemapData({label: '', sound: ''});// index 0 is "No Sound"
+    if (tabIndex == 0) window.api.sendRemapSound('');// index 0 is "No Sound"
     setTimeout(()=>{
         isRemapping = false;
         remapAcceptBtn.setAttribute('disabled', true);
@@ -317,31 +317,30 @@ function remapStop() {
 
 function remapReset() {
     const { defaultSound } = currentKey;
-    changeTab(!defaultSound||defaultSound===''?0:defaultSound.startsWith('&')?1:defaultSound.startsWith('%')?2:defaultSound.startsWith('sfx')?3:0);
-    window.api.sendRemapData({ defaultSound });
+    window.api.sendRemapSound(defaultSound);
 }
 
-window.api.onRemapReceived((remapButton) => {
+window.api.onRemapSound((remapSound) => {
     if (!(remapIn === document.activeElement || isRemapping)) return;
     const { keycode, isCtrlDown, isAltDown, isShiftDown, finalSound, defaultSound } = currentKey;
-    if(remapButton.sound === finalSound) return; // if the key is already mapped to the same sound, do nothing
-    const reset = remapButton.sound === defaultSound;// if the key is being mapped to it's default sound, reset and clear the mapping in settings
+    if(remapSound === finalSound) return; // if the key is already mapped to the same sound, do nothing
+    const reset = remapSound === defaultSound;// if the key is being mapped to it's default sound, reset and clear the mapping in settings
 
     const remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
     const mapping = { ...remappedKeys.get(`${keycode}`) || {} };
 
     if (reset) delete mapping[isCtrlDown?'ctrlSound':isAltDown?'altSound':isShiftDown?'shiftSound':'sound'];
-    else mapping[isCtrlDown?'ctrlSound':isAltDown?'altSound':isShiftDown?'shiftSound':'sound'] = remapButton.sound;
+    else mapping[isCtrlDown?'ctrlSound':isAltDown?'altSound':isShiftDown?'shiftSound':'sound'] = remapSound;
 
     if (Object.keys(mapping).length === 0) remappedKeys.delete(`${keycode}`);
     else remappedKeys.set(`${keycode}`, mapping);
-
-    console.log(remappedKeys);
     
     document.querySelector('.highlighted')?.classList.remove('highlighted');
-    document.querySelector(`[sound="${remapButton.sound}"]`)?.classList.add('highlighted');
+    document.querySelector(`[sound="${remapSound}"]`)?.classList.add('highlighted');
 
     preferences.set('remapped_keys', Object.fromEntries(remappedKeys));
+
+    changeTab(!remapSound||remapSound===''?0:remapSound.startsWith('&')?1:remapSound.startsWith('%')?2:remapSound.startsWith('sfx')?3:0);
 });
 
 remapIn.addEventListener('focusin', e => remapMonitor.setAttribute('monitoring', true));
@@ -367,7 +366,9 @@ function remapStart() {
     document.querySelector('.highlighted')?.classList.remove('highlighted');
     const highlightedBtn = document.querySelector(`[sound="${finalSound}"]`);
     highlightedBtn?.classList.add('highlighted');
-    highlightedBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    highlightedBtn?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    
 
     changeTab(!finalSound||finalSound===''?0:finalSound.startsWith('&')?1:finalSound.startsWith('%')?2:finalSound.startsWith('sfx')?3:0);
 }
@@ -431,9 +432,9 @@ const voiceLayout = [
         {label:'Z', btnType:'s', sound:`&.z`}
     ],
     [
-        {label:'OK', btnType:'s', sound:`&.OK`},
-        {label:'GWAH', btnType:'m', sound:`&.Gwah`},
-        {label:'DESKA', btnType:'m', sound:`&.Deska`},
+        {label:'OK', btnType:'s', sound:`&.ok`},
+        {label:'GWAH', btnType:'m', sound:`&.gwah`},
+        {label:'DESKA', btnType:'m', sound:`&.deska`},
     ]
     //TODO: create more phonemes
     // [
@@ -691,10 +692,7 @@ function press(btn, holdKey=false) {
             setTimeout(() => btn.classList.remove('pressed'), 100);
             setTimeout(() => btn.classList.remove('pressed'), 100);
         }
-        window.api.sendRemapData({
-            label: label,
-            sound: sound
-        });
+        window.api.sendRemapSound(sound);
     }
 }
 
