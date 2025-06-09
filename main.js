@@ -97,11 +97,7 @@ ipcMain.on('minimize-window', (e) => {
 });
 ipcMain.on('remap-send', (e, sound) => { if (bgwin) bgwin.webContents.send(`remap-sound`, sound)});
 ipcMain.on('open-remap-settings', (e) => {
-    if(remapwin) remapwin.focus();
-    else createRemapWin();
-});
-ipcMain.on('close-remap-settings', (e) => {
-    if(remapwin) remapwin.close();
+    createRemapWin();
 });
 ipcMain.on('get-app-info', (e) => {
     e.returnValue = {
@@ -190,10 +186,13 @@ function createMainWin() {
     });
 }
 function createRemapWin() {
-    if(remapwin !== null) return;
+    if(remapwin !== null) {
+        remapwin.close();
+        return;
+    }
     remapwin = new BrowserWindow({
         width: 526,
-        height: 420,
+        height: 628,
         icon: ICON,
         resizable: true,
         frame: true,

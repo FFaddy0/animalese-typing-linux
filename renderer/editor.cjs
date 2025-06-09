@@ -303,7 +303,6 @@ const remapMonitor = document.getElementById('remap_monitor');
 const remapIn = document.getElementById('remap_in');
 
 function remapStop() {
-    if (tabIndex == 0) window.api.sendRemapSound('');// index 0 is "No Sound"
     setTimeout(()=>{
         isRemapping = false;
         remapAcceptBtn.setAttribute('disabled', true);
@@ -690,7 +689,6 @@ function press(btn, holdKey=false) {
         }
         else {
             window.audio.play(sound, {noRandom: true});
-            setTimeout(() => btn.classList.remove('pressed'), 100);
             setTimeout(() => btn.classList.remove('pressed'), 100);
         }
         window.api.sendRemapSound(sound);

@@ -44,7 +44,6 @@ contextBridge.exposeInMainWorld('api', {
     sendRemapSound: (remapSound) => ipcRenderer.send('remap-send', remapSound),
     onRemapSound: (callback) => ipcRenderer.on('remap-sound', (_, remapSound) => callback(remapSound)),
     openRemapSettings: () => ipcRenderer.send('open-remap-settings'),
-    closeRemapSettings: () => ipcRenderer.send('close-remap-settings'),
     onKeyDown: (callback) => ipcRenderer.on('keydown', (_, e) =>  callback( getKeyInfo(e) )),
     onKeyUp: (callback) => ipcRenderer.on('keyup', (_, e) =>  callback( getKeyInfo(e) )),
     onSettingUpdate: (key, callback) => {
