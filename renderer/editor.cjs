@@ -323,8 +323,9 @@ function remapReset() {
 window.api.onRemapSound((remapSound) => {
     if (!(remapIn === document.activeElement || isRemapping)) return;
     const { keycode, isCtrlDown, isAltDown, isShiftDown, finalSound, defaultSound } = currentKey;
-    if(remapSound === finalSound) return; // if the key is already mapped to the same sound, do nothing
     const reset = remapSound === defaultSound;// if the key is being mapped to it's default sound, reset and clear the mapping in settings
+
+    console.log("reset:", reset, "remapSound:", remapSound, "defaultSound:", defaultSound)
 
     const remappedKeys = new Map(Object.entries(preferences.get('remapped_keys')));
     const mapping = { ...remappedKeys.get(`${keycode}`) || {} };
