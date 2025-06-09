@@ -780,12 +780,11 @@ input[type=text]::placeholder {
 #settings_overlay label {
     font-size: 14px;
     color: rgb(from var(--main-text-color) r g b / 0.8);
-    display: inline-flex;
+    display: inline-block;
     align-self: flex-start;
 }
 #settings_overlay label input, .toggle {
-    margin: 2px 7px 4px 7px;
-    align-self: baseline;
+    margin: 0px 7px -2px 7px;
 }
 
 #settings_overlay .catagory {
@@ -826,21 +825,17 @@ input[type=text]::placeholder {
 
 #apps_table label {
     font-size: 11px;
-    align-items: anchor-center;
 }
-#apps_table td {
-    display: inline-flex;
-}
-#apps_table td:nth-child(2) label {
+
+td label {
   display: inline-block;
-  max-width: 175px;
+  max-width: 208px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  vertical-align: middle;
 }
 
-#settings_title {
+h2 {
     font-size: 18px;
     font-weight: bold;
     color: var(--main-text-color);
@@ -881,5 +876,12 @@ table thead {
     background: rgb(from var(--input-main-color) r g b / 1.0);
 }
 #remap-table tbody tr:nth-child(odd) {
-    background: rgb(from var(--input-main-color) r g b / 0.5);
+    background: rgb(from var(--input-bg-color) r g b / 1.0);
 }  
+#remap-table {
+    height: 90%;
+}
+#remap-table td {
+    width: 100%;
+    padding-block: 6px;
+}

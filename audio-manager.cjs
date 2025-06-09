@@ -142,7 +142,6 @@ const duration = 3200; // ms duration for ramp
     
         const rate = startRate * ((endRate / startRate) ** easedT);
 
-        console.log("startRate:", startRate);
         setTimeout(() => bank.rate(rate, id), i * interval);
     }
 }
