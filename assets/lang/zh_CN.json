@@ -7,8 +7,7 @@
     "config_1":"默认",
     "config_2":"仅动物语",
     "config_3":"仅音效",
-    "config_4":"随机",
-    "config_4.description":"(隐藏输入)",
+    "config_4":"随机 <span style='opacity: .6; font-size: 10px; margin: 3px 6px;'>(隐藏输入)</span>",
 
     "editor_title":"编辑器",
     "editor_1":"音调变化",

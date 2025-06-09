@@ -7,8 +7,7 @@
     "config_1":"défaut",
     "config_2":"voix",
     "config_3":"effets sonores",
-    "config_4":"aléatoire",
-    "config_4.description":"(masquer la saisie)",
+    "config_4":"aléatoire <span style='opacity: .6; font-size: 10px; margin: 3px 6px;'>(masquer la saisie)</span>",
 
     "editor_title":"Éditeur",
     "editor_1":"variation hauteur",

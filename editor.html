@@ -59,10 +59,8 @@ author: joshxviii
                     <input type="radio" id="config_3" name="audio_mode" value="2">
                 </label>
 
-                <label>
+                <label translation="config_4">
                     <input type="radio" id="config_4" name="audio_mode" value="3">
-                    <label translation="config_4" for="config_4"></label>
-                    <p style="opacity: .6; font-size: 10px; margin: 3px 6px;" translation="config_4.description"></p>
                 </label>
                 
             </div>
@@ -87,12 +85,11 @@ author: joshxviii
                 <input type="checkbox" id="check_always_active" onchange="window.settings.set('always_active', this.checked);document.querySelectorAll('#apps_table, #apps_toggle').forEach(el => el.setAttribute('disabled', this.checked))"/>
             </label>
 
-            <label id="apps_toggle" disabled="false">
+            <label id="apps_toggle" translation="settings.apps.mode" disabled="false">
                 <label class="toggle">
                     <input type="checkbox" id="check_selected_active" onchange="window.settings.set('selected_active', this.checked);document.querySelectorAll(`[translation='settings.apps.active'], [translation='settings.apps.inactive']`).forEach(el => el.setAttribute('translation', this.checked?'settings.apps.active':'settings.apps.inactive'));document.getElementById('apps_tbody').setAttribute('inactive', !this.checked);"/>
                     <span class="slider"></span>
                 </label>
-                <label translation="settings.apps.mode"></label>
             </label>
 
             <table id="apps_table" disabled="false">
