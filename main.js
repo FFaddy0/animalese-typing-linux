@@ -53,7 +53,7 @@ const defaults = {
         pitch_variation: 0.2,
         intonation: 0.0
     },
-    instrument: 'guitar',
+    instrument: 'girl',
     saved_voice_profiles: new Map(),
     remapped_keys: new Map()
 }
