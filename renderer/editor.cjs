@@ -193,32 +193,25 @@ function updatedFocusedWindows(activeWindows = []) {
     [...new Set([...enabledApps, ...activeWindows])].forEach(appName => {
         if (appName !== undefined) {
             const row = document.createElement('tr');
-
-            // checkbox cell
-            //const checkboxCell = document.createElement('td');
+            const nameCell = document.createElement('td');
+            const label = document.createElement('label');
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.checked = enabledApps.includes(appName);
-            checkbox.id = `app_${appName}`;
-            checkbox.addEventListener('change', () => updateEnabledApps(appName, checkbox.checked));
-            //checkboxCell.appendChild(checkbox);
-            //row.appendChild(checkboxCell);
 
-            // app name cell
-            const nameCell = document.createElement('td');
-            const label = document.createElement('label');
-            //label.setAttribute('for', `app_${appName}`);
             label.appendChild(checkbox);
-            label.innerHTML += appName;
+            label.appendChild(document.createTextNode(appName));
+            label.addEventListener('change', (e) => updateEnabledApps(appName, e.target.checked));
+            
             nameCell.appendChild(label);
             row.appendChild(nameCell);
-
             tableBody.appendChild(row);
         }
     });
 }
 
 function updateEnabledApps(appName, isChecked) {
+    console.log("change", appName, isChecked);
     let enabledApps = preferences.get('selected_apps')
 
     if (isChecked && !enabledApps.includes(appName)) enabledApps.push(appName);
@@ -437,32 +430,6 @@ const voiceLayout = [
         {label:'GWAH', btnType:'m', sound:`&.gwah`},
         {label:'DESKA', btnType:'m', sound:`&.deska`},
     ]
-    //TODO: create more phonemes
-    // [
-    //     {label:'AA', btnType:'s', sound:`&.a`},
-    //     {label:'AE', btnType:'s', sound:`&.a`},
-    //     {label:'CH', btnType:'s', sound:`&.a`},
-    //     {label:'EH', btnType:'s', sound:`&.a`},
-    //     {label:'EU', btnType:'s', sound:`&.a`},
-    //     {label:'IE', btnType:'s', sound:`&.a`},
-    //     {label:'KH', btnType:'s', sound:`&.a`},
-    //     {label:'NG', btnType:'s', sound:`&.a`},
-    //     {label:'SH', btnType:'s', sound:`&.a`},
-    //     {label:'WA', btnType:'s', sound:`&.a`},
-    //     {label:'WA', btnType:'s', sound:`&.a`},
-    //     {label:'WE', btnType:'s', sound:`&.a`},
-    //     {label:'WI', btnType:'s', sound:`&.a`}
-    // ],
-    // [
-    //     {label:'WO', btnType:'s', sound:`&.a`},
-    //     {label:'Y', btnType:'s', sound:`&.a`},
-    //     {label:'YA', btnType:'s', sound:`&.a`},
-    //     {label:'YAE', btnType:'s', sound:`&.a`},
-    //     {label:'YEH', btnType:'s', sound:`&.a`},
-    //     {label:'YEO', btnType:'s', sound:`&.a`},
-    //     {label:'YO', btnType:'s', sound:`&.a`},
-    //     {label:'YU', btnType:'s', sound:`&.a`},
-    // ]
 ];
 
 const pianoLayout = [
@@ -705,8 +672,6 @@ customElements.define('piano-board', class extends HTMLElement {
             if (wheelTimeoutId) clearTimeout(wheelTimeoutId);
             wheelTimeoutId = setTimeout(stopScroll, 80);
         });
-
-        piano_keys.addEventListener('')
     }
 });
 
