@@ -134,7 +134,7 @@ author: joshxviii
                     <div id="key_remapper">
                         <div style="width: 100%;">
                             <h3 translation="key-remapper" style="margin-block: 6px 16px;"></h3>
-                            <input id="remap_in" type="text" maxlength="1" onclick="this.focus()" translation="remap"/>
+                            <input id="remap_in" type="text" maxlength="1" onclick="this.focus()" translation="remap" tabindex="-1"/>
                             <label id="remap_monitor" for="remap_in" translation="remap" class="highlighted"></label>
                             <div class="button_row">
                                 <svg-button id="remap_accept" onclick="remapStop()" onmousedown="window.audio.play('sfx.default', { static: true, channel: 2, volume: 0.55 })" icon="accept" title="Accept" disabled="true"></svg-button>
@@ -183,7 +183,7 @@ author: joshxviii
                             <svg-button id="female" icon="female" onclick="selectVoiceType('female')"></svg-button>
                         </div>
 
-                        <select id="voice_type" class="female">
+                        <select id="voice_type" class="female" tabindex="-1">
                             <option id="label_f1" class="female" value="f1" translation="f1" selected></option>
                             <option id="label_f2" class="female" value="f2" translation="f2"></option>
                             <option id="label_f3" class="female" value="f3" translation="f3"></option>
@@ -198,7 +198,7 @@ author: joshxviii
                     <div id="voice_profiles">
                         <p style="margin-block-end: 4px;" translation="voice_profiles"></p>
                         <div id="voice_profile_select">
-                            <select id="voice_profile_slot" onchange="loadVoiceProfile()">
+                            <select id="voice_profile_slot" onchange="loadVoiceProfile()" tabindex="-1">
                                 <option id="save_1" value="1" selected>1</option>
                                 <option id="save_2" value="2">2</option>
                                 <option id="save_3" value="3">3</option>
@@ -235,7 +235,7 @@ author: joshxviii
         </div>
 
         <div id="master_volume_group">
-            <input id="master_volume" min="0" max="1" step=".01" orient="vertical" type="range" playing="false" defaultValue=".5">
+            <input id="master_volume" min="0" max="100" step="1" orient="vertical" type="range" defaultValue="50">
             <input type="text" id="master_volume_out" class="editor_output" display="percent" />
         </div>
 

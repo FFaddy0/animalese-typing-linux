@@ -73,32 +73,28 @@ function initControls() {
         const isSlider = el.type === 'range';
         const displayMode = (outputEl)?outputEl.getAttribute('display') || 'float':undefined;
 
-        const updateValue = (value) => {
+        const updateValue = (value, updateSound) => {
             if (isSlider) {
                 value = parseFloat(value) || 0.0;
                 value = Math.min(Math.max(value, parseFloat(el.min)), parseFloat(el.max));
                 el.value = value;
                 if (outputEl) {
                     outputEl.value = displayMode === 'percent' 
-                    ? (parseFloat(el.value) * 100).toFixed(0) + "%" 
+                    ? (parseFloat(el.value)).toFixed(0) + "%" 
                     : ((parseFloat(el.value) > 0) ? "+" : "") + parseFloat(el.value).toFixed(1);
                 }
-            } else {
-                el.value = value;
-            }
-            if (control==='master_volume') {
-                preferences.set('volume', value);
-                
-                if (el.getAttribute('playing')==='false') {
-                    el.setAttribute('playing', 'true');
-                    window.audio.play('sfx.default', {noRandom: true, channel: 2});
-                    setTimeout(() => el.setAttribute('playing', 'false'), 50);
-                }
-            }
+            } else el.value = value;
+
+            if (control==='master_volume') preferences.set('volume', value*.01);
             else {
                 voiceProfile[control] = value;
                 preferences.set('voice_profile', voiceProfile);
-                if(control==='voice_type') setTimeout(() => {window.audio.play('&.ok', {noRandom: true, channel: 2, volume:.55});}, 10);
+            }
+
+            if (updateSound && el.getAttribute('playing') !== 'true') {
+                el.setAttribute('playing', 'true');
+                window.audio.play(updateSound, { noRandom: true, channel: 2 });
+                setTimeout(() => el.setAttribute('playing', 'false'), 50);
             }
         };
 
@@ -110,32 +106,29 @@ function initControls() {
             outputEl = document.getElementById(control + '_out');
         }
         if (isSlider) {
-            if (control === 'master_volume') el.value = preferences.get('volume');
-            else el.value = voiceProfile[control];
+            updateValue(control === 'master_volume'?(preferences.get('volume') * 100):voiceProfile[control])
+            
             const step = parseFloat((el.max - el.min) * 0.05);
-
-            el.addEventListener('input', (e) => updateValue(e.target.value));
+            el.setAttribute('tabindex', '-1');
+            
+            el.addEventListener('input', (e) => updateValue(e.target.value, control === 'master_volume'?'sfx.default':undefined));
             el.addEventListener('wheel', (e) => {
-                updateValue(parseFloat(el.value) + (e.deltaY < 0 ? step : -step));
+                updateValue(parseFloat(el.value) + (e.deltaY < 0 ? step : -step), control === 'master_volume'?'sfx.default':undefined);
             }, {passive: true});
             el.addEventListener('dblclick', () => updateValue(el.getAttribute('defaultValue')));
             if (outputEl) {
-                outputEl.value = displayMode === 'percent' 
-                ? (parseFloat(el.value) * 100).toFixed(0) + "%" 
-                : ((parseFloat(el.value) > 0) ? "+" : "") + parseFloat(el.value).toFixed(1);
-
                 outputEl.addEventListener('click', () => outputEl.select());
                 outputEl.addEventListener('focusout', () => updateValue(outputEl.value));
                 outputEl.addEventListener('keydown', (e) => {
                     if (e.key === "Enter") updateValue(outputEl.value);
-                    else if (["ArrowUp", "ArrowRight"].includes(e.key)) updateValue(parseFloat(outputEl.value) + 0.1);
-                    else if (["ArrowDown", "ArrowLeft"].includes(e.key)) updateValue(parseFloat(outputEl.value) - 0.1);
+                    else if (["ArrowUp", "ArrowRight"].includes(e.key)) updateValue(parseFloat(outputEl.value) + step);
+                    else if (["ArrowDown", "ArrowLeft"].includes(e.key)) updateValue(parseFloat(outputEl.value) - step);
                 });
                 outputEl.addEventListener('dblclick', () => updateValue(el.getAttribute('defaultValue')));
             }
         } else {
             el.value = voiceProfile[control];
-            el.addEventListener('input', (e) => updateValue(e.target.value));
+            el.addEventListener('input', (e) => updateValue(e.target.value, '&.ok'));
         }
     });
 
