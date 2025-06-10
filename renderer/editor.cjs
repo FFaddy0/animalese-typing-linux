@@ -33,6 +33,7 @@ let voiceProfile = null;
 let voiceProfileSlots = null;
 const profileName = document.getElementById('voice_profile_name');
 const checkStartupRun = document.getElementById('check_startup_run');
+
 profileName.addEventListener('input', (e) => {
     e.target.value = e.target.value.replace(/[^\p{Letter}0-9\s]/gu, '').substring(0, 12);
     document.documentElement.style.setProperty('--label-length', e.target.value.length);
@@ -364,13 +365,11 @@ function remapStart() {
     remapMonitor.innerHTML = keyLabel.toUpperCase();
 
     document.querySelector('.highlighted')?.classList.remove('highlighted');
+    changeTab(!finalSound||finalSound===''?0:finalSound.startsWith('&')?1:finalSound.startsWith('%')?2:finalSound.startsWith('sfx')?3:0);
+
     const highlightedBtn = document.querySelector(`[sound="${finalSound}"]`);
     highlightedBtn?.classList.add('highlighted');
     highlightedBtn?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    
-
-    changeTab(!finalSound||finalSound===''?0:finalSound.startsWith('&')?1:finalSound.startsWith('%')?2:finalSound.startsWith('sfx')?3:0);
 }
 
 function changeTab(newTabIndex = 1) {
@@ -393,6 +392,8 @@ function changeTab(newTabIndex = 1) {
     allEditors[newTabIndex].setAttribute('show',true);
 
     tabIndex = newTabIndex;
+
+    if (newTabIndex === 2) centerPianoKeys();
 }
 //#endregion
 
@@ -465,44 +466,70 @@ const voiceLayout = [
 ];
 
 const pianoLayout = [
+    {label:'C2', btnType:'l', sound:'%.36'},
+    { btnType:'b',sound:'%.37'},
+    {btnType:'m', sound:'%.38'},
+    { btnType:'b',sound:'%.39'},
+    {btnType:'r', sound:'%.40'},
+    {btnType:'l', sound:'%.41'},
+    { btnType:'b',sound:'%.42'},
+    {btnType:'m', sound:'%.43'},
+    { btnType:'b',sound:'%.44'},
+    {btnType:'m', sound:'%.45'},
+    { btnType:'b',sound:'%.46'},
+    {btnType:'r', sound:'%.47'},
+
     {label:'C3', btnType:'l', sound:'%.48'},
-    {label:'Db3', btnType:'b',sound:'%.49'},
-    {label:'D3', btnType:'m', sound:'%.50'},
-    {label:'Eb3', btnType:'b',sound:'%.51'},
-    {label:'E3', btnType:'r', sound:'%.52'},
-    {label:'F3', btnType:'l', sound:'%.53'},
-    {label:'Gb3', btnType:'b',sound:'%.54'},
-    {label:'G3', btnType:'m', sound:'%.55'},
-    {label:'Ab3', btnType:'b',sound:'%.56'},
-    {label:'A3', btnType:'m', sound:'%.57'},
-    {label:'Bb3', btnType:'b',sound:'%.58'},
-    {label:'B3', btnType:'r', sound:'%.59'},
+    { btnType:'b',sound:'%.49'},
+    {btnType:'m', sound:'%.50'},
+    { btnType:'b',sound:'%.51'},
+    {btnType:'r', sound:'%.52'},
+    {btnType:'l', sound:'%.53'},
+    { btnType:'b',sound:'%.54'},
+    {btnType:'m', sound:'%.55'},
+    { btnType:'b',sound:'%.56'},
+    {btnType:'m', sound:'%.57'},
+    { btnType:'b',sound:'%.58'},
+    {btnType:'r', sound:'%.59'},
 
     {label:'C4', btnType:'l', sound:'%.60'},
-    {label:'Db4', btnType:'b',sound:'%.61'},
-    {label:'D4', btnType:'m', sound:'%.62'},
-    {label:'Eb4', btnType:'b',sound:'%.63'},
-    {label:'E4', btnType:'r', sound:'%.64'},
-    {label:'F4', btnType:'l', sound:'%.65'},
-    {label:'Gb4', btnType:'b',sound:'%.66'},
-    {label:'G4', btnType:'m', sound:'%.67'},
-    {label:'Ab4', btnType:'b',sound:'%.68'},
-    {label:'A4', btnType:'m', sound:'%.69'},
-    {label:'Bb4', btnType:'b',sound:'%.70'},
-    {label:'B4', btnType:'r', sound:'%.71'},
+    { btnType:'b',sound:'%.61'},
+    {btnType:'m', sound:'%.62'},
+    { btnType:'b',sound:'%.63'},
+    {btnType:'r', sound:'%.64'},
+    {btnType:'l', sound:'%.65'},
+    { btnType:'b',sound:'%.66'},
+    {btnType:'m', sound:'%.67'},
+    { btnType:'b',sound:'%.68'},
+    {btnType:'m', sound:'%.69'},
+    { btnType:'b',sound:'%.70'},
+    {btnType:'r', sound:'%.71'},
 
     {label:'C5', btnType:'l', sound:'%.72'},
-    {label:'Db5', btnType:'b',sound:'%.73'},
-    {label:'D5', btnType:'m', sound:'%.74'},
-    {label:'Eb5', btnType:'b',sound:'%.75'},
-    {label:'E5', btnType:'r', sound:'%.76'},
-    {label:'F5', btnType:'l', sound:'%.77'},
-    {label:'Gb5', btnType:'b',sound:'%.78'},
-    {label:'G5', btnType:'m', sound:'%.79'},
-    {label:'Ab5', btnType:'b',sound:'%.80'},
-    {label:'A5', btnType:'m', sound:'%.81'},
-    {label:'Bb5', btnType:'b',sound:'%.82'},
-    {label:'B5', btnType:'r', sound:'%.83'},
+    { btnType:'b',sound:'%.73'},
+    {btnType:'m', sound:'%.74'},
+    { btnType:'b',sound:'%.75'},
+    {btnType:'r', sound:'%.76'},
+    {btnType:'l', sound:'%.77'},
+    { btnType:'b',sound:'%.78'},
+    {btnType:'m', sound:'%.79'},
+    { btnType:'b',sound:'%.80'},
+    {btnType:'m', sound:'%.81'},
+    { btnType:'b',sound:'%.82'},
+    {btnType:'r', sound:'%.83'},
+
+    {label:'C6', btnType:'l', sound:'%.84'},
+    { btnType:'b',sound:'%.85'},
+    {btnType:'m', sound:'%.86'},
+    { btnType:'b',sound:'%.87'},
+    {btnType:'r', sound:'%.88'},
+    {btnType:'l', sound:'%.89'},
+    { btnType:'b',sound:'%.90'},
+    {btnType:'m', sound:'%.91'},
+    { btnType:'b',sound:'%.92'},
+    {btnType:'m', sound:'%.93'},
+    { btnType:'b',sound:'%.94'},
+    {btnType:'r', sound:'%.95'},
 ]
 
 const sfxLayout = [
@@ -551,13 +578,13 @@ customElements.define('key-button', class extends HTMLElement {
         .then(res => res.text())
         .then(svg => {
             this.innerHTML = `
-                <div class='key-label-wrapper key_${btnType}'>
+                <span class='key-label-wrapper key_${btnType}'>
                     ${svg}
                     ${
-                        svgIcon?`<div class="key-icon-wrapper"></div>`:
+                        svgIcon?`<span class="key-icon-wrapper"></span>`:
                         label?`<span class='key-label'>${label}</span>`:''
                     }
-                </div>
+                </span>
             `;
             this.querySelector('svg').classList.add(`key_${btnType}`);
 
@@ -589,7 +616,7 @@ customElements.define('key-board', class extends HTMLElement {
                 const btnType = key.btnType?`btn-type=${key.btnType}`:'';
                 const icon = key.icon?`icon=${key.icon}`:'';
                 const _key = $(
-                    key.label?`<key-button ${label} ${sound} ${btnType} ${icon} style="--label-length: ${key.label.length};"></key-button>`:
+                    key.label?`<key-button ${label} ${sound} ${btnType} ${icon} style="--label-length: ${key.label?.length};"></key-button>`:
                     `<div class='key_blank'></div>`
                 );
                 _key.appendTo(_row);
@@ -602,8 +629,9 @@ customElements.define('key-board', class extends HTMLElement {
 customElements.define('piano-key', class extends HTMLElement {
     connectedCallback() {
         const btnType = this.getAttribute('btn-type');
-            this.data = {
-            label: this.getAttribute('label') ?? '',
+        const label = this.getAttribute('label');
+        this.data = {
+            label: label ?? '',
             sound: this.getAttribute('sound') ?? 'sfx.default'
         }
 
@@ -611,9 +639,10 @@ customElements.define('piano-key', class extends HTMLElement {
         .then(res => res.text())
         .then(svg => {
             this.innerHTML = `
-                <div class='piano_${btnType}'>
+                <span class='piano_${btnType}'>
                     ${svg}
-                </div>
+                    ${label?`<span class='key-label'>${label}</span>`:''}
+                </span>
             `;
             this.querySelector('svg').classList.add(`piano_${btnType}`);
 
@@ -635,7 +664,7 @@ customElements.define('piano-board', class extends HTMLElement {
             const sound = key.sound?`sound=${key.sound}`:'';
             const btnType = key.btnType?`btn-type=${key.btnType}`:'';
             const _key = $(
-                `<piano-key ${label} ${sound} ${btnType} ></piano-key>`
+                `<piano-key ${label} ${sound} ${btnType} style="--label-length: ${key.label?.length};"></piano-key>`
             );
             _key.appendTo(keys);
         }
@@ -676,8 +705,19 @@ customElements.define('piano-board', class extends HTMLElement {
             if (wheelTimeoutId) clearTimeout(wheelTimeoutId);
             wheelTimeoutId = setTimeout(stopScroll, 80);
         });
+
+        piano_keys.addEventListener('')
     }
 });
+
+function centerPianoKeys() {
+    const piano_keys = document.getElementById('piano_keys');
+    if (!piano_keys) return;
+    // Only center if visible
+    if (piano_keys.offsetParent !== null && piano_keys.offsetWidth > 0) {
+        piano_keys.scrollLeft = (piano_keys.scrollWidth - piano_keys.clientWidth) / 2;
+    }
+}
 
 function press(btn, holdKey=false) {
     if (!btn.classList.contains('pressed')) {

@@ -122,13 +122,13 @@ div[show=false], div[show=false] text {
 .footer {
     padding-top:0px;
     padding-bottom:0px;
-
     bottom:0;
     width:100%;
     height:20px;
-   
+
     display: inline-block;
 }
+
 .footer a, .footer p {
     font-size: 12px;
     color: #b89c7a9f;
