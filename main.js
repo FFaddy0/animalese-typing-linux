@@ -70,23 +70,18 @@ ipcMain.handle('store-set', async (e, key, value) => {
     bgwin.webContents.send(`updated-${key}`, value);
     if (key==='startup_run') updateTrayMenu();
 });
-ipcMain.handle('store-reset', async (e) => {// set settings to default and trigger store update messages
-    const resetable = [
-        'startup_run',
-        'hold_repeat',
-        'audio_mode',
-        'voice_profile',
-        'instrument',
-        'saved_voice_profiles',
-        'remapped_keys',
-        'selected_apps',
-        'selected_active',
-        'always_active'
-    ];
-    resetable.forEach(r=>{
-        preferences.reset(r);
-        bgwin.webContents.send(`updated-${r}`, defaults[r]);
-        if (r==='startup_run') updateTrayMenu();
+const nonResettable = [
+    'lang',
+    'startup_run',
+];
+ipcMain.handle('store-reset', async (e) => {// reset and clear any non-settings values fron config.json
+    Object.keys(preferences.store).forEach(key => { if (!nonResettable.includes(key)) preferences.delete(key); });
+    
+    Object.keys(defaults).forEach(key => {
+        if (!nonResettable.includes(key)) {
+            preferences.set(key, defaults[key]);
+            bgwin.webContents.send(`updated-${key}`, defaults[key]);
+        }
     });
 });
 ipcMain.on('close-window', (e) => {
@@ -225,7 +220,7 @@ function createRemapWin() {
 function updateTrayMenu() {
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'Show Settings',
+            label: 'Show Editor',
             click: () => { showIfAble(); }
         },
         {

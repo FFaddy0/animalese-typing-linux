@@ -853,7 +853,7 @@ h2 {
 
 table {
     width: 84%;
-    height: 122px;
+    height: 160px;
     background-color: var(--secondary-bg-color);
     border-radius: 8px;
     overflow-y: auto;

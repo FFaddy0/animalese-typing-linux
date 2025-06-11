@@ -65,7 +65,7 @@ const keyDefinitions = [
   { keycodes: [27, 53, null], key: 'Esc', sound: 'sfx.enter' },
   { keycodes: [9, 48, null], key: 'Tab', sound: 'sfx.tab' },
   { keycodes: [20, 57, null], key: 'Caps Lock'},
-  { keycodes: [192, 50, null], key: '`', sound: '%.55', shiftSound: 'sfx.tilde' },
+  { keycodes: [192, 50, null], key: '`', sound: '%.55', ctrlSound:'%.56', shiftSound: 'sfx.tilde' },
   { keycodes: [189, 27, null], key: '-', sound: '%.77', ctrlSound:'%.78', shiftSound: 'sfx.default' },
   { keycodes: [187, 24, null], key: '=', sound: '%.79', ctrlSound:'%.80', shiftSound: 'sfx.default' },
   { keycodes: [219, 33, null], key: '[', sound: 'sfx.bracket_open', shiftSound: 'sfx.brace_open' },
