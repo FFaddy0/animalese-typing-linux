@@ -30,18 +30,22 @@ jobs:
 
       - name: Build Windows app
         run: npm run build:win
+        env:
+          ELECTRON_BUILDER_PUBLISH: never
+
+      - name: List artifacts
+        run: dir exports
+        shell: cmd
 
       - name: Upload Windows artifacts to draft release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
           files: |
-            exports/AnimaleseTypingSetup.exe
+            exports/*.exe
             exports/latest.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          # CSC_LINK: ${{ secrets.WIN_CERTIFICATE }}
-          # CSC_KEY_PASSWORD: ${{ secrets.WIN_CERTIFICATE_PASSWORD }}
 
   build-macos:
     runs-on: macos-latest
@@ -54,39 +58,29 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.app
+
       - name: Install dependencies
         run: npm install
 
       - name: Build macOS key listener
         run: npm run build:swift
 
-      # - name: Import macOS certificate
-      #   run: |
-      #     echo "${{ secrets.MAC_CERTIFICATE }}" | base64 --decode > certificate.p12
-      #     security create-keychain -p ci build.keychain
-      #     security default-keychain -s build.keychain
-      #     security unlock-keychain -p ci build.keychain
-      #     security import certificate.p12 -k build.keychain -P "${{ secrets.MAC_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
-      #     security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ci build.keychain
-      #   env:
-      #     MAC_CERTIFICATE: ${{ secrets.MAC_CERTIFICATE }}
-      #     MAC_CERTIFICATE_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
-
       - name: Build macOS app
         run: npm run build:mac
-        # env:
-          # APPLE_ID: ${{ secrets.APPLE_ID }}
-          # APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          # CSC_LINK: file://certificate.p12
-          # CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
+        env:
+          ELECTRON_BUILDER_PUBLISH: never
+
+      - name: List artifacts
+        run: ls -l exports
 
       - name: Upload macOS artifacts to draft release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
           files: |
-            exports/Animalese Typing-*.dmg
+            "exports/Animalese Typing-*.dmg"
             exports/latest-mac.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
