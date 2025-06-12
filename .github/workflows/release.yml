@@ -42,7 +42,7 @@ jobs:
         with:
           draft: true
           files: |
-            exports/*.exe
+            exports/AnimaleseTypingSetup*.exe
             exports/latest.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -80,7 +80,7 @@ jobs:
         with:
           draft: true
           files: |
-            "exports/Animalese Typing-*.dmg"
+            exports/Animalese Typing*.dmg
             exports/latest-mac.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
