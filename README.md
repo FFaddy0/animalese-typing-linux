@@ -1,6 +1,6 @@
-# Animalese Typing - Desktop
+# Animalese Typing - linux (ill work on this l8r)
 
-### A desktop version of my [Animalese Typing Web Extension](https://www.youtube.com/watch?v=wdxvKpUY7q8). 😊
+### A linux version of joshxviii [Animalese Typing Web Extension](https://www.youtube.com/watch?v=wdxvKpUY7q8). 😊
 
 ---
 
